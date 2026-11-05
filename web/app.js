@@ -57,7 +57,7 @@
         if (!x || !e.phase) continue;           // phase 0 = başlamadı
         out[k] = { phase: e.phase, s: x.s, min: x.min, h: x.ht?.r ?? 0, a: x.at?.r ?? 0,
                    hh: x.ht?.ht ?? null, ha: x.at?.ht ?? null, hco: x.ht?.co, aco: x.at?.co,
-                   hrc: x.ht?.rc || 0, arc: x.at?.rc || 0 };
+                   hrc: x.ht?.rc || 0, arc: x.at?.rc || 0, hyc: x.ht?.yc, ayc: x.at?.yc };
       }
       LIVE = out; liveAt = Date.now();
       paintLive();
@@ -183,16 +183,19 @@
     return `<div class="lodds-h">Canlı Üst oranları <span>iddaa · ${new Date(oddsAt).toLocaleTimeString("tr-TR", { timeZone: "Europe/Istanbul" })}</span></div>
       <div class="grid4">${zs.map((z) => liveOddBtn(m, z)).join("")}</div>`;
   }
-  function liveDetail(kod) {
+function liveDetail(kod) {
     const m = byKod(kod), x = LIVE[kod];
     if (!m || !x || x.phase !== 1) return "";
-    const zs = liveOvers(m) || [];
-    if (!zs.length) return `<div class="sec">Canlı Üst oranları</div><div class="lodds-note">${LODDS[kod] ? "Şu an açık canlı Üst oranı yok (askıda olabilir)." : "Yükleniyor…"}</div>`;
-    const bar = (cls, v, l) => `<div>${l} ${pct(v)}</div><div class="bar ${cls}"><i style="width:${v == null ? 0 : Math.min(100, 100 * v)}%"></i></div>`;
-    return `<div class="sec">Canlı Üst oranları <span style="font-size:.7rem;color:var(--muted);font-weight:500">iddaa · ${new Date(oddsAt).toLocaleTimeString("tr-TR", { timeZone: "Europe/Istanbul" })}</span></div><div class="optgrid">${zs.map((z) => `<div class="opt">${liveOddBtn(m, z)}
-      <div class="bars">${bar("", z.m, "canlı tahmin")}${bar("mk", z.pk, "piyasa")}</div>
-      <div style="font-size:.66rem;color:${z.m != null && z.m * z.o > 1 ? "#7ff0a8" : "var(--muted)"}">${z.m == null ? "" : `değer ${z.m * z.o - 1 > 0 ? "+" : ""}${(z.m * z.o - 1).toFixed(2)}`}</div></div>`).join("")}</div>
-      <div class="lodds-note">Canlı tahmin: maç öncesi gol beklentisinin kalan süreye düşen payı ve mevcut skorla hesaplanır (kırmızı kart, tempo gibi canlı etkenleri bilmez).</div>`;
+    const zs = liveOvers(m);
+    const when = `iddaa · ${new Date(oddsAt).toLocaleTimeString("tr-TR", { timeZone: "Europe/Istanbul" })}`;
+    if (!zs || !zs.length) return `<div class="mkt"><div class="mkt-h"><span class="lbadge">CANLI</span> Toplam Gol Üst <span class="mkt-s">${when}</span></div>
+      <div class="lodds-note">${LODDS[kod] || EVODDS[kod] ? "Şu an açık canlı Üst oranı yok (askıda olabilir)." : "Canlı oranlar yükleniyor…"}</div></div>`;
+    const block = (title, list) => !list.length ? "" : `<div class="mkt"><div class="mkt-h"><span class="lbadge">CANLI</span> ${title} <span class="mkt-s">${when}</span></div>
+      ${list.map((z) => oddRow(`${tr(z.line)} Üst`,
+        `canlı tahmin ${z.m == null ? "–" : pct(z.m)} · piyasa ${z.pk == null ? "–" : pct(z.pk)}${z.m != null ? ` · değer ${z.m * z.o - 1 > 0 ? "+" : ""}${(z.m * z.o - 1).toFixed(2)}` : ""}`,
+        rowBtn(`data-lk="${esc(m.kod)}" data-lp="${esc(z.p)}"`, z.o, kupon[m.kod]?.p === z.p, z.open ? null : "askıda"))).join("")}</div>`;
+    return block("Toplam Gol Üst", zs.filter((z) => !z.fh)) + block("1. Yarı Gol Üst", zs.filter((z) => z.fh))
+      + `<div class="lodds-note">Canlı tahmin: maç öncesi gol beklentisinin kalan süreye düşen payı ve mevcut skorla hesaplanır (kırmızı kart, tempo gibi etkenleri bilmez).</div>`;
   }
 
   // Maç durumu etiketi
@@ -229,12 +232,30 @@
     const el = $("#livecount"); if (el) { el.textContent = mine ? `● ${mine} canlı` : ""; el.classList.toggle("hidden", !mine); }
   }
   function liveBox(kod) {
-    const x = LIVE[kod]; if (!x) return "";
-    const st = x.phase === 2 ? "Maç sonu" : x.s === 4 ? "Devre arası" : `${x.min}. dakika`;
-    return `<div class="lbox ${x.phase === 1 ? "on" : ""}"><div class="lst">${x.phase === 1 ? '<i class="dot"></i>' : ""}${st}</div>
-      <div class="lsc">${x.h} <span>-</span> ${x.a}</div>
-      <div class="lmeta">İY ${x.hh ?? "–"}-${x.ha ?? "–"}${x.hco != null ? ` · korner ${x.hco}-${x.aco}` : ""}${x.hrc || x.arc ? ` · kırmızı ${x.hrc}-${x.arc}` : ""}</div>
-      <div class="lmeta" style="opacity:.7">güncelleme ${new Date(liveAt).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZone: "Europe/Istanbul" })}</div></div>`;
+    const m = byKod(kod); if (!m) return "";
+    const x = LIVE[kod];
+    const chips = (co, yc, rc) => `<div class="sb-chips">${co != null ? `<span title="korner">⚑ ${co}</span>` : ""}${yc != null ? `<span title="sarı kart"><i class="yc"></i>${yc}</span>` : ""}<span title="kırmızı kart"><i class="rc2"></i>${rc || 0}</span></div>`;
+    let mid;
+    if (!x) mid = `<div class="sb-pill sb-pre">${esc(m.saat)}</div><div class="sb-score sb-vs">vs</div><div class="sb-ht">başlamadı</div>`;
+    else {
+      const pill = x.phase === 2 ? `<div class="sb-pill sb-end">MS</div>` : x.s === 4 ? `<div class="sb-pill">İY</div>` : `<div class="sb-pill"><i class="dot"></i>${x.min ?? ""}'</div>`;
+      mid = `${pill}<div class="sb-score">${x.h} <span>-</span> ${x.a}</div><div class="sb-ht">İY: ${x.hh ?? "–"}-${x.ha ?? "–"}</div>`;
+    }
+    return `<div class="sb ${x?.phase === 1 ? "on" : ""}">
+      <div class="sb-team"><b>${esc(m.ev)}</b>${x ? chips(x.hco, x.hyc, x.hrc) : ""}</div>
+      <div class="sb-mid">${mid}</div>
+      <div class="sb-team"><b>${esc(m.dep)}</b>${x ? chips(x.aco, x.ayc, x.arc) : ""}</div></div>
+      ${x ? `<div class="sb-upd">güncelleme ${new Date(liveAt).toLocaleTimeString("tr-TR", { timeZone: "Europe/Istanbul" })}</div>` : ""}`;
+  }
+
+  // Oran satırı: "2,5 Üst ............ [1.43]" + altında tahmin/piyasa
+  const tr = (line) => String(line).replace(".", ",");
+  function oddRow(label, sub, btn) {
+    return `<div class="orow"><div class="olab">${label}<small>${sub}</small></div>${btn}</div>`;
+  }
+  function rowBtn(attrs, o, on, dis) {
+    if (dis) return `<div class="obtn dis">${dis}</div>`;
+    return `<button class="obtn ${on ? "on" : ""}" ${attrs}>${odd(o)}</button>`;
   }
 
   // ---------- veri ----------
@@ -429,11 +450,15 @@
 </div>
       <div data-livebox="${esc(m.kod)}">${liveBox(m.kod)}</div>
       <div data-ldet="${esc(m.kod)}">${liveDetail(m.kod)}</div>
-      <div class="legend"><span><i style="background:var(--acc)"></i>tahmin</span><span><i style="background:var(--blue)"></i>pazar fiyatı</span><span><i style="background:var(--amber)"></i>istatistik</span></div>`;
+`;
     for (const [pa, os] of Object.entries(groups)) {
-      h += `<div class="sec" style="margin-top:10px">${esc(pa)}</div><div class="optgrid">`;
-      for (const o of os) h += `<div class="opt">${oddBtn(m, o, o.etiket || o.s)}<div class="bars">${bar("", o.m, "tahmin")}${bar("mk", o.pk, "pazar")}${bar("st", o.i, "istatistik")}</div>
-        <div style="font-size:.66rem;color:${o.d > 0 ? "#7ff0a8" : "var(--muted)"}">${o.o == null ? "iddaa bu pazarı açmamış" : `değer ${o.d > 0 ? "+" : ""}${o.d.toFixed(2)} · güven ${Math.round(o.g)}`}${o.sup ? " · <span style='color:#ffcf70'>şüpheli</span>" : ""}</div></div>`;
+      h += `<div class="mkt"><div class="mkt-h">${esc(pa)} <span class="mkt-s">oranlar ${esc((m.oran_zamani || DATA.oran_zamani || "").slice(11, 16))}</span></div>`;
+      for (const o of os) {
+        const sub = `tahmin ${pct(o.m)} · piyasa ${o.pk == null ? "–" : pct(o.pk)} · istatistik ${o.i == null ? "–" : pct(o.i)}`
+          + (o.o == null ? "" : ` · güven ${Math.round(o.g)}`) + (o.sup ? " · <span style='color:#ffcf70'>şüpheli</span>" : "");
+        const dis = o.o == null ? "yok" : m.baslamis ? odd(o.o) : null;
+        h += oddRow(esc((o.etiket || o.s).replace(/(\d)\.5/, "$1,5")), sub, rowBtn(`data-k="${esc(m.kod)}" data-p="${esc(o.p)}" data-s="${esc(o.s)}"`, o.o, isOn(m, o), dis));
+      }
       h += `</div>`;
     }
     h += `<div class="sec">En olası skorlar</div><div class="scores">${(m.skorlar || []).map((s) => `<div class="score"><b>${esc(s.skor)}</b><small>${pct(s.olasilik, 1)}</small></div>`).join("")}
