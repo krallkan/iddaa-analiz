@@ -5,7 +5,9 @@
   Sekmeler: Seçimler (güven halkalı günün seçimleri) · Maçlar (lig filtresi, dokunulabilir oranlar) ·
   Favoriler (☆ ile işaretlenen maçlar, canlı olanlar üstte; cihazda saklanır) · Kupon
   (toplam oran, kombine olasılık, MBS uyarısı) · Geçmiş. Bir maça dokununca tüm pazarlar, en olası skorlar, form,
-  haberler açılır. Kupon yalnızca cihazda tutulur; uygulama bahis yapmaz.
+  haberler açılır. Kupon yalnızca cihazda tutulur; uygulama bahis yapmaz ve hiçbir bahis hesabına bağlanmaz.
+  Kupon ekranı: **Kuponu kopyala** (maç · seçim · güncel oran listesi), **Bilyoner'i aç** (kuponu orada elle kurmak için)
+  ve **oran kontrolü** (kupondaki her seçimin güncel oranı 10 sn'de bir iddaa maç servisinden; değiştiyse/kapandıysa uyarı).
   **Canlı skor:** başlayan maçlarda dakika, skor, İY skoru, korner ve kırmızı kart; Üst tahminlerinin anlık durumu
   (Tuttu / Kaçtı / X gol daha). Telefon doğrudan iddaa canlı sonuç servisinden çeker
   (`statisticsv2.iddaa.com/live-results`); bizim maçlardan biri canlıyken her yanıttan 1 sn sonra (pratikte 1-2 sn'de bir, ~40 MB/saat), maç başlamak
