@@ -1,0 +1,4 @@
+{
+ "tarih": "2026-11-05",
+ "not": "Tahminler piyasaya dayalıdır: iddaa'nın MS, Alt/Üst, KG, Çifte Şans ve handikap oranlarından marj temizlenip tüm pazarlara uyan tek bir gol beklentisi (λ) çifti çıkarılır; İY, İY/MS, toplam gol gibi diğer pazarlar bu λ'dan tutarlı biçimde türetilir. Geri testte (2026-11-05, 1411 maç) bağımsız istatistik modelinin en iyi ağırlığı w=0.0 çıktı (test log-loss: saf piyasa 1.631, saf istatistik 1.670); istatistik modeli bu yüzden ikinci görüş olarak güven skorunda kullanılır. 'Değer', iddaa'nın bir pazarını kendi diğer pazarlarıyla tutarsız fiyatlamasından doğar; ~%15 marj nedeniyle çoğu seçimin beklenen değeri negatiftir."
+}

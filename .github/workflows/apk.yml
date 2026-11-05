@@ -1,0 +1,49 @@
+name: APK
+
+on:
+  push:
+    paths:
+      - "android/**"
+      - ".github/workflows/apk.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write     # Release oluşturmak için
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+
+      - name: APK derle
+        working-directory: android
+        env:
+          VERSION_CODE: ${{ github.run_number }}
+          REPORT_URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/
+        run: gradle --no-daemon assembleDebug
+
+      - name: Dosya adı
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk iddaa-analiz.apk
+
+      - name: Release olarak yayınla
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-v${{ github.run_number }}
+          name: Maç Analiz APK v${{ github.run_number }}
+          make_latest: "true"
+          files: iddaa-analiz.apk
+          body: |
+            Telefona kurulum: bu sayfadan **iddaa-analiz.apk** dosyasını indirip açın
+            (Android "bilinmeyen kaynaklardan yükleme" izni isteyebilir).
+            Uygulama analizi https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/app/ adresinden yükler; analiz her gün 12:07 ve 18:07'de GitHub Actions ile yenilenir.

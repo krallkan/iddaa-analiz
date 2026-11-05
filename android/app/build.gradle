@@ -1,0 +1,20 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.krallkan.iddaaanaliz'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'com.krallkan.iddaaanaliz'
+        minSdk 24
+        targetSdk 34
+        versionCode Integer.parseInt(System.getenv("VERSION_CODE") ?: "1")
+        versionName "1.0." + (System.getenv("VERSION_CODE") ?: "1")
+        // Rapor adresi derleme sırasında verilir (GitHub Actions: https://<kullanıcı>.github.io/<depo>/)
+        buildConfigField "String", "REPORT_URL", "\"" + (System.getenv("REPORT_URL") ?: "https://krallkan.github.io/iddaa-analiz/") + "\""
+    }
+    buildFeatures { buildConfig true }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}

@@ -1,0 +1,6 @@
+httpx>=0.27
+numpy>=2.0
+scipy>=1.13
+rich>=13
+markdown>=3.6
+# Yalnızca yedek bülten yöntemi için (isteğe bağlı): playwright

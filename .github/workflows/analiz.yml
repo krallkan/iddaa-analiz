@@ -1,0 +1,79 @@
+name: Günlük analiz
+
+on:
+  schedule:
+    - cron: "7 9,15 * * *"     # 12:07 ve 18:07 (Türkiye saati, UTC+3)
+  workflow_dispatch:            # Actions sekmesinden elle çalıştırma
+
+permissions:
+  contents: write               # gh-pages dalına yayın + haftalık geri test sonucunu commit
+
+concurrency:
+  group: analiz
+  cancel-in-progress: false
+
+jobs:
+  analiz:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Tarih
+        id: gun
+        run: |
+          echo "tarih=$(TZ=Europe/Istanbul date +%F)" >> "$GITHUB_OUTPUT"
+          echo "haftagunu=$(TZ=Europe/Istanbul date +%u)" >> "$GITHUB_OUTPUT"
+          echo "saat=$(TZ=Europe/Istanbul date +%H)" >> "$GITHUB_OUTPUT"
+
+      # Aynı günün önceki çalıştırmasının verisi (oran hareketleri ve istatistik önbelleği için)
+      - uses: actions/cache/restore@v4
+        with:
+          path: data
+          key: data-${{ steps.gun.outputs.tarih }}-${{ github.run_id }}
+          restore-keys: data-${{ steps.gun.outputs.tarih }}-
+
+      - name: Haftalık geri test (pazartesi sabah çalıştırması)
+        if: steps.gun.outputs.haftagunu == '1' && steps.gun.outputs.saat < '14'
+        run: |
+          python backtest.py --hafta 10
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add config/model.json config/backtest_son.json
+          git diff --cached --quiet || (git commit -m "Haftalık geri test: model ağırlığı güncellendi" && git push)
+
+      - name: Analiz
+        env:
+          COLUMNS: "160"
+        run: python main.py
+
+      - name: Rapor sayfası
+        run: python site.py --onceki "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/manifest.json"
+
+      - uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: data
+          key: data-${{ steps.gun.outputs.tarih }}-${{ github.run_id }}
+
+      - name: GitHub Pages'e yayınla
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./site
+          keep_files: true      # geçmiş raporlar (r/) silinmesin
+          commit_message: "Rapor ${{ steps.gun.outputs.tarih }}"
+
+      - name: Raporu iş çıktısı olarak da sakla
+        uses: actions/upload-artifact@v4
+        with:
+          name: rapor-${{ steps.gun.outputs.tarih }}-${{ github.run_number }}
+          path: reports/
+          retention-days: 14

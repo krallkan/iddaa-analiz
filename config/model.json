@@ -1,0 +1,9 @@
+{
+ "w_istatistik": 0.0,
+ "kaynak": "backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları)",
+ "test_logloss": {
+  "saf_piyasa": 1.6315,
+  "karisim": 1.6315,
+  "saf_istatistik": 1.6697
+ }
+}

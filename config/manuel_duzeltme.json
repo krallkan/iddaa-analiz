@@ -1,0 +1,6 @@
+{
+  "_aciklama": "Haberlere dayalı manuel λ düzeltmeleri. Her kayıtta gerekçe ve kaynak zorunlu. Model yalnızca o günün tarihli kayıtlarını uygular. carpan: ilgili takımın beklenen golüne (λ) uygulanır; rakip_carpan: rakibin λ'sına uygulanır.",
+  "ornek": {"tarih": "YYYY-MM-DD", "mac_kodu": 0, "takim": "ev|dep", "carpan": 0.92, "rakip_carpan": 1.0,
+            "gerekce": "Golcü X sakat (kesin)", "kaynak": "https://...", "kaynak_tarihi": "YYYY-MM-DDTHH:MM"},
+  "duzeltmeler": []
+}

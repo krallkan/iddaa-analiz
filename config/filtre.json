@@ -1,0 +1,73 @@
+{
+  "_aciklama": "Günlük maç filtresi. Lig kalıpları iddaa'daki lig adına (büyük/küçük harf duyarsız regex) uygulanır. Bu dosyayı düzenleyerek lig ekleyip çıkarabilirsiniz.",
+
+  "seviye_1_oncelikli": [
+    "^Türkiye Süper Lig(,|$)",
+    "^Türkiye 1\\. Lig",
+    "^İngiltere Premier Lig(,|$)",
+    "^İngiltere Championship",
+    "^İspanya La Liga$",
+    "^İtalya Serie A",
+    "^Almanya Bundesliga(,|$)",
+    "^Fransa Ligue 1",
+    "^Hollanda Eredivisie",
+    "^Portekiz Premier Lig",
+    "^UEFA Şampiyonlar Ligi",
+    "^UEFA (Avrupa )?Konferans Ligi",
+    "^UEFA Avrupa Ligi",
+    "^UEFA Süper Kupa"
+  ],
+
+  "seviye_2_buyuk_ikinci_ligler": [
+    "^İspanya La Liga 2",
+    "^İtalya Serie B",
+    "^Almanya 2\\. Bundesliga",
+    "^Fransa Ligue 2",
+    "^Hollanda 1\\. Lig",
+    "^Portekiz 2\\. Lig",
+    "^İngiltere 1\\. Lig",
+    "^Belçika Pro Lig",
+    "^İskoçya Premiership",
+    "^Avusturya Bundesliga",
+    "^İsviçre Süper Lig",
+    "^Danimarka Süper Lig",
+    "^Norveç Eliteserien",
+    "^İsveç Allsvenskan",
+    "^Yunanistan Süper Lig",
+    "^Çekya 1\\. Lig",
+    "^Polonya Ekstraklasa",
+    "^Hırvatistan 1\\. HNL",
+    "^Brezilya Serie A",
+    "^Arjantin Primera LPF",
+    "^ABD Major Lig",
+    "^Japonya J\\.Lig$",
+    "^Suudi Arabistan Pro Lig",
+    "(İngiltere )?FA Kupası",
+    "^İngiltere (Lig|EFL) Kupası",
+    "^İspanya (Kral|Copa del Rey)",
+    "^İtalya Kupası",
+    "^Almanya Kupası",
+    "^Fransa Kupası",
+    "^Türkiye Kupası",
+    "^Dünya Kupası",
+    "^Avrupa Şampiyonası",
+    "^UEFA Uluslar Ligi",
+    "Dünya Kupası Elemeleri|Avrupa Şampiyonası Elemeleri"
+  ],
+
+  "her_zaman_ele": {
+    "kadin": "Kadın|Women|\\(K\\)",
+    "genc_takim": "\\bU ?(1[5-9]|2[0-3])\\b|Gençler|Altyapı|Youth|Rezerv|Reserve|Amatör",
+    "hazirlik": "Hazırlık|Dostluk|Friendly|Club Friendl",
+    "ozel_bahis": "Bahisler|Özel$|Özel Bahis"
+  },
+
+  "takim_adi_ele": "\\(K\\)$|\\bU ?(1[5-9]|2[0-3])\\b|\\bII$| B$",
+
+  "min_baslamaya_dakika": 30,
+  "ms_pazari_zorunlu": true,
+  "min_pazar_sayisi": 10,
+  "max_detayli_analiz": 40,
+  "seviye_3_dahil_et": false,
+  "min_erisilebilir_mac": 8
+}
