@@ -11,6 +11,10 @@
   (`statisticsv2.iddaa.com/live-results`); bizim maçlardan biri canlıyken her yanıttan 1 sn sonra (pratikte 1-2 sn'de bir, ~40 MB/saat), maç başlamak
   üzereyken 15 sn'de, canlı maç yokken 5 dk'da bir; yalnızca uygulama ekrandayken. Aynı gün önceki analizlerde
   gösterilip başlamış maçlar, son tahminleriyle listede kalır (`site.py` → `carry_over`).
+  **Canlı oranlar:** canlı maç kartında iddaa'nın açık canlı Üst çizgisi (gol oldukça 4.5, 5.5… açılır) 2 sn'de bir
+  (`sportsbook/events?type=1`, yalnızca değişenler); maç detayı açıkken o maçın BÜTÜN canlı Üst çizgileri
+  (`sportsbook/event/<kod>`) 2 sn'de bir. Her çizgide canlı tahmin (maç öncesi λ'nın kalan süreye düşen payı +
+  mevcut skor, Poisson), piyasa olasılığı ve değer. Canlı orana dokununca o anki oranla kupona eklenir.
 - **Tarayıcıdan:** https://krallkan.github.io/iddaa-analiz/ (aynı arayüz) · metin rapor: `rapor.html`
 - **Otomatik çalışma:** `.github/workflows/analiz.yml` her gün 09:07, 12:07, 15:07, 18:07 ve 20:07'de (TSİ) analizi
   çalıştırıp sayfayı günceller (GitHub zamanlanmış işleri bazen geciktirir/atlar; sık çalıştırma bunu telafi eder); elle çalıştırmak için Actions → "Günlük analiz" → Run workflow. Her pazartesi geri test yapılır.

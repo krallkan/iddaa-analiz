@@ -368,7 +368,8 @@ def build_app(day: str, root: Path, data: dict, stats: dict, haber: dict | None,
         pk = pick_codes.get(code)
         maclar.append({
             "kod": code, "saat": m["saat"], "baslama": m["baslama"], "lig": m["lig"], "ev": m["ev"], "dep": m["deplasman"],
-            "mbs": m["mbs"], "lambda": anc.get("lambda"), "ist_lambda": anc.get("istatistik_lambda"),
+            "mbs": m["mbs"], "lambda": anc.get("lambda"),
+            "iy_pay": model["maclar"][code]["bilesenler"].get("iy_gol_payi"),
             "skorlar": (anc.get("olasiliklar") or {}).get("_en_olasi_skorlar", []),
             "veri_kalitesi": model["maclar"][code]["veri_kalitesi"],
             "form": {"ev": ev_s.get("son10", {}).get("form"), "dep": dep_s.get("son10", {}).get("form")},

@@ -61,6 +61,8 @@
       }
       LIVE = out; liveAt = Date.now();
       paintLive();
+      if (!oddsTimer && DATA.maclar.some((m) => LIVE[m.kod]?.phase === 1)) fetchOdds();
+      if (curKod && !evTimer && !evBusy && LIVE[curKod]?.phase === 1) fetchEvent(curKod);
     } catch (e) { /* ağ hatası: bir sonraki turda tekrar dener */ }
     liveBusy = false;
     scheduleLive();
@@ -74,6 +76,125 @@
     liveTimer = setTimeout(() => { if (document.visibilityState === "visible") fetchLive(); else scheduleLive(); },
                            anyLive ? LIVE_FAST : soon ? LIVE_SOON : LIVE_IDLE);
   }
+  // ---------- canlı oranlar (iddaa canlı bülteni; yalnızca değişenler) ----------
+  const ODDS_URL = (v) => `https://sportsbookv2.iddaa.com/sportsbook/events?st=1&type=1&version=${v}`;
+  const ODDS_EVERY = 2000;
+  const FT_ST = new Set([14]), IY_ST = new Set([63, 64, 806]);   // Alt/Üst {x} ve 1. Yarı Alt/Üst {x}
+  let LODDS = {}, oddsVer = 0, oddsTimer = null, oddsBusy = false, oddsAt = 0;
+  async function fetchOdds() {
+    if (!DATA || !live || oddsBusy) return;
+    oddsBusy = true;
+    try {
+      const r = await fetch(ODDS_URL(oddsVer), { cache: "no-store" });
+      if (!r.ok) throw new Error(r.status);
+      const d = (await r.json()).data || {};
+      const mine = new Set(DATA.maclar.map((m) => m.kod));
+      if (!d.isdiff) LODDS = {};
+      for (const e of d.events || []) {          // değişen maç, bütün pazarlarıyla gelir
+        const k = String(e.i);
+        if (e.sid === 1 && mine.has(k)) LODDS[k] = { m: e.m || [], at: Date.now() };
+      }
+      oddsVer = d.version || oddsVer; oddsAt = Date.now();
+      paintLive();
+    } catch (e) { oddsVer = 0; /* hata: bir sonraki turda baştan çek */ }
+    oddsBusy = false;
+    scheduleOdds();
+  }
+  function scheduleOdds() {
+    clearTimeout(oddsTimer);
+    if (!DATA || !live) return;
+    const anyLive = DATA.maclar.some((m) => LIVE[m.kod]?.phase === 1);
+    oddsTimer = setTimeout(() => { if (document.visibilityState === "visible") fetchOdds(); else scheduleOdds(); },
+                           anyLive ? ODDS_EVERY : 60e3);
+  }
+  // Detay paneli açıkken: o maçın BÜTÜN canlı çizgileri (sportsbook/event/<kod>, ~3 KB), 2 sn'de bir
+  const EVENT_URL = (k) => `https://sportsbookv2.iddaa.com/sportsbook/event/${k}`;
+  let EVODDS = {}, evTimer = null, evBusy = false;
+  async function fetchEvent(kod) {
+    clearTimeout(evTimer); evTimer = null;
+    if (!DATA || !live || evBusy || curKod !== kod || LIVE[kod]?.phase !== 1) return;
+    evBusy = true;
+    try {
+      const r = await fetch(EVENT_URL(kod), { cache: "no-store" });
+      if (!r.ok) throw new Error(r.status);
+      let e = (await r.json()).data; if (Array.isArray(e)) e = e[0];
+      if (e) { EVODDS[kod] = { m: e.m || [], at: Date.now() }; oddsAt = Date.now(); paintLive(); }
+    } catch (e) { /* bir sonraki turda tekrar dener */ }
+    evBusy = false;
+    if (curKod === kod && LIVE[kod]?.phase === 1)
+      evTimer = setTimeout(() => { if (document.visibilityState === "visible") fetchEvent(kod); else evTimer = setTimeout(() => fetchEvent(kod), 3000); }, 2000);
+  }
+
+  // Poisson: P(N >= k), N ~ Poisson(mu)
+  function pAtLeast(k, mu) {
+    if (k <= 0) return 1;
+    let term = Math.exp(-mu), cum = term;
+    for (let i = 1; i < k; i++) { term *= mu / i; cum += term; }
+    return Math.max(0, 1 - cum);
+  }
+  // Maç öncesi λ'nın kalan süreye düşen payı + mevcut gollerle canlı Üst olasılığı
+  function liveProb(m, firstHalf, line) {
+    const x = LIVE[m.kod]; if (!x || !m.lambda) return null;
+    const lt = (m.lambda.ev || 0) + (m.lambda.dep || 0), iy = m.iy_pay || 0.44;
+    const t = Math.min(x.min ?? 0, 95), ht = x.s === 4;
+    let goals, rem;
+    if (firstHalf) {
+      if (ht || t > 47) return null;                       // ilk yarı bitti
+      goals = (x.hh ?? 0) + (x.ha ?? 0);
+      rem = lt * iy * Math.max(0, 47 - t) / 45;            // ~2 dk uzatma payı
+    } else {
+      goals = x.h + x.a;
+      rem = ht ? lt * (1 - iy) * 47 / 45
+          : t <= 45 ? lt * (iy * Math.max(0, 47 - t) / 45 + (1 - iy) * 47 / 45)
+          : lt * (1 - iy) * Math.max(0, 94 - t) / 45;
+    }
+    return pAtLeast(Math.floor(line) + 1 - goals, rem);
+  }
+  // Bir maçın canlı Üst seçenekleri: [{p, s, pa, et, o, pk, m}]
+  function liveOvers(m) {
+    const E = EVODDS[m.kod];
+    const L = E && Date.now() - E.at < 15000 ? E : LODDS[m.kod]; if (!L) return null;
+    const out = [];
+    for (const mk of L.m) {
+      if (mk.t !== 4 || !(FT_ST.has(mk.st) || IY_ST.has(mk.st)) || mk.sov == null) continue;
+      const fh = IY_ST.has(mk.st), line = parseFloat(mk.sov);
+      const ov = mk.o.find((o) => o.n === "Üst"), al = mk.o.find((o) => o.n === "Alt");
+      if (!ov || ov.odd <= 1) continue;
+      const pk = al && al.odd > 1 ? (1 / ov.odd) / (1 / ov.odd + 1 / al.odd) : null;
+      const p = `LIVE_${fh ? "IY_" : ""}AU_${mk.sov}`;
+      if (out.some((z) => z.p === p)) continue;
+      out.push({ p, s: "Üst", pa: `Canlı ${fh ? "1. Yarı " : ""}Alt/Üst ${mk.sov}`, et: `${fh ? "İY " : ""}${mk.sov}Ü`,
+                 o: ov.odd, pk, m: liveProb(m, fh, line), open: mk.s === 1, line, fh });
+    }
+    return out.sort((a, b) => (a.fh - b.fh) || a.line - b.line);
+  }
+  function liveOddBtn(m, z) {
+    const on = kupon[m.kod] && kupon[m.kod].p === z.p;
+    if (!z.open) return `<div class="odd nood"><span class="n">CANLI ${esc(z.et)}</span><span class="o">${odd(z.o)}</span><span class="p">askıda</span></div>`;
+    return `<button class="odd live ${on ? "on" : ""}" data-lk="${esc(m.kod)}" data-lp="${esc(z.p)}"><span class="n">CANLI ${esc(z.et)}</span>
+      <span class="o">${odd(z.o)}</span><span class="p">${z.m == null ? "–" : pct(z.m)}</span></button>`;
+  }
+  function liveOddsGrid(kod) {
+    const m = byKod(kod), x = LIVE[kod];
+    if (!m || !x || x.phase !== 1) return "";
+    const zs = liveOvers(m);
+    if (zs === null) return `<div class="lodds-note">canlı oranlar yükleniyor…</div>`;
+    if (!zs.length) return `<div class="lodds-note">⏸ canlı Üst oranı şu an kapalı/askıda</div>`;
+    return `<div class="lodds-h">Canlı Üst oranları <span>iddaa · ${new Date(oddsAt).toLocaleTimeString("tr-TR", { timeZone: "Europe/Istanbul" })}</span></div>
+      <div class="grid4">${zs.map((z) => liveOddBtn(m, z)).join("")}</div>`;
+  }
+  function liveDetail(kod) {
+    const m = byKod(kod), x = LIVE[kod];
+    if (!m || !x || x.phase !== 1) return "";
+    const zs = liveOvers(m) || [];
+    if (!zs.length) return `<div class="sec">Canlı Üst oranları</div><div class="lodds-note">${LODDS[kod] ? "Şu an açık canlı Üst oranı yok (askıda olabilir)." : "Yükleniyor…"}</div>`;
+    const bar = (cls, v, l) => `<div>${l} ${pct(v)}</div><div class="bar ${cls}"><i style="width:${v == null ? 0 : Math.min(100, 100 * v)}%"></i></div>`;
+    return `<div class="sec">Canlı Üst oranları <span style="font-size:.7rem;color:var(--muted);font-weight:500">iddaa · ${new Date(oddsAt).toLocaleTimeString("tr-TR", { timeZone: "Europe/Istanbul" })}</span></div><div class="optgrid">${zs.map((z) => `<div class="opt">${liveOddBtn(m, z)}
+      <div class="bars">${bar("", z.m, "canlı tahmin")}${bar("mk", z.pk, "piyasa")}</div>
+      <div style="font-size:.66rem;color:${z.m != null && z.m * z.o > 1 ? "#7ff0a8" : "var(--muted)"}">${z.m == null ? "" : `değer ${z.m * z.o - 1 > 0 ? "+" : ""}${(z.m * z.o - 1).toFixed(2)}`}</div></div>`).join("")}</div>
+      <div class="lodds-note">Canlı tahmin: maç öncesi gol beklentisinin kalan süreye düşen payı ve mevcut skorla hesaplanır (kırmızı kart, tempo gibi canlı etkenleri bilmez).</div>`;
+  }
+
   // Maç durumu etiketi
   function liveTag(kod, big) {
     const x = LIVE[kod];
@@ -87,7 +208,7 @@
   // Üst tahmininin canlı durumu
   function pickState(kod, p) {
     const x = LIVE[kod]; if (!x) return "";
-    const m = /^(IY_)?AU_(\d+\.5)$/.exec(p); if (!m) return "";
+    const m = /^(?:LIVE_)?(IY_)?AU_(\d+\.5)$/.exec(p); if (!m) return "";
     const line = parseFloat(m[2]);
     const firstHalf = !!m[1];
     const goals = firstHalf ? (x.hh ?? 0) + (x.ha ?? 0) : x.h + x.a;
@@ -101,6 +222,9 @@
     document.querySelectorAll("[data-live]").forEach((el) => (el.innerHTML = liveTag(el.dataset.live)));
     document.querySelectorAll("[data-ps]").forEach((el) => { const [k, p] = el.dataset.ps.split("|"); el.innerHTML = pickState(k, p); });
     document.querySelectorAll("[data-livebox]").forEach((el) => (el.innerHTML = liveBox(el.dataset.livebox)));
+    document.querySelectorAll("[data-lodds]").forEach((el) => (el.innerHTML = liveOddsGrid(el.dataset.lodds)));
+    document.querySelectorAll("[data-ldet]").forEach((el) => (el.innerHTML = liveDetail(el.dataset.ldet)));
+    document.querySelectorAll("[data-pre]").forEach((el) => el.classList.toggle("pre-live", LIVE[el.dataset.pre]?.phase === 1));
     const mine = DATA.maclar.filter((m) => LIVE[m.kod]?.phase === 1).length;
     const el = $("#livecount"); if (el) { el.textContent = mine ? `● ${mine} canlı` : ""; el.classList.toggle("hidden", !mine); }
   }
@@ -202,7 +326,9 @@
   function matchRow(m) {
     const g = (p, s) => opt(m, p, s);
     return `<div class="card mrow"><div class="tap" data-open="${esc(m.kod)}">${meta(m)}${teams(m)}</div>
-        <div class="grid4">${(DATA.pazarlar || []).map((z) => oddBtn(m, g(z.pazar, z.secenek), z.etiket.replace(" Üst", "Ü"))).join("")}</div>
+        <div data-lodds="${esc(m.kod)}">${liveOddsGrid(m.kod)}</div>
+        <div class="pre-h">Maç öncesi</div>
+        <div class="grid4" data-pre="${esc(m.kod)}">${(DATA.pazarlar || []).map((z) => oddBtn(m, g(z.pazar, z.secenek), z.etiket.replace(" Üst", "Ü"))).join("")}</div>
         <button class="more" data-open="${esc(m.kod)}">detay · form · skor olasılıkları · haberler</button></div>`;
   }
 
@@ -289,10 +415,11 @@
     $("#sheet").classList.remove("hidden"); document.body.style.overflow = "hidden";
     $("#sheetBody").scrollTop = 0;
     history.pushState({ detay: kod }, "");   // Android geri tuşu paneli kapatsın
+    fetchEvent(kod);
   }
   function drawDetail(m) {
     const ord = (o) => (DATA.pazarlar || []).findIndex((z) => z.pazar === o.p && z.secenek === o.s);
-    const groups = { "Üst tahminleri": [...m.secenekler].sort((a, b) => ord(a) - ord(b)) };
+    const groups = { "Maç öncesi Üst tahminleri": [...m.secenekler].sort((a, b) => ord(a) - ord(b)) };
     const bar = (cls, v, l) => `<div>${l} ${pct(v)}</div><div class="bar ${cls}"><i style="width:${v == null ? 0 : Math.min(100, 100 * v)}%"></i></div>`;
     const fb = (s) => [...(s || "")].map((c) => `<span class="fb ${c}">${c}</span>`).join("");
     const o2 = (x) => (x == null ? "–" : Number(x).toFixed(2));
@@ -301,6 +428,7 @@
       <button class="close" data-close="1" aria-label="Kapat">✕</button></div>
 </div>
       <div data-livebox="${esc(m.kod)}">${liveBox(m.kod)}</div>
+      <div data-ldet="${esc(m.kod)}">${liveDetail(m.kod)}</div>
       <div class="legend"><span><i style="background:var(--acc)"></i>tahmin</span><span><i style="background:var(--blue)"></i>pazar fiyatı</span><span><i style="background:var(--amber)"></i>istatistik</span></div>`;
     for (const [pa, os] of Object.entries(groups)) {
       h += `<div class="sec" style="margin-top:10px">${esc(pa)}</div><div class="optgrid">`;
@@ -323,7 +451,7 @@
     $("#sheetBody").innerHTML = h;
     paintLive();
   }
-  function hideDetail() { $("#sheet").classList.add("hidden"); document.body.style.overflow = ""; curKod = null; }
+  function hideDetail() { $("#sheet").classList.add("hidden"); document.body.style.overflow = ""; curKod = null; clearTimeout(evTimer); evTimer = null; }
   function closeDetail() { if (history.state && history.state.detay) history.back(); else hideDetail(); }
 
   // ---------- çizim ----------
@@ -350,6 +478,17 @@
     if (!t) { if (e.target.id === "sheet") closeDetail(); return; }
     const d = t.dataset;
     if (d.tab) { tab = d.tab; window.scrollTo(0, 0); render(); return; }
+    if (d.lk) {
+      e.stopPropagation(); const m = byKod(d.lk); const z = m && (liveOvers(m) || []).find((q) => q.p === d.lp);
+      if (m && z) {
+        const cur = kupon[m.kod];
+        if (cur && cur.p === z.p) { delete kupon[m.kod]; toast("Kupondan çıkarıldı"); }
+        else { kupon[m.kod] = { p: z.p, s: "Üst", o: z.o, m: z.m ?? z.pk ?? 0, pk: z.pk, mbs: m.mbs, mac: `${m.ev} – ${m.dep}`, pa: z.pa, saat: m.saat };
+               toast(`Canlı oran kupona eklendi · ${odd(z.o)}`); }
+        saveKupon(); render(true);
+      }
+      return;
+    }
     if (d.fav) { e.stopPropagation(); toggleFav(d.fav); render(true); return; }
     if (d.k) { e.stopPropagation(); const m = byKod(d.k); const o = opt(m, d.p, d.s); if (m && o) toggle(m, o); return; }
     if (d.open) { openDetail(d.open); return; }
@@ -377,7 +516,7 @@
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState !== "visible") return;
     if (live && Date.now() - lastLoad > 10 * 60 * 1000) load("../data.json", true);
-    else fetchLive();   // ekrana dönünce hemen güncelle
+    else { fetchLive(); fetchOdds(); if (curKod) fetchEvent(curKod); }   // ekrana dönünce hemen güncelle
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDetail(); });
   // Android geri tuşu: önce detay panelini kapat
