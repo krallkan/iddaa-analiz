@@ -5,6 +5,9 @@
   Sekmeler: Seçimler (güven halkalı günün seçimleri) · Maçlar (lig filtresi, dokunulabilir oranlar) · Kupon
   (toplam oran, kombine olasılık, MBS uyarısı) · Geçmiş. Bir maça dokununca tüm pazarlar, en olası skorlar, form,
   haberler açılır. Kupon yalnızca cihazda tutulur; uygulama bahis yapmaz.
+  **Canlı skor:** başlayan maçlarda dakika, skor, İY skoru, korner ve kırmızı kart; Üst tahminlerinin anlık durumu
+  (Tuttu / Kaçtı / X gol daha). Telefon doğrudan iddaa canlı sonuç servisinden çeker
+  (`statisticsv2.iddaa.com/live-results`); canlı maç varken 30 sn'de, yokken 5 dk'da bir, yalnızca uygulama açıkken.
 - **Tarayıcıdan:** https://krallkan.github.io/iddaa-analiz/ (aynı arayüz) · metin rapor: `rapor.html`
 - **Otomatik çalışma:** `.github/workflows/analiz.yml` her gün 09:07, 12:07, 15:07, 18:07 ve 20:07'de (TSİ) analizi
   çalıştırıp sayfayı günceller (GitHub zamanlanmış işleri bazen geciktirir/atlar; sık çalıştırma bunu telafi eder); elle çalıştırmak için Actions → "Günlük analiz" → Run workflow. Her pazartesi geri test yapılır.
