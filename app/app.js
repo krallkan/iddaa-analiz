@@ -21,12 +21,16 @@
 
   let DATA = null, live = true, tab = "secim", lig = "Tümü", q = "", lastLoad = 0;
   let kupon = LS.get("kupon", {}); // {kod: {p,s,o,m,pk,mbs,mac,pa,tarih}}
-  let LIVE = {}, liveAt = 0, liveTimer = null;   // canlı skorlar: {kod: {...}}
+  let LIVE = {}, liveAt = 0, liveTimer = null, liveBusy = false;   // canlı skorlar: {kod: {...}}
+  const LIVE_FAST = 1000;      // canlı maç varken: her yanıttan 1 sn sonra yeni istek (~12 KB, sıkıştırılmış)
+  const LIVE_SOON = 15000;     // maç başlamak üzereyken
+  const LIVE_IDLE = 5 * 60e3;  // canlı maç yokken
 
   // ---------- canlı skor (telefondan doğrudan; iddaa canlı sonuç servisi) ----------
   const LIVE_URL = (d) => `https://statisticsv2.iddaa.com/live-results?sportId=1&date=${d}`;
   async function fetchLive() {
-    if (!DATA || !live) return;
+    if (!DATA || !live || liveBusy) return;
+    liveBusy = true;
     try {
       const r = await fetch(LIVE_URL(DATA.tarih), { cache: "no-store" });
       if (!r.ok) throw new Error(r.status);
@@ -42,16 +46,17 @@
       LIVE = out; liveAt = Date.now();
       paintLive();
     } catch (e) { /* ağ hatası: bir sonraki turda tekrar dener */ }
+    liveBusy = false;
     scheduleLive();
   }
   function scheduleLive() {
     clearTimeout(liveTimer);
     if (!DATA || !live) return;
     const now = Date.now();
-    const anyLive = Object.values(LIVE).some((x) => x.phase === 1);
+    const anyLive = DATA.maclar.some((m) => LIVE[m.kod]?.phase === 1);   // yalnızca bizim maçlar
     const soon = DATA.maclar.some((m) => { const t = new Date(m.baslama).getTime(); return t - now < 15 * 60e3 && now - t < 3 * 3600e3; });
     liveTimer = setTimeout(() => { if (document.visibilityState === "visible") fetchLive(); else scheduleLive(); },
-                           anyLive || soon ? 30e3 : 5 * 60e3);
+                           anyLive ? LIVE_FAST : soon ? LIVE_SOON : LIVE_IDLE);
   }
   // Maç durumu etiketi
   function liveTag(kod, big) {
@@ -331,7 +336,7 @@
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState !== "visible") return;
     if (live && Date.now() - lastLoad > 10 * 60 * 1000) load("../data.json", true);
-    else if (Date.now() - liveAt > 25e3) fetchLive();
+    else fetchLive();   // ekrana dönünce hemen güncelle
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDetail(); });
   // Android geri tuşu: önce detay panelini kapat
