@@ -21,6 +21,76 @@
 
   let DATA = null, live = true, tab = "secim", lig = "Tümü", q = "", lastLoad = 0;
   let kupon = LS.get("kupon", {}); // {kod: {p,s,o,m,pk,mbs,mac,pa,tarih}}
+  let LIVE = {}, liveAt = 0, liveTimer = null;   // canlı skorlar: {kod: {...}}
+
+  // ---------- canlı skor (telefondan doğrudan; iddaa canlı sonuç servisi) ----------
+  const LIVE_URL = (d) => `https://statisticsv2.iddaa.com/live-results?sportId=1&date=${d}`;
+  async function fetchLive() {
+    if (!DATA || !live) return;
+    try {
+      const r = await fetch(LIVE_URL(DATA.tarih), { cache: "no-store" });
+      if (!r.ok) throw new Error(r.status);
+      const j = (await r.json()).data || {};
+      const sc = j.sc || {}, out = {};
+      for (const e of j.events || []) {
+        const k = String(e.eventId), x = sc[k];
+        if (!x || !e.phase) continue;           // phase 0 = başlamadı
+        out[k] = { phase: e.phase, s: x.s, min: x.min, h: x.ht?.r ?? 0, a: x.at?.r ?? 0,
+                   hh: x.ht?.ht ?? null, ha: x.at?.ht ?? null, hco: x.ht?.co, aco: x.at?.co,
+                   hrc: x.ht?.rc || 0, arc: x.at?.rc || 0 };
+      }
+      LIVE = out; liveAt = Date.now();
+      paintLive();
+    } catch (e) { /* ağ hatası: bir sonraki turda tekrar dener */ }
+    scheduleLive();
+  }
+  function scheduleLive() {
+    clearTimeout(liveTimer);
+    if (!DATA || !live) return;
+    const now = Date.now();
+    const anyLive = Object.values(LIVE).some((x) => x.phase === 1);
+    const soon = DATA.maclar.some((m) => { const t = new Date(m.baslama).getTime(); return t - now < 15 * 60e3 && now - t < 3 * 3600e3; });
+    liveTimer = setTimeout(() => { if (document.visibilityState === "visible") fetchLive(); else scheduleLive(); },
+                           anyLive || soon ? 30e3 : 5 * 60e3);
+  }
+  // Maç durumu etiketi
+  function liveTag(kod, big) {
+    const x = LIVE[kod];
+    if (!x) return "";
+    const sc = `${x.h} - ${x.a}`;
+    const red = (n) => (n ? `<i class="rc">${n > 1 ? n : ""}</i>` : "");
+    if (x.phase === 2) return `<span class="lv end">MS <b>${sc}</b></span>`;
+    const t = x.s === 4 ? "İY" : `${x.min ?? ""}'`;
+    return `<span class="lv on"><i class="dot"></i>${t} <b>${red(x.hrc)}${sc}${red(x.arc)}</b></span>`;
+  }
+  // Üst tahmininin canlı durumu
+  function pickState(kod, p) {
+    const x = LIVE[kod]; if (!x) return "";
+    const m = /^(IY_)?AU_(\d+\.5)$/.exec(p); if (!m) return "";
+    const line = parseFloat(m[2]);
+    const firstHalf = !!m[1];
+    const goals = firstHalf ? (x.hh ?? 0) + (x.ha ?? 0) : x.h + x.a;
+    const need = Math.floor(line) + 1 - goals;
+    const over = firstHalf ? (x.phase === 2 || x.s === 4 || (x.min ?? 0) > 45 && x.s !== 2) : x.phase === 2;
+    if (need <= 0) return `<span class="ps ok">✓ Tuttu</span>`;
+    if (over) return `<span class="ps no">✗ Kaçtı</span>`;
+    return `<span class="ps wait">${need} gol daha</span>`;
+  }
+  function paintLive() {
+    document.querySelectorAll("[data-live]").forEach((el) => (el.innerHTML = liveTag(el.dataset.live)));
+    document.querySelectorAll("[data-ps]").forEach((el) => { const [k, p] = el.dataset.ps.split("|"); el.innerHTML = pickState(k, p); });
+    document.querySelectorAll("[data-livebox]").forEach((el) => (el.innerHTML = liveBox(el.dataset.livebox)));
+    const mine = DATA.maclar.filter((m) => LIVE[m.kod]?.phase === 1).length;
+    const el = $("#livecount"); if (el) { el.textContent = mine ? `● ${mine} canlı` : ""; el.classList.toggle("hidden", !mine); }
+  }
+  function liveBox(kod) {
+    const x = LIVE[kod]; if (!x) return "";
+    const st = x.phase === 2 ? "Maç sonu" : x.s === 4 ? "Devre arası" : `${x.min}. dakika`;
+    return `<div class="lbox ${x.phase === 1 ? "on" : ""}"><div class="lst">${x.phase === 1 ? '<i class="dot"></i>' : ""}${st}</div>
+      <div class="lsc">${x.h} <span>-</span> ${x.a}</div>
+      <div class="lmeta">İY ${x.hh ?? "–"}-${x.ha ?? "–"}${x.hco != null ? ` · korner ${x.hco}-${x.aco}` : ""}${x.hrc || x.arc ? ` · kırmızı ${x.hrc}-${x.arc}` : ""}</div>
+      <div class="lmeta" style="opacity:.7">güncelleme ${new Date(liveAt).toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit", second: "2-digit", timeZone: "Europe/Istanbul" })}</div></div>`;
+  }
 
   // ---------- veri ----------
   async function load(url, isLive) {
@@ -32,6 +102,7 @@
       if (isLive) LS.set("son_veri", DATA);
       cleanKupon();
       render();
+      fetchLive();
       if (isLive) toast("Güncel rapor yüklendi");
     } catch (e) {
       const cached = LS.get("son_veri", null);
@@ -47,7 +118,7 @@
     for (const k of Object.keys(kupon)) {
       const m = byKod(k);
       if (!live) continue;
-      if (!m || new Date(m.baslama).getTime() < now) delete kupon[k];
+      if (!m || now - new Date(m.baslama).getTime() > 6 * 3600e3) delete kupon[k];   // maç bittikten sonra da sonucu görünsün
     }
     saveKupon();
   }
@@ -78,7 +149,7 @@
   }
   function valChip(d) { return `<span class="chip ${d > 0 ? "pos" : "neg"}">değer ${d > 0 ? "+" : ""}${d.toFixed(2)}</span>`; }
   const teams = (m) => `<div class="teams">${esc(m.ev)}<span class="vs">–</span>${esc(m.dep)}</div>`;
-  const meta = (m) => `<div class="meta"><span class="lig">${esc(m.lig)}</span><span>${esc(m.saat)} · MBS ${esc(m.mbs)}</span></div>`;
+  const meta = (m) => `<div class="meta"><span class="lig">${esc(m.lig)}</span><span><span data-live="${esc(m.kod)}">${liveTag(m.kod)}</span> ${esc(m.saat)} · MBS ${esc(m.mbs)}</span></div>`;
 
   // ---------- sekmeler ----------
   function vSecim() {
@@ -89,7 +160,7 @@
       if (!o) continue;
       h += `<div class="card tap" data-open="${esc(m.kod)}">${meta(m)}${teams(m)}
         <div class="pick">${ring(o.g)}<div class="lbl"><div class="mk">Üst tahmini</div><div class="sel">${esc(o.etiket || o.pa + " " + o.s)}</div></div>${oddBtn(m, o, "oran")}</div>
-        <div class="stats"><span class="chip">tahmin ${pct(o.m)}</span><span class="chip">istatistik ${pct(o.i)}</span>${valChip(o.d)}
+        <div class="stats"><span data-ps="${esc(m.kod)}|${esc(o.p)}">${pickState(m.kod, o.p)}</span><span class="chip">tahmin ${pct(o.m)}</span><span class="chip">istatistik ${pct(o.i)}</span>${valChip(o.d)}
         ${(m.risk || []).slice(0, 1).map((r) => `<span class="chip warn">${esc(r)}</span>`).join("")}</div></div>`;
     }
     if (DATA.kuponlar && DATA.kuponlar.length) {
@@ -107,11 +178,11 @@
   }
 
   function vMac() {
-    const ligs = ["Tümü", ...new Set(DATA.maclar.map((m) => m.lig))];
+    const ligs = ["Tümü", "Canlı", ...new Set(DATA.maclar.map((m) => m.lig))];
     let h = `<input class="search" id="q" placeholder="Takım ara…" value="${esc(q)}">
       <div class="filters">${ligs.map((l) => `<button class="fchip ${l === lig ? "on" : ""}" data-lig="${esc(l)}">${esc(l)}</button>`).join("")}</div>`;
     const ql = q.toLocaleLowerCase("tr");
-    const list = DATA.maclar.filter((m) => (lig === "Tümü" || m.lig === lig) && (!ql || (m.ev + " " + m.dep).toLocaleLowerCase("tr").includes(ql)));
+    const list = DATA.maclar.filter((m) => (lig === "Tümü" || m.lig === lig || (lig === "Canlı" && LIVE[m.kod]?.phase === 1)) && (!ql || (m.ev + " " + m.dep).toLocaleLowerCase("tr").includes(ql)));
     let last = "";
     for (const m of list) {
       if (m.lig !== last) { h += `<div class="lgroup">${esc(m.lig)}</div>`; last = m.lig; }
@@ -120,7 +191,7 @@
         <div class="grid4">${(DATA.pazarlar || []).map((z) => oddBtn(m, g(z.pazar, z.secenek), z.etiket.replace(" Üst", "Ü"))).join("")}</div>
         <button class="more" data-open="${esc(m.kod)}">detay · form · skor olasılıkları · haberler</button></div>`;
     }
-    if (!list.length) h += `<div class="empty">Eşleşen maç yok.</div>`;
+    if (!list.length) h += `<div class="empty">${lig === "Canlı" ? "Şu an oynanan maç yok." : "Eşleşen maç yok."}</div>`;
     return h;
   }
 
@@ -132,7 +203,7 @@
     for (const [k, s] of ks) {
       h += `<div class="card kitem"><button class="x" data-del="${esc(k)}" aria-label="Sil">✕</button>
         <div class="info"><div class="t">${esc(s.saat)} · ${esc(s.mac)}</div><div class="s">${esc(s.pa)}: ${esc(nice(s.s))}</div>
-        <div class="t">tahmin ${pct(s.m)} · MBS ${esc(s.mbs)}</div></div><div class="o">${odd(s.o)}</div></div>`;
+        <div class="t">tahmin ${pct(s.m)} · MBS ${esc(s.mbs)} <span data-live="${esc(k)}">${liveTag(k)}</span> <span data-ps="${esc(k)}|${esc(s.p)}">${pickState(k, s.p)}</span></div></div><div class="o">${odd(s.o)}</div></div>`;
     }
     const to = ks.reduce((a, [, s]) => a * s.o, 1), tp = ks.reduce((a, [, s]) => a * s.m, 1);
     const maxMbs = Math.max(...ks.map(([, s]) => Number(s.mbs) || 1));
@@ -183,6 +254,7 @@
     let h = `<div class="sh-top"><div class="grab"></div><div class="sh-head"><div>${meta(m)}<h3>${esc(m.ev)} – ${esc(m.dep)}</h3></div>
       <button class="close" data-close="1" aria-label="Kapat">✕</button></div>
 </div>
+      <div data-livebox="${esc(m.kod)}">${liveBox(m.kod)}</div>
       <div class="legend"><span><i style="background:var(--acc)"></i>tahmin</span><span><i style="background:var(--blue)"></i>pazar fiyatı</span><span><i style="background:var(--amber)"></i>istatistik</span></div>`;
     for (const [pa, os] of Object.entries(groups)) {
       h += `<div class="sec" style="margin-top:10px">${esc(pa)}</div><div class="optgrid">`;
@@ -203,6 +275,7 @@
       ${(m.risk || []).length ? `<div class="note">⚠ Risk: ${m.risk.map(esc).join(" · ")}</div>` : ""}
       <div class="note">Veri kalitesi ${m.veri_kalitesi} · İstatistik modelinin beklenen golü ${o2(m.ist_lambda?.ev)} : ${o2(m.ist_lambda?.dep)} · maç kodu ${esc(m.kod)}</div>`;
     $("#sheetBody").innerHTML = h;
+    paintLive();
   }
   function hideDetail() { $("#sheet").classList.add("hidden"); document.body.style.overflow = ""; curKod = null; }
   function closeDetail() { if (history.state && history.state.detay) history.back(); else hideDetail(); }
@@ -220,6 +293,7 @@
     view.innerHTML = tab === "secim" ? vSecim() : tab === "mac" ? vMac() : vKupon();
     if (keepScroll) window.scrollTo(0, y);
     if (curKod && byKod(curKod)) drawDetail(byKod(curKod));
+    paintLive();
   }
   let toastT;
   function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.remove("hidden"); clearTimeout(toastT); toastT = setTimeout(() => el.classList.add("hidden"), 1800); }
@@ -254,7 +328,9 @@
   });
   // Uygulama arka plandan 10 dakikadan sonra dönerse güncel raporu kendiliğinden çek
   document.addEventListener("visibilitychange", () => {
-    if (document.visibilityState === "visible" && live && Date.now() - lastLoad > 10 * 60 * 1000) load("../data.json", true);
+    if (document.visibilityState !== "visible") return;
+    if (live && Date.now() - lastLoad > 10 * 60 * 1000) load("../data.json", true);
+    else if (Date.now() - liveAt > 25e3) fetchLive();
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDetail(); });
   // Android geri tuşu: önce detay panelini kapat
