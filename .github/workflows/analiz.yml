@@ -2,7 +2,9 @@ name: Günlük analiz
 
 on:
   schedule:
-    - cron: "7 9,15 * * *"     # 12:07 ve 18:07 (Türkiye saati, UTC+3)
+    # GitHub zamanlanmış işleri yoğunlukta geciktirebilir/atlayabilir; bu yüzden gün içinde 5 çalıştırma:
+    # 09:07, 12:07, 15:07, 18:07, 20:07 (Türkiye saati, UTC+3)
+    - cron: "7 6,9,12,15,17 * * *"
   workflow_dispatch:            # Actions sekmesinden elle çalıştırma
 
 permissions:

@@ -6,8 +6,8 @@
   (toplam oran, kombine olasılık, MBS uyarısı) · Geçmiş. Bir maça dokununca tüm pazarlar, en olası skorlar, form,
   haberler açılır. Kupon yalnızca cihazda tutulur; uygulama bahis yapmaz.
 - **Tarayıcıdan:** https://krallkan.github.io/iddaa-analiz/ (aynı arayüz) · metin rapor: `rapor.html`
-- **Otomatik çalışma:** `.github/workflows/analiz.yml` her gün 12:07 ve 18:07'de (TSİ) analizi çalıştırıp sayfayı
-  günceller; elle çalıştırmak için Actions → "Günlük analiz" → Run workflow. Her pazartesi geri test yapılır.
+- **Otomatik çalışma:** `.github/workflows/analiz.yml` her gün 09:07, 12:07, 15:07, 18:07 ve 20:07'de (TSİ) analizi
+  çalıştırıp sayfayı günceller (GitHub zamanlanmış işleri bazen geciktirir/atlar; sık çalıştırma bunu telafi eder); elle çalıştırmak için Actions → "Günlük analiz" → Run workflow. Her pazartesi geri test yapılır.
 - **APK derleme:** `.github/workflows/apk.yml`, `android/` değiştiğinde APK'yı derleyip Release olarak yayınlar.
   Arayüz (`web/`) GitHub Pages'ten yüklendiği için tasarım güncellemeleri APK'yı yeniden kurmadan gelir.
   APK her derlemede farklı hata ayıklama anahtarıyla imzalanır; yeni APK sürümünü kurmak için eskisini kaldırın.
