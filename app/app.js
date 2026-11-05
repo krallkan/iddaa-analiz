@@ -138,6 +138,7 @@
   // ---------- parçalar ----------
   function oddBtn(m, o, label, extraCls = "") {
     if (!o) return `<button class="odd dis"><span class="n">${esc(label)}</span><span class="o">–</span><span class="p">kapalı</span></button>`;
+    if (m.baslamis) return `<div class="odd nood" title="maç başladı"><span class="n">${esc(label)}</span><span class="o">${odd(o.o)}</span><span class="p">${pct(o.m)}</span></div>`;
     if (o.o == null) return `<div class="odd nood" title="iddaa bu pazarı açmamış"><span class="n">${esc(label)}</span><span class="o">${pct(o.m)}</span><span class="p">oran yok</span></div>`;
     const best = m.secim && m.secim.p === o.p && m.secim.s === o.s;
     return `<button class="odd ${isOn(m, o) ? "on" : ""} ${best ? "best" : ""} ${extraCls}" data-k="${esc(m.kod)}" data-p="${esc(o.p)}" data-s="${esc(o.s)}">
@@ -155,7 +156,7 @@
   function vSecim() {
     const picks = DATA.ozet.map((p) => ({ m: byKod(p.kod), o: null, p })).filter((x) => x.m);
     picks.forEach((x) => (x.o = opt(x.m, x.p.p, x.p.s)));
-    let h = `<div class="hero"><div class="big">${picks.length}</div><p><b>Günün seçimleri</b><br>Yalnızca Üst tahminleri (İY 1.5, 2.5, 3.5, 4.5). Güven ≥55, maç başına 1 seçim. Oranlar ${esc((DATA.oran_zamani || "").slice(11, 16))} itibarıyla.</p></div>`;
+    let h = `<div class="hero"><div class="big">${picks.length}</div><p><b>Günün seçimleri</b><br>Yalnızca Üst tahminleri (İY 1.5, 2.5, 3.5, 4.5). Güven ≥55, maç başına 1 seçim. Başlamış maçlar canlı skoruyla listede kalır. Oranlar ${esc((DATA.oran_zamani || "").slice(11, 16))} itibarıyla.</p></div>`;
     for (const { m, o } of picks) {
       if (!o) continue;
       h += `<div class="card tap" data-open="${esc(m.kod)}">${meta(m)}${teams(m)}

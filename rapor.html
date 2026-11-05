@@ -15,7 +15,7 @@ code{font-size:.8rem;white-space:normal}
 nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;color:var(--muted)}
 .arsiv a{display:block;padding:10px 12px;margin:6px 0;background:var(--card);border:1px solid var(--line);border-radius:8px;text-decoration:none}
 </style></head><body><main><nav><a href='arsiv.html'>Geçmiş raporlar</a></nav><h1>iddaa Günlük Maç Analizi — 2026-11-05</h1>
-<p>Rapor zamanı: 2026-11-05T21:47:08+03:00 · Oranların çekildiği an: <strong>2026-11-05T21:47:06+03:00</strong> (oranlar değişir; oynamadan önce kontrol edin)</p>
+<p>Rapor zamanı: 2026-11-05T21:54:08+03:00 · Oranların çekildiği an: <strong>2026-11-05T21:54:07+03:00</strong> (oranlar değişir; oynamadan önce kontrol edin)</p>
 <blockquote>
 <p><strong>Model hakkında dürüst not.</strong> Tahminler piyasaya dayalıdır: iddaa'nın MS, Alt/Üst, KG, Çifte Şans ve handikap oranlarından marj temizlenip tüm pazarlara uyan tek bir gol beklentisi (λ) çifti çıkarılır; İY, İY/MS, toplam gol gibi diğer pazarlar bu λ'dan tutarlı biçimde türetilir. Geri testte (2026-11-05, 1411 maç) bağımsız istatistik modelinin en iyi ağırlığı w=0.0 çıktı (test log-loss: saf piyasa 1.631, saf istatistik 1.670); istatistik modeli bu yüzden ikinci görüş olarak güven skorunda kullanılır. 'Değer', iddaa'nın bir pazarını kendi diğer pazarlarıyla tutarsız fiyatlamasından doğar; ~%15 marj nedeniyle çoğu seçimin beklenen değeri negatiftir.</p>
 <p>Güven skoru formülü: <code>GÜVEN = 30·O + 30·U + 20·V + 20·İ − H | p=piyasaya dayalı olasılık | O=(p−0.40)/0.45 | U=1−|p_istatistik−p|/0.15 (şüpheli→0) | V=veri kalitesi | İ=1−(puan_sd−0.9)/0.6 | H=haber/rotasyon riski (≤15) | Özet şartı: yalnızca config/pazarlar.json'daki seçenekler (İY 1.5 Üst, 2.5/3.5/4.5 Üst), oran 1.25-5.00, model ≥%55</code></p>
@@ -46,12 +46,12 @@ nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;col
 <td>Panathinaikos – CSKA Sofya</td>
 <td>1</td>
 <td>Alt/Üst 2.5: Üst</td>
-<td>1.41</td>
-<td>61.6</td>
-<td>61.6</td>
+<td>1.40</td>
+<td>62.2</td>
+<td>62.2</td>
 <td>63.5</td>
 <td>-0.13</td>
-<td>71</td>
+<td>73</td>
 </tr>
 <tr>
 <td>23:00</td>
@@ -59,15 +59,16 @@ nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;col
 <td>Monaco – Nordsjælland</td>
 <td>1</td>
 <td>Alt/Üst 2.5: Üst</td>
-<td>1.30</td>
-<td>67.3</td>
-<td>66.9</td>
+<td>1.28</td>
+<td>68.0</td>
+<td>67.8</td>
 <td>59.6</td>
 <td>-0.13</td>
-<td>59</td>
+<td>58</td>
 </tr>
 </tbody>
 </table></div>
+<p><strong>Gün içi oran hareketleri (≥%8, önceki çekime göre)</strong>: Monaco–Nordsjælland: MS:2 5.78→5.23; Benfica–Lech Poznan: MS:2 13.95→12.15</p>
 <h2>B) Maç maç detaylı analiz</h2>
 <h3>23:00 · UEFA Konferans Ligi · Panathinaikos – CSKA Sofya (kod 3269128, MBS 1)</h3>
 <p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
@@ -114,12 +115,12 @@ nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;col
 - CSKA Sofya (M.Gisdol, None): F.Lapoukhov, D.S.Custodio Lima, T.Valentinov Ivanov, A.Martino, F.Rodriguez, A.M.Ebong Ngome, S.Sensi, I.Pittas, Jordao, S.L.Godoy, M.A.Brahimi
 - Son 72 saatte risk taşıyan haber başlığı bulunamadı.
 - Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
-<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 2.40, λ dep 0.79 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
-- Piyasa λ: 2.40 / 0.79, uyduruldu: AU_1.5, AU_2.5, AU_3.5, HMS_0:2, KG, MS (pazarlar arası RMSE 0.0080)
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 2.42, λ dep 0.80 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
+- Piyasa λ: 2.42 / 0.80, uyduruldu: AU_1.5, AU_2.5, AU_3.5, HMS_0:2, KG, MS (pazarlar arası RMSE 0.0076)
 <strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 2.52, λ dep 0.76 (μ 0.125, ev avantajı 0.325, ligler arası +0.328, ρ -0.049); veri kalitesi 0.72
 - Ligler arası ayar: α=0.4234 × (ln C[GRE]=3.85 − ln C[BUL]=3.07) = +0.328 (log-λ)
 - Güç kaynağı: Panathinaikos: football-data G1 (zaman ağırlıklı, 18.5 ağırlıklı maç) | CSKA Sofya: iddaa son 10 maç (rakip gücü düzeltilmemiş)
-- En olası 3 skor: 2-0 (%11.9), 1-0 (%9.6), 3-0 (%9.5)</p>
+- En olası 3 skor: 2-0 (%11.8), 3-0 (%9.5), 2-1 (%9.4)</p>
 <div class='tw'><table>
 <thead>
 <tr>
@@ -127,50 +128,50 @@ nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;col
 <th>Tahmin</th>
 <th>Pazar fiyatı (marjsız)</th>
 <th>İstatistik</th>
-<th>Oran (21:47)</th>
+<th>Oran (21:54)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>IY_AU_1.5 Üst</td>
-<td>%41.8</td>
-<td>%42.7</td>
+<td>%42.2</td>
 <td>%43.2</td>
-<td>2.03</td>
+<td>%43.2</td>
+<td>2.01</td>
 </tr>
 <tr>
 <td>AU_2.5 Üst</td>
-<td>%61.6</td>
-<td>%61.6</td>
+<td>%62.2</td>
+<td>%62.2</td>
 <td>%63.5</td>
-<td>1.41</td>
+<td>1.40</td>
 </tr>
 <tr>
 <td>AU_3.5 Üst</td>
-<td>%39.2</td>
-<td>%40.1</td>
+<td>%39.9</td>
+<td>%40.7</td>
 <td>%41.3</td>
-<td>2.17</td>
+<td>2.14</td>
 </tr>
 <tr>
 <td>AU_4.5 Üst</td>
-<td>%21.4</td>
+<td>%22.0</td>
 <td>veri yok</td>
 <td>%23.0</td>
 <td>kapalı/yok</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.41 — tahmin %61.6, pazar fiyatı %61.6, istatistik %63.5, değer -0.13, güven <strong>71</strong> (O 0.48, U 0.874, V 0.72, İ 0.8, H −0.0)
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.40 — tahmin %62.2, pazar fiyatı %62.2, istatistik %63.5, değer -0.13, güven <strong>73</strong> (O 0.494, U 0.916, V 0.72, İ 0.8, H −0.0)
 <strong>En büyük risk</strong>: kadro resmi değil (resmi 11 maçtan ~1 saat önce açıklanır)</p>
 <p><strong>Kaynaklar</strong>
-- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3269128/tum-oranlar (2026-11-05T21:47:06+03:00)
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3269128/tum-oranlar (2026-11-05T21:54:07+03:00)
 - İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3269128
 - Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/G1.csv
-- Haber araması: https://news.google.com/rss/search?q=%22Panathinaikos%22%20%22CSKA%20Sofya%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T21:45:40+03:00)
-- Haber araması: https://news.google.com/rss/search?q=Panathinaikos%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T21:45:43+03:00)
-- Haber araması: https://news.google.com/rss/search?q=CSKA%20Sofya%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T21:45:44+03:00)
-- Haber araması: https://news.google.com/rss/search?q=Panathinaikos%20CSKA%20Sofya%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T21:45:46+03:00)</p>
+- Haber araması: https://news.google.com/rss/search?q=%22Panathinaikos%22%20%22CSKA%20Sofya%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T21:52:40+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Panathinaikos%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T21:52:42+03:00)
+- Haber araması: https://news.google.com/rss/search?q=CSKA%20Sofya%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T21:52:44+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Panathinaikos%20CSKA%20Sofya%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T21:52:45+03:00)</p>
 <h3>23:00 · UEFA Konferans Ligi · Monaco – Nordsjælland (kod 3269261, MBS 1)</h3>
 <p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
 <div class='tw'><table>
@@ -216,12 +217,12 @@ nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;col
 - Nordsjælland (J.Olsen, 3-4-3): A.Hansen, Peter Ankersen, T.Salquist, N.Markmann, J.Janssen, N.Rojkjaer, L.Sadio, R.R.Norheim, J.Lahteenmaki, A.Lind, I.Adel
 - [sakatlik, kadro] American Player Folarin Balogun Added to AS Monaco’s Conference League Squad After Ansu Fati Injury - Nice-Matin — Nice-Matin, 2026-11-04T10:29 (<a href="https://news.google.com/rss/articles/CBMi3AFBVV95cUxQNGFqVTRLV2l3eFp5YjZ1NWhDSzVJRHZnQWZ6YllleHRIN0h2N1Y4a0s1dXRuaEFBVTBrSHRWajh5eGJtemRPYlhMUFNJaGlkdUlrVl9UZU5tNkkxVmNBX0JnMVFoYkJQUzhubEdyVDc4Rjh3QlVFUk5MREYzdU9rM2g1aDdPTldmOUY2aXlwLUtKMkl1QURfdTluRGdxdVNncHQ3RHU3UFl5ckJ3UTQwVE14UVExQWVmNzIzc1h5UVFUdjhpOGpuV0RVSndUSFJDTk1JdmZBMHI0OEx3?oc=5">bağlantı</a>)
 - Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
-<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 2.36, λ dep 1.11 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
-- Piyasa λ: 2.36 / 1.11, uyduruldu: AU_2.5, AU_3.5, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0045)
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 2.38, λ dep 1.13 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
+- Piyasa λ: 2.38 / 1.13, uyduruldu: AU_2.5, AU_3.5, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0037)
 <strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 2.04, λ dep 1.04 (μ 0.276, ev avantajı 0.229, ligler arası +0.246, ρ -0.049); veri kalitesi 0.93
 - Ligler arası ayar: α=0.4234 × (ln C[FRA]=4.27 − ln C[DEN]=3.69) = +0.246 (log-λ)
 - Güç kaynağı: Monaco: football-data F1 (zaman ağırlıklı, 18.7 ağırlıklı maç) | Nordsjælland: football-data DNK (zaman ağırlıklı, 20.6 ağırlıklı maç)
-- En olası 3 skor: 2-1 (%9.7), 2-0 (%8.7), 1-1 (%8.6)</p>
+- En olası 3 skor: 2-1 (%9.6), 2-0 (%8.5), 1-1 (%8.5)</p>
 <div class='tw'><table>
 <thead>
 <tr>
@@ -229,58 +230,58 @@ nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;col
 <th>Tahmin</th>
 <th>Pazar fiyatı (marjsız)</th>
 <th>İstatistik</th>
-<th>Oran (21:47)</th>
+<th>Oran (21:54)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>IY_AU_1.5 Üst</td>
-<td>%44.4</td>
-<td>%46.6</td>
+<td>%45.0</td>
+<td>%47.1</td>
 <td>%38.7</td>
-<td>1.87</td>
+<td>1.84</td>
 </tr>
 <tr>
 <td>AU_2.5 Üst</td>
-<td>%67.3</td>
-<td>%66.9</td>
+<td>%68.0</td>
+<td>%67.8</td>
 <td>%59.6</td>
-<td>1.30</td>
+<td>1.28</td>
 </tr>
 <tr>
 <td>AU_3.5 Üst</td>
-<td>%45.5</td>
-<td>%46.3</td>
+<td>%46.4</td>
+<td>%47.0</td>
 <td>%37.2</td>
-<td>1.88</td>
+<td>1.85</td>
 </tr>
 <tr>
 <td>AU_4.5 Üst</td>
-<td>%26.7</td>
+<td>%27.4</td>
 <td>veri yok</td>
 <td>%19.9</td>
 <td>kapalı/yok</td>
 </tr>
 </tbody>
 </table></div>
-<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.30 — tahmin %67.3, pazar fiyatı %66.9, istatistik %59.6, değer -0.13, güven <strong>59</strong> (O 0.606, U 0.486, V 0.93, İ 0.533, H −3.0)
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.28 — tahmin %68.0, pazar fiyatı %67.8, istatistik %59.6, değer -0.13, güven <strong>58</strong> (O 0.623, U 0.436, V 0.93, İ 0.533, H −3.0)
 <strong>En büyük risk</strong>: istatistik modeli piyasadan ayrılıyor (-8 puan) (diğer: 1 sakatlık/ceza haberi)</p>
 <p><strong>Kaynaklar</strong>
-- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3269261/tum-oranlar (2026-11-05T21:47:06+03:00)
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3269261/tum-oranlar (2026-11-05T21:54:07+03:00)
 - İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3269261
 - Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/F1.csv
 - Sezon verisi: https://www.football-data.co.uk/new/DNK.csv
-- Haber araması: https://news.google.com/rss/search?q=%22Monaco%22%20%22Nordsj%C3%A6lland%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T21:46:24+03:00)
-- Haber araması: https://news.google.com/rss/search?q=Monaco%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T21:46:26+03:00)
-- Haber araması: https://news.google.com/rss/search?q=Nordsj%C3%A6lland%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T21:46:28+03:00)
-- Haber araması: https://news.google.com/rss/search?q=Monaco%20Nordsjaelland%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T21:46:31+03:00)</p>
+- Haber araması: https://news.google.com/rss/search?q=%22Monaco%22%20%22Nordsj%C3%A6lland%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T21:53:22+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Monaco%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T21:53:25+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Nordsj%C3%A6lland%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T21:53:27+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Monaco%20Nordsjaelland%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T21:53:30+03:00)</p>
 <h2>C) Kupon önerileri</h2>
 <p>Kombine olasılık, maçların birbirinden bağımsız olduğu varsayımıyla çarpılarak hesaplanır.</p>
-<p><strong>Düşük risk — tekli</strong> — toplam oran 1.41, kombine model olasılığı: %62 ≈ %62 (piyasa: %62), beklenen değer -0.13 (birim başına), en yüksek MBS 1
-- Panathinaikos - CSKA Sofya: Alt/Üst 2.5: Üst @1.41 (model %62, MBS 1)</p>
-<p><strong>Düşük risk — ikili</strong> — toplam oran 1.83, kombine model olasılığı: %62 × %67 ≈ %41 (piyasa: %41), beklenen değer -0.24 (birim başına), en yüksek MBS 1
-- Panathinaikos - CSKA Sofya: Alt/Üst 2.5: Üst @1.41 (model %62, MBS 1)
-- Monaco - Nordsjælland: Alt/Üst 2.5: Üst @1.30 (model %67, MBS 1)</p>
+<p><strong>Düşük risk — tekli</strong> — toplam oran 1.40, kombine model olasılığı: %62 ≈ %62 (piyasa: %62), beklenen değer -0.13 (birim başına), en yüksek MBS 1
+- Panathinaikos - CSKA Sofya: Alt/Üst 2.5: Üst @1.40 (model %62, MBS 1)</p>
+<p><strong>Düşük risk — ikili</strong> — toplam oran 1.79, kombine model olasılığı: %62 × %68 ≈ %42 (piyasa: %42), beklenen değer -0.24 (birim başına), en yüksek MBS 1
+- Panathinaikos - CSKA Sofya: Alt/Üst 2.5: Üst @1.40 (model %62, MBS 1)
+- Monaco - Nordsjælland: Alt/Üst 2.5: Üst @1.28 (model %68, MBS 1)</p>
 <p>Not: iddaa marjı (~%15) nedeniyle bu seçimlerin beklenen değeri negatiftir; kupon büyüdükçe kayıp beklentisi artar.</p>
 <h2>D) Elenen maçlar</h2>
 <div class='tw'><table>
@@ -297,13 +298,19 @@ nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;col
 <td>22:00</td>
 <td>CA Lito - Montevideo</td>
 <td>Uruguay Kupası Eleme</td>
-<td>başlamasına 17 dk var; analiz yetişmez (min 30)</td>
+<td>başlamasına 10 dk var; analiz yetişmez (min 30)</td>
 </tr>
 <tr>
 <td>22:45</td>
 <td>Valenciennes - Orleans</td>
 <td>Fransa Ulusal Lig</td>
 <td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>AZ Alkmaar – Juventus</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
 </tr>
 <tr>
 <td>23:00</td>
@@ -333,7 +340,7 @@ nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;col
 <td>23:00</td>
 <td>Benfica – Lech Poznan</td>
 <td>UEFA Avrupa Ligi</td>
-<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 48 &lt; 55 (1. Yarı Alt/Üst 1.5: Üst @1.53)</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 44 &lt; 55 (Alt/Üst 3.5: Üst @1.47)</td>
 </tr>
 <tr>
 <td>23:00</td>
@@ -350,12 +357,6 @@ nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;col
 <tr>
 <td>23:00</td>
 <td>Hapoel Beer Sheva – Ofi Crete</td>
-<td>UEFA Avrupa Ligi</td>
-<td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
-</tr>
-<tr>
-<td>23:00</td>
-<td>AZ Alkmaar – Juventus</td>
 <td>UEFA Avrupa Ligi</td>
 <td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
 </tr>
@@ -399,7 +400,7 @@ nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;col
 <td>23:00</td>
 <td>Kopenhag – FC Iberia 1999</td>
 <td>UEFA Konferans Ligi</td>
-<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 51 &lt; 55 (Alt/Üst 2.5: Üst @1.32)</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 49 &lt; 55 (Alt/Üst 2.5: Üst @1.33)</td>
 </tr>
 </tbody>
 </table></div>
