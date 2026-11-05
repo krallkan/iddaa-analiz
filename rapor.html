@@ -1,0 +1,2069 @@
+<!doctype html><html lang='tr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>iddaa Günlük Analiz</title><style>
+:root{--bg:#f6f7f9;--fg:#15181d;--muted:#5d6672;--card:#fff;--line:#dfe3e8;--acc:#0b6bcb;--warn:#8a5a00;--warnbg:#fff4dc}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1216;--fg:#e8ebef;--muted:#9aa4b0;--card:#171b21;--line:#2a3039;--acc:#5aa9ff;--warn:#ffcf70;--warnbg:#2b2312}}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif}
+main{max-width:980px;margin:0 auto;padding:12px 16px 48px}
+h1{font-size:1.35rem;margin:.6rem 0}h2{font-size:1.15rem;margin:1.6rem 0 .6rem;padding-top:.6rem;border-top:1px solid var(--line)}
+h3{font-size:1rem;margin:1.4rem 0 .4rem;background:var(--card);padding:10px 12px;border:1px solid var(--line);border-radius:10px}
+a{color:var(--acc)}p,li{overflow-wrap:anywhere}
+blockquote{margin:.8rem 0;padding:10px 12px;background:var(--warnbg);color:var(--fg);border-left:4px solid var(--warn);border-radius:6px;font-size:.9rem}
+.tw{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.5rem 0;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:.85rem;white-space:nowrap}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}th{position:sticky;top:0;background:var(--card)}
+code{font-size:.8rem;white-space:normal}
+nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;color:var(--muted)}
+.arsiv a{display:block;padding:10px 12px;margin:6px 0;background:var(--card);border:1px solid var(--line);border-radius:8px;text-decoration:none}
+</style></head><body><main><nav><a href='arsiv.html'>Geçmiş raporlar</a></nav><h1>iddaa Günlük Maç Analizi — 2026-11-05</h1>
+<p>Rapor zamanı: 2026-11-05T16:39:27+03:00 · Oranların çekildiği an: <strong>2026-11-05T16:39:22+03:00</strong> (oranlar değişir; oynamadan önce kontrol edin)</p>
+<blockquote>
+<p><strong>Model hakkında dürüst not.</strong> Tahminler piyasaya dayalıdır: iddaa'nın MS, Alt/Üst, KG, Çifte Şans ve handikap oranlarından marj temizlenip tüm pazarlara uyan tek bir gol beklentisi (λ) çifti çıkarılır; İY, İY/MS, toplam gol gibi diğer pazarlar bu λ'dan tutarlı biçimde türetilir. Geri testte (2026-11-05, 1411 maç) bağımsız istatistik modelinin en iyi ağırlığı w=0.0 çıktı (test log-loss: saf piyasa 1.631, saf istatistik 1.670); istatistik modeli bu yüzden ikinci görüş olarak güven skorunda kullanılır. 'Değer', iddaa'nın bir pazarını kendi diğer pazarlarıyla tutarsız fiyatlamasından doğar; ~%15 marj nedeniyle çoğu seçimin beklenen değeri negatiftir.</p>
+<p>Güven skoru formülü: <code>GÜVEN = 30·O + 30·U + 20·V + 20·İ − H | p=piyasaya dayalı olasılık | O=(p−0.40)/0.45 | U=1−|p_istatistik−p|/0.15 (şüpheli→0) | V=veri kalitesi | İ=1−(puan_sd−0.9)/0.6 | H=haber/rotasyon riski (≤15) | Özet şartı: oran 1.25-5.00, model ≥%55, korner hariç</code></p>
+</blockquote>
+<h2>A) Günün özeti</h2>
+<p>Güven ≥ 55, maç başına en fazla 1 seçim (aynı maçın seçenekleri birbirine bağlıdır).</p>
+<p>Model % = piyasaya dayalı tahmin (tüm pazarlara uyan λ); Piyasa % = o pazarın kendi marjsız fiyatı; İst. % = bağımsız istatistik modeli.</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Saat</th>
+<th>Lig</th>
+<th>Maç</th>
+<th>MBS</th>
+<th>Seçenek</th>
+<th>Oran</th>
+<th>Model %</th>
+<th>Piyasa %</th>
+<th>İst. %</th>
+<th>Değer</th>
+<th>Güven</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>20:45</td>
+<td>UEFA Konferans Ligi</td>
+<td>AGF Aarhus – Braga</td>
+<td>1</td>
+<td>1. Yarı Alt/Üst 0.5: Üst</td>
+<td>1.26</td>
+<td>69.7</td>
+<td>69.0</td>
+<td>70.0</td>
+<td>-0.12</td>
+<td>75</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>UEFA Avrupa Ligi</td>
+<td>Celta Vigo – Union Saint Gilloise</td>
+<td>1</td>
+<td>1. Yarı Alt/Üst 0.5: Üst</td>
+<td>1.30</td>
+<td>68.0</td>
+<td>67.1</td>
+<td>61.6</td>
+<td>-0.12</td>
+<td>73</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>UEFA Konferans Ligi</td>
+<td>Kuopion – KAA Gent</td>
+<td>1</td>
+<td>1. Yarı Alt/Üst 0.5: Üst</td>
+<td>1.26</td>
+<td>69.2</td>
+<td>68.9</td>
+<td>66.5</td>
+<td>-0.13</td>
+<td>71</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>UEFA Avrupa Ligi</td>
+<td>NEC Nijmegen – Omonia</td>
+<td>1</td>
+<td>Alt/Üst 3.5: Alt</td>
+<td>1.41</td>
+<td>62.5</td>
+<td>61.6</td>
+<td>59.7</td>
+<td>-0.12</td>
+<td>69</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>UEFA Konferans Ligi</td>
+<td>Panathinaikos – CSKA Sofya</td>
+<td>1</td>
+<td>Alt/Üst 2.5: Üst</td>
+<td>1.42</td>
+<td>61.1</td>
+<td>61.2</td>
+<td>64.5</td>
+<td>-0.13</td>
+<td>68</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>UEFA Konferans Ligi</td>
+<td>Lincoln Red – Hajduk Split</td>
+<td>1</td>
+<td>Alt/Üst 3.5: Alt</td>
+<td>1.37</td>
+<td>64.2</td>
+<td>63.5</td>
+<td>63.6</td>
+<td>-0.12</td>
+<td>66</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>UEFA Konferans Ligi</td>
+<td>Monaco – Nordsjælland</td>
+<td>1</td>
+<td>Maç Sonucu: 1</td>
+<td>1.34</td>
+<td>65.0</td>
+<td>64.8</td>
+<td>61.3</td>
+<td>-0.13</td>
+<td>66</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>UEFA Avrupa Ligi</td>
+<td>Real Sociedad – Lyon</td>
+<td>1</td>
+<td>Alt/Üst 2.5: Üst</td>
+<td>1.38</td>
+<td>63.1</td>
+<td>62.9</td>
+<td>61.5</td>
+<td>-0.13</td>
+<td>65</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>UEFA Konferans Ligi</td>
+<td>Mjallby – Banja Luka</td>
+<td>1</td>
+<td>1. Yarı Alt/Üst 0.5: Üst</td>
+<td>1.29</td>
+<td>68.5</td>
+<td>67.5</td>
+<td>65.4</td>
+<td>-0.12</td>
+<td>65</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>UEFA Konferans Ligi</td>
+<td>Riga FC – Jablonec</td>
+<td>1</td>
+<td>1. Yarı Alt/Üst 0.5: Üst</td>
+<td>1.25</td>
+<td>70.3</td>
+<td>69.4</td>
+<td>67.6</td>
+<td>-0.12</td>
+<td>65</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Gün içi oran hareketleri (≥%8, önceki çekime göre)</strong>: St. Truidense–Brann: AU_2.5:Alt 2.60→2.95, KG:Yok 2.38→2.60</p>
+<h2>B) Maç maç detaylı analiz</h2>
+<h3>20:45 · UEFA Konferans Ligi · AGF Aarhus – Braga (kod 3269136, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AGF Aarhus</td>
+<td>MGGBBMGBGM</td>
+<td>atılan 1.70 / yenilen 1.20</td>
+<td>2.5Ü %50.0</td>
+<td>KG %60.0</td>
+<td>gol yemeden %10.0</td>
+</tr>
+<tr>
+<td>Braga</td>
+<td>GBMGMMMBGM</td>
+<td>atılan 1.10 / yenilen 1.30</td>
+<td>2.5Ü %60.0</td>
+<td>KG %40.0</td>
+<td>gol yemeden %40.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>AGF Aarhus — Danimarka Süper Lig sezon verisi: iç saha 1.67/1.33 (6 maç), dış saha 1.00/1.86 (7 maç), xG veri yok / xGA veri yok (eşleşme Aarhus, 6 maç tarih+skor ile doğrulandı)</li>
+<li>Braga — Portekiz Premier Lig sezon verisi: iç saha 1.40/1.00 (5 maç), dış saha 1.00/1.20 (5 maç), xG 1.32 / xGA 0.70 (eşleşme Sp Braga, 7 maç tarih+skor ile doğrulandı)</li>
+<li>Puan durumu (UEFA Conference League 26/27): AGF Aarhus 26. sıra, 1 puan (2 maç, 1-2); Braga 16. sıra, 3 puan (2 maç, 2-3); puan farkı -2</li>
+<li>Sonraki maç (5 gün): AGF Aarhus: 2026-11-08T16:00 Danimarka Süper Lig: AGF Aarhus - AC Horsens | Braga: 2026-11-08T23:30 Portekiz Premier Lig: Rio Ave - Braga</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: veri yok (kaynakta geçmiş karşılaşma yok)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: AGF Aarhus: maç başı kart 4.17, maç başı korner 12.40 | Braga: maç başı kart 5.17, maç başı korner 7.60. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): AGF Aarhus (J.Poulsen, 3-4-2-1): Jesper Hansen, T.Molgaard, F.Tingager, E.Kahl, J.Andersen, Arnstad, M.Solbakken, C.McCowatt, F.Emmery, T.Bech, James Bogere
+- Braga (Franclim Carvalho, 4-2-3-1): B.C.Parise Fontes, V.Gomez, A.L.Barisic, S.Barcia, D.Travassos, J.Moutinho, V.Carvalho, M.Dorgeles, F.Navarro, R.Horta, G.Martinez Aguilera
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 1.06, λ dep 1.65 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
+- Piyasa λ: 1.06 / 1.65, uyduruldu: AU_1.5, AU_2.5, AU_3.5, CS, HMS_1:0, KG, MS (pazarlar arası RMSE 0.0065)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 1.06, λ dep 1.67 (μ 0.23, ev avantajı 0.183, ligler arası -0.244, ρ -0.049); veri kalitesi 0.93
+- Ligler arası ayar: α=0.4589 × (ln C[DEN]=3.69 − ln C[POR]=4.22) = -0.244 (log-λ)
+- Güç kaynağı: AGF Aarhus: football-data DNK (zaman ağırlıklı, 20.6 ağırlıklı maç) | Braga: football-data P1 (zaman ağırlıklı, 19.6 ağırlıklı maç)
+- En olası 3 skor: 1-1 (%12.2), 0-1 (%10.4), 1-2 (%9.6)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (16:39)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MS 1</td>
+<td>%23.9</td>
+<td>%23.4</td>
+<td>%23.5</td>
+<td>3.71</td>
+</tr>
+<tr>
+<td>MS 0</td>
+<td>%25.7</td>
+<td>%26.3</td>
+<td>%25.4</td>
+<td>3.30</td>
+</tr>
+<tr>
+<td>MS 2</td>
+<td>%50.5</td>
+<td>%50.2</td>
+<td>%51.1</td>
+<td>1.73</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%50.8</td>
+<td>%50.7</td>
+<td>%51.5</td>
+<td>1.71</td>
+</tr>
+<tr>
+<td>AU_2.5 Alt</td>
+<td>%49.2</td>
+<td>%49.3</td>
+<td>%48.5</td>
+<td>1.76</td>
+</tr>
+<tr>
+<td>KG Var</td>
+<td>%53.3</td>
+<td>%53.3</td>
+<td>%53.7</td>
+<td>1.63</td>
+</tr>
+<tr>
+<td>KG Yok</td>
+<td>%46.7</td>
+<td>%46.7</td>
+<td>%46.3</td>
+<td>1.86</td>
+</tr>
+<tr>
+<td>CS 1 ve 0</td>
+<td>%49.5</td>
+<td>%50.4</td>
+<td>%48.9</td>
+<td>1.72</td>
+</tr>
+<tr>
+<td>CS 0 ve 2</td>
+<td>%76.1</td>
+<td>%76.1</td>
+<td>%76.5</td>
+<td>1.14</td>
+</tr>
+<tr>
+<td>IY 1</td>
+<td>%21.0</td>
+<td>%20.5</td>
+<td>%20.9</td>
+<td>4.24</td>
+</tr>
+<tr>
+<td>IY 0</td>
+<td>%41.5</td>
+<td>%41.5</td>
+<td>%41.2</td>
+<td>2.09</td>
+</tr>
+<tr>
+<td>IY 2</td>
+<td>%37.4</td>
+<td>%38.0</td>
+<td>%37.9</td>
+<td>2.28</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: 1. Yarı Alt/Üst 0.5: <strong>Üst</strong> @1.26 — tahmin %69.7, pazar fiyatı %69.0, istatistik %70.0, değer -0.12, güven <strong>75</strong> (O 0.66, U 0.977, V 0.93, İ 0.35, H −0.0)
+<strong>Alternatif</strong>: 1. Yarı Alt/Üst 1.5: Alt @1.32 — model %66.5, piyasa %65.5, güven 72
+<strong>En büyük risk</strong>: kadro resmi değil (resmi 11 maçtan ~1 saat önce açıklanır)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3269136/tum-oranlar (2026-11-05T16:39:22+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3269136
+- Sezon verisi: https://www.football-data.co.uk/new/DNK.csv
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/P1.csv
+- Haber araması: https://news.google.com/rss/search?q=%22AGF%20Aarhus%22%20%22Braga%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:35:38+03:00)
+- Haber araması: https://news.google.com/rss/search?q=AGF%20Aarhus%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:35:41+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Braga%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:35:44+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Aarhus%20Sp%20Braga%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T16:35:46+03:00)</p>
+<h3>23:00 · UEFA Avrupa Ligi · Celta Vigo – Union Saint Gilloise (kod 3269189, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Celta Vigo</td>
+<td>MBGGMBGMBB</td>
+<td>atılan 1.20 / yenilen 1.00</td>
+<td>2.5Ü %50.0</td>
+<td>KG %50.0</td>
+<td>gol yemeden %30.0</td>
+</tr>
+<tr>
+<td>Union Saint Gilloise</td>
+<td>GGGGBBGGGG</td>
+<td>atılan 2.90 / yenilen 0.70</td>
+<td>2.5Ü %70.0</td>
+<td>KG %50.0</td>
+<td>gol yemeden %50.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Celta Vigo — İspanya La Liga sezon verisi: iç saha 1.50/1.00 (6 maç), dış saha 0.20/0.80 (5 maç), xG 0.93 / xGA 1.16 (eşleşme Celta, 7 maç tarih+skor ile doğrulandı)</li>
+<li>Union Saint Gilloise — Belçika Pro Lig sezon verisi: iç saha 2.80/0.60 (5 maç), dış saha 3.00/0.80 (5 maç), xG 1.86 / xGA 1.02 (eşleşme St. Gilloise, 6 maç tarih+skor ile doğrulandı)</li>
+<li>Puan durumu (UEFA Avrupa Ligi 26/27): Celta Vigo 25. sıra, 3 puan (3 maç, 3-4); Union Saint Gilloise 6. sıra, 7 puan (3 maç, 8-1); puan farkı -4</li>
+<li>Sonraki maç (5 gün): Celta Vigo: 2026-11-08T20:30 İspanya La Liga: Celta Vigo - Levante | Union Saint Gilloise: 2026-11-08T20:30 Belçika Pro Lig: Union Saint Gilloise - KRC Genk</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: veri yok (kaynakta geçmiş karşılaşma yok)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Celta Vigo: maç başı kart 3.33, maç başı korner 7.00 | Union Saint Gilloise: maç başı kart 3.33, maç başı korner 9.20. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): Celta Vigo (C.Giraldez, 3-4-3): I. Radu, Marcos Alonso, S. Cáceres, Javi Rodríguez, Sergio Carreira, Hugo Burcio, Aleix Febas, Javi Rueda, Hugo Álvarez, Ferran Jutglà, Iago Aspas
+- Union Saint Gilloise (D.Hubert, 3-1-4-2): H. Koffi, N. Havenaar, M. Sylla, N. Chibani, K. Van de Perre, Guilherme Smith, L. Patris, B. Zeneli, D. Olaru, R. Mofokeng, R. Florucz
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 1.39, λ dep 1.21 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
+- Piyasa λ: 1.39 / 1.21, uyduruldu: AU_1.5, AU_2.5, AU_3.5, CS, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0059)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 0.99, λ dep 1.19 (μ 0.176, ev avantajı 0.296, ligler arası +0.146, ρ -0.049); veri kalitesi 1.0
+- Ligler arası ayar: α=0.4589 × (ln C[ESP]=4.46 − ln C[BEL]=4.14) = +0.146 (log-λ)
+- Güç kaynağı: Celta Vigo: football-data SP1 (zaman ağırlıklı, 21.9 ağırlıklı maç) | Union Saint Gilloise: football-data B1 (zaman ağırlıklı, 21.4 ağırlıklı maç)
+- En olası 3 skor: 1-1 (%13.1), 1-0 (%9.7), 2-1 (%8.7)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (16:39)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MS 1</td>
+<td>%40.5</td>
+<td>%40.3</td>
+<td>%29.8</td>
+<td>2.16</td>
+</tr>
+<tr>
+<td>MS 0</td>
+<td>%27.5</td>
+<td>%27.6</td>
+<td>%30.3</td>
+<td>3.15</td>
+</tr>
+<tr>
+<td>MS 2</td>
+<td>%32.0</td>
+<td>%32.1</td>
+<td>%39.9</td>
+<td>2.71</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%48.2</td>
+<td>%48.3</td>
+<td>%37.4</td>
+<td>1.80</td>
+</tr>
+<tr>
+<td>AU_2.5 Alt</td>
+<td>%51.8</td>
+<td>%51.7</td>
+<td>%62.6</td>
+<td>1.68</td>
+</tr>
+<tr>
+<td>KG Var</td>
+<td>%53.4</td>
+<td>%53.3</td>
+<td>%44.6</td>
+<td>1.63</td>
+</tr>
+<tr>
+<td>KG Yok</td>
+<td>%46.6</td>
+<td>%46.7</td>
+<td>%55.4</td>
+<td>1.86</td>
+</tr>
+<tr>
+<td>CS 1 ve 0</td>
+<td>%68.0</td>
+<td>%68.0</td>
+<td>%60.1</td>
+<td>1.28</td>
+</tr>
+<tr>
+<td>CS 0 ve 2</td>
+<td>%59.5</td>
+<td>%60.0</td>
+<td>%70.2</td>
+<td>1.45</td>
+</tr>
+<tr>
+<td>IY 1</td>
+<td>%30.9</td>
+<td>%30.9</td>
+<td>%23.2</td>
+<td>2.81</td>
+</tr>
+<tr>
+<td>IY 0</td>
+<td>%43.2</td>
+<td>%43.5</td>
+<td>%47.6</td>
+<td>2.00</td>
+</tr>
+<tr>
+<td>IY 2</td>
+<td>%25.8</td>
+<td>%25.6</td>
+<td>%29.2</td>
+<td>3.39</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: 1. Yarı Alt/Üst 0.5: <strong>Üst</strong> @1.30 — tahmin %68.0, pazar fiyatı %67.1, istatistik %61.6, değer -0.12, güven <strong>73</strong> (O 0.621, U 0.577, V 1.0, İ 0.842, H −0.0)
+<strong>Alternatif</strong>: 1. Yarı Alt/Üst 1.5: Alt @1.29 — model %68.5, piyasa %67.4, güven 73
+<strong>En büyük risk</strong>: kadro resmi değil (resmi 11 maçtan ~1 saat önce açıklanır)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3269189/tum-oranlar (2026-11-05T16:39:22+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3269189
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/SP1.csv
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/B1.csv
+- Haber araması: https://news.google.com/rss/search?q=%22Celta%20Vigo%22%20%22Union%20Saint%20Gilloise%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:36:35+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Celta%20Vigo%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:36:38+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Union%20Saint%20Gilloise%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:36:41+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Celta%20St.%20Gilloise%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T16:36:44+03:00)</p>
+<h3>20:45 · UEFA Konferans Ligi · Kuopion – KAA Gent (kod 3269015, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Kuopion</td>
+<td>MBBMGMMMGB</td>
+<td>atılan 0.90 / yenilen 1.30</td>
+<td>2.5Ü %20.0</td>
+<td>KG %30.0</td>
+<td>gol yemeden %30.0</td>
+</tr>
+<tr>
+<td>KAA Gent</td>
+<td>MGMBGGGBGG</td>
+<td>atılan 1.70 / yenilen 0.90</td>
+<td>2.5Ü %40.0</td>
+<td>KG %30.0</td>
+<td>gol yemeden %50.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Kuopion — Finlandiya Veikkausliiga sezon verisi: iç saha 1.60/1.07 (15 maç), dış saha 1.38/0.94 (16 maç), xG veri yok / xGA veri yok (eşleşme KuPS, 8 maç tarih+skor ile doğrulandı)</li>
+<li>KAA Gent — Belçika Pro Lig sezon verisi: iç saha 2.20/0.40 (5 maç), dış saha 1.60/0.80 (5 maç), xG 1.28 / xGA 0.83 (eşleşme Gent, 7 maç tarih+skor ile doğrulandı)</li>
+<li>Puan durumu (UEFA Conference League 26/27): Kuopion 34. sıra, 0 puan (2 maç, 2-6); KAA Gent 17. sıra, 3 puan (2 maç, 1-2); puan farkı -3</li>
+<li>Sonraki maç (5 gün): Kuopion: 2026-11-08T16:00 Finlandiya Veikkausliiga, Şampiyonluk Gr: Kuopion - Inter Turku | KAA Gent: 2026-11-08T18:00 Belçika Pro Lig: KAA Gent - Kortrijk</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: veri yok (kaynakta geçmiş karşılaşma yok)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Kuopion: maç başı kart 4.17, maç başı korner 11.83 | KAA Gent: maç başı kart 3.00, maç başı korner 8.80. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): Kuopion (M.Nuutinen, 4-3-3): J.Kreidl, T.Hamalainen, A.Lotjonen, C.Antwi, S.Pasanen, P.Pennanen, T.Jyry, S.Savolainen, G.P.Fredrik Engvall, P.Parzyszek, B.N.Armah
+- KAA Gent (R.Demil, 3-4-2-1): D.Roef, M.Paskotsi, M.Volckaert, S.Van Der Heyden, L.Lopes, M.Delorge Knieper, A.Kadri, H.Goore, T.F.Alves Araujo, M.L.Sonko, M.Dean
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 0.90, λ dep 1.76 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
+- Piyasa λ: 0.90 / 1.76, uyduruldu: AU_1.5, AU_2.5, AU_3.5, CS, HMS_1:0, KG, MS (pazarlar arası RMSE 0.0062)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 0.68, λ dep 1.79 (μ 0.188, ev avantajı 0.194, ligler arası -0.702, ρ -0.049); veri kalitesi 0.93
+- Ligler arası ayar: α=0.4589 × (ln C[FIN]=2.61 − ln C[BEL]=4.14) = -0.702 (log-λ)
+- Güç kaynağı: Kuopion: football-data FIN (zaman ağırlıklı, 26.2 ağırlıklı maç) | KAA Gent: football-data B1 (zaman ağırlıklı, 21.4 ağırlıklı maç)
+- En olası 3 skor: 0-1 (%11.8), 1-1 (%11.6), 0-2 (%10.9)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (16:39)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MS 1</td>
+<td>%18.3</td>
+<td>%18.6</td>
+<td>%13.1</td>
+<td>4.67</td>
+</tr>
+<tr>
+<td>MS 0</td>
+<td>%24.4</td>
+<td>%24.0</td>
+<td>%23.3</td>
+<td>3.61</td>
+</tr>
+<tr>
+<td>MS 2</td>
+<td>%57.3</td>
+<td>%57.4</td>
+<td>%63.6</td>
+<td>1.51</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%49.7</td>
+<td>%49.7</td>
+<td>%44.9</td>
+<td>1.75</td>
+</tr>
+<tr>
+<td>AU_2.5 Alt</td>
+<td>%50.3</td>
+<td>%50.3</td>
+<td>%55.1</td>
+<td>1.73</td>
+</tr>
+<tr>
+<td>KG Var</td>
+<td>%49.6</td>
+<td>%49.4</td>
+<td>%41.6</td>
+<td>1.76</td>
+</tr>
+<tr>
+<td>KG Yok</td>
+<td>%50.4</td>
+<td>%50.6</td>
+<td>%58.4</td>
+<td>1.72</td>
+</tr>
+<tr>
+<td>CS 1 ve 0</td>
+<td>%42.7</td>
+<td>%43.6</td>
+<td>%36.4</td>
+<td>1.99</td>
+</tr>
+<tr>
+<td>CS 0 ve 2</td>
+<td>%81.7</td>
+<td>%81.0</td>
+<td>%86.9</td>
+<td>1.07</td>
+</tr>
+<tr>
+<td>IY 1</td>
+<td>%17.3</td>
+<td>%16.9</td>
+<td>%13.1</td>
+<td>5.14</td>
+</tr>
+<tr>
+<td>IY 0</td>
+<td>%41.1</td>
+<td>%40.8</td>
+<td>%42.0</td>
+<td>2.13</td>
+</tr>
+<tr>
+<td>IY 2</td>
+<td>%41.6</td>
+<td>%42.4</td>
+<td>%44.9</td>
+<td>2.05</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: 1. Yarı Alt/Üst 0.5: <strong>Üst</strong> @1.26 — tahmin %69.2, pazar fiyatı %68.9, istatistik %66.5, değer -0.13, güven <strong>71</strong> (O 0.65, U 0.818, V 0.93, İ 0.5, H −2.0)
+<strong>Alternatif</strong>: 1. Yarı Alt/Üst 1.5: Alt @1.32 — model %67.0, piyasa %65.9, güven 68
+<strong>En büyük risk</strong>: ev: yoğun fikstür (son 7 günde 2 maç, 3 gün içinde yeni maç)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3269015/tum-oranlar (2026-11-05T16:39:22+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3269015
+- Sezon verisi: https://www.football-data.co.uk/new/FIN.csv
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/B1.csv
+- Haber araması: https://news.google.com/rss/search?q=%22Kuopion%22%20%22KAA%20Gent%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:34:52+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Kuopion%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:34:54+03:00)
+- Haber araması: https://news.google.com/rss/search?q=KAA%20Gent%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:34:55+03:00)
+- Haber araması: https://news.google.com/rss/search?q=KuPS%20Gent%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T16:34:58+03:00)</p>
+<h3>20:45 · UEFA Avrupa Ligi · NEC Nijmegen – Omonia (kod 3269180, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NEC Nijmegen</td>
+<td>MBGBBBBMMB</td>
+<td>atılan 1.30 / yenilen 2.00</td>
+<td>2.5Ü %60.0</td>
+<td>KG %70.0</td>
+<td>gol yemeden %0.0</td>
+</tr>
+<tr>
+<td>Omonia</td>
+<td>GMMBGGGGBG</td>
+<td>atılan 2.00 / yenilen 1.00</td>
+<td>2.5Ü %60.0</td>
+<td>KG %40.0</td>
+<td>gol yemeden %50.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>NEC Nijmegen — Hollanda Eredivisie sezon verisi: iç saha 1.50/2.00 (6 maç), dış saha 1.60/1.40 (5 maç), xG 1.67 / xGA 1.74 (eşleşme Nijmegen, 7 maç tarih+skor ile doğrulandı)</li>
+<li>Omonia — sezon verisi/xG: veri yok (football-data'da tarih/skor ile doğrulanan takım yok (lig kapsam dışı olabilir))</li>
+<li>Puan durumu (UEFA Avrupa Ligi 26/27): NEC Nijmegen 20. sıra, 4 puan (3 maç, 5-8); Omonia 11. sıra, 6 puan (3 maç, 5-4); puan farkı -2</li>
+<li>Sonraki maç (5 gün): NEC Nijmegen: 2026-11-08T22:00 Hollanda Eredivisie: Utrecht - NEC Nijmegen | Omonia: bültende yok</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: veri yok (kaynakta geçmiş karşılaşma yok)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: NEC Nijmegen: maç başı kart 3.17, maç başı korner 10.00 | Omonia: maç başı kart 6.17, maç başı korner veri yok. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): NEC Nijmegen (D.Schreuder, 3-4-2-1): G. Crettaz, A. Kabar, A. Kaplan, P. Schuurs, C. Bischoff, Jamiro Monteiro, D. Nejašmić, T. Storm, N. Lebreton, T. Chery, B. Linssen
+- Omonia (H.S.Berg, 4-4-2): Fabiano, J. Balkovec, Ľ. Šatka, J. Duverne, A. Christou, J. Montnor, M. Marić, P. Andreou, Ewandro, F. Tănase, A. Kakoullis
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 1.92, λ dep 1.18 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
+- Piyasa λ: 1.92 / 1.18, uyduruldu: AU_1.5, AU_2.5, AU_3.5, CS, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0062)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 1.81, λ dep 1.42 (μ 0.3, ev avantajı 0.128, ligler arası +0.205, ρ -0.049); veri kalitesi 0.72
+- Ligler arası ayar: α=0.4589 × (ln C[NED]=4.01 − ln C[CYP]=3.57) = +0.205 (log-λ)
+- Güç kaynağı: NEC Nijmegen: football-data N1 (zaman ağırlıklı, 20.0 ağırlıklı maç) | Omonia: iddaa son 10 maç (rakip gücü düzeltilmemiş)
+- En olası 3 skor: 1-1 (%10.7), 2-1 (%9.8), 2-0 (%8.3)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (16:39)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MS 1</td>
+<td>%54.0</td>
+<td>%53.9</td>
+<td>%46.3</td>
+<td>1.61</td>
+</tr>
+<tr>
+<td>MS 0</td>
+<td>%23.2</td>
+<td>%23.6</td>
+<td>%23.9</td>
+<td>3.68</td>
+</tr>
+<tr>
+<td>MS 2</td>
+<td>%22.8</td>
+<td>%22.5</td>
+<td>%29.8</td>
+<td>3.86</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%59.9</td>
+<td>%59.8</td>
+<td>%62.5</td>
+<td>1.45</td>
+</tr>
+<tr>
+<td>AU_2.5 Alt</td>
+<td>%40.1</td>
+<td>%40.2</td>
+<td>%37.5</td>
+<td>2.16</td>
+</tr>
+<tr>
+<td>KG Var</td>
+<td>%59.6</td>
+<td>%59.6</td>
+<td>%63.8</td>
+<td>1.46</td>
+</tr>
+<tr>
+<td>KG Yok</td>
+<td>%40.4</td>
+<td>%40.4</td>
+<td>%36.2</td>
+<td>2.15</td>
+</tr>
+<tr>
+<td>CS 1 ve 0</td>
+<td>%77.2</td>
+<td>%77.0</td>
+<td>%70.2</td>
+<td>1.13</td>
+</tr>
+<tr>
+<td>CS 0 ve 2</td>
+<td>%46.0</td>
+<td>%47.3</td>
+<td>%53.7</td>
+<td>1.84</td>
+</tr>
+<tr>
+<td>IY 1</td>
+<td>%41.0</td>
+<td>%41.6</td>
+<td>%36.4</td>
+<td>2.09</td>
+</tr>
+<tr>
+<td>IY 0</td>
+<td>%37.7</td>
+<td>%37.8</td>
+<td>%37.5</td>
+<td>2.30</td>
+</tr>
+<tr>
+<td>IY 2</td>
+<td>%21.3</td>
+<td>%20.7</td>
+<td>%26.1</td>
+<td>4.20</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 3.5: <strong>Alt</strong> @1.41 — tahmin %62.5, pazar fiyatı %61.6, istatistik %59.7, değer -0.12, güven <strong>69</strong> (O 0.501, U 0.813, V 0.72, İ 0.758, H −0.0)
+<strong>Alternatif</strong>: 1. Yarı Alt/Üst 1.5: Alt @1.47 — model %59.8, piyasa %59.2, güven 69
+<strong>En büyük risk</strong>: kadro resmi değil (resmi 11 maçtan ~1 saat önce açıklanır)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3269180/tum-oranlar (2026-11-05T16:39:22+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3269180
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/N1.csv
+- Haber araması: https://news.google.com/rss/search?q=%22NEC%20Nijmegen%22%20%22Omonia%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:33:51+03:00)
+- Haber araması: https://news.google.com/rss/search?q=NEC%20Nijmegen%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:33:54+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Omonia%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:33:57+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Nijmegen%20Omonia%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T16:33:59+03:00)</p>
+<h3>23:00 · UEFA Konferans Ligi · Panathinaikos – CSKA Sofya (kod 3269128, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Panathinaikos</td>
+<td>GGGGGGMGGG</td>
+<td>atılan 2.30 / yenilen 0.50</td>
+<td>2.5Ü %50.0</td>
+<td>KG %40.0</td>
+<td>gol yemeden %50.0</td>
+</tr>
+<tr>
+<td>CSKA Sofya</td>
+<td>BGBGMGBGGG</td>
+<td>atılan 2.10 / yenilen 1.00</td>
+<td>2.5Ü %50.0</td>
+<td>KG %60.0</td>
+<td>gol yemeden %40.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Panathinaikos — Yunanistan Süper Lig sezon verisi: iç saha 3.20/0.60 (5 maç), dış saha 1.00/0.25 (4 maç), xG 2.24 / xGA 0.73 (eşleşme Panathinaikos, 6 maç tarih+skor ile doğrulandı)</li>
+<li>CSKA Sofya — sezon verisi/xG: veri yok (football-data'da tarih/skor ile doğrulanan takım yok (lig kapsam dışı olabilir))</li>
+<li>Puan durumu (UEFA Conference League 26/27): Panathinaikos 1. sıra, 6 puan (2 maç, 7-2); CSKA Sofya 23. sıra, 1 puan (2 maç, 3-4); puan farkı 5</li>
+<li>Sonraki maç (5 gün): Panathinaikos: 2026-11-08T18:30 Yunanistan Süper Lig: POT Iraklis - Panathinaikos | CSKA Sofya: 2026-11-08T18:00 Bulgaristan Parva Ligi: Levski Sofya - CSKA Sofya</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: veri yok (kaynakta geçmiş karşılaşma yok)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Panathinaikos: maç başı kart 3.00, maç başı korner 10.80 | CSKA Sofya: maç başı kart 5.00, maç başı korner veri yok. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): Panathinaikos (J.Neestrup, 4-4-2): I.Pena, D.Calabria, R.Van Drongelen, S.De Vrij, G.Kyriakopoulos, E.Camara, K.Kangwa, Levi Garcia, S.Andino Valencia, C.Dessers, A.Tetteh
+- CSKA Sofya (M.Gisdol, None): F.Lapoukhov, D.S.Custodio Lima, T.Valentinov Ivanov, A.Martino, F.Rodriguez, A.M.Ebong Ngome, S.Sensi, I.Pittas, Jordao, S.L.Godoy, M.A.Brahimi
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 2.34, λ dep 0.82 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
+- Piyasa λ: 2.34 / 0.82, uyduruldu: AU_1.5, AU_2.5, AU_3.5, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0078)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 2.59, λ dep 0.74 (μ 0.125, ev avantajı 0.325, ligler arası +0.356, ρ -0.049); veri kalitesi 0.72
+- Ligler arası ayar: α=0.4589 × (ln C[GRE]=3.85 − ln C[BUL]=3.07) = +0.356 (log-λ)
+- Güç kaynağı: Panathinaikos: football-data G1 (zaman ağırlıklı, 18.5 ağırlıklı maç) | CSKA Sofya: iddaa son 10 maç (rakip gücü düzeltilmemiş)
+- En olası 3 skor: 2-0 (%11.6), 2-1 (%9.6), 1-0 (%9.5)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (16:39)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MS 1</td>
+<td>%70.9</td>
+<td>%70.8</td>
+<td>%76.7</td>
+<td>1.23</td>
+</tr>
+<tr>
+<td>MS 0</td>
+<td>%18.1</td>
+<td>%17.3</td>
+<td>%15.2</td>
+<td>5.02</td>
+</tr>
+<tr>
+<td>MS 2</td>
+<td>%11.0</td>
+<td>%11.8</td>
+<td>%8.1</td>
+<td>7.37</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%61.1</td>
+<td>%61.2</td>
+<td>%64.5</td>
+<td>1.42</td>
+</tr>
+<tr>
+<td>AU_2.5 Alt</td>
+<td>%38.9</td>
+<td>%38.8</td>
+<td>%35.5</td>
+<td>2.24</td>
+</tr>
+<tr>
+<td>KG Var</td>
+<td>%51.0</td>
+<td>%50.6</td>
+<td>%48.6</td>
+<td>1.72</td>
+</tr>
+<tr>
+<td>KG Yok</td>
+<td>%49.0</td>
+<td>%49.4</td>
+<td>%51.4</td>
+<td>1.76</td>
+</tr>
+<tr>
+<td>CS 1 ve 0</td>
+<td>%89.0</td>
+<td>veri yok</td>
+<td>%91.9</td>
+<td>kapalı/yok</td>
+</tr>
+<tr>
+<td>CS 0 ve 2</td>
+<td>%29.1</td>
+<td>veri yok</td>
+<td>%23.3</td>
+<td>2.86</td>
+</tr>
+<tr>
+<td>IY 1</td>
+<td>%52.6</td>
+<td>%53.4</td>
+<td>%57.5</td>
+<td>1.63</td>
+</tr>
+<tr>
+<td>IY 0</td>
+<td>%34.5</td>
+<td>%33.9</td>
+<td>%32.0</td>
+<td>2.57</td>
+</tr>
+<tr>
+<td>IY 2</td>
+<td>%12.9</td>
+<td>%12.8</td>
+<td>%10.5</td>
+<td>6.82</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.42 — tahmin %61.1, pazar fiyatı %61.2, istatistik %64.5, değer -0.13, güven <strong>68</strong> (O 0.469, U 0.777, V 0.72, İ 0.8, H −0.0)
+<strong>Alternatif</strong>: 1. Yarı Alt/Üst 1.5: Alt @1.50 — model %58.6, piyasa %57.8, güven 68
+<strong>En büyük risk</strong>: kadro resmi değil (resmi 11 maçtan ~1 saat önce açıklanır)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3269128/tum-oranlar (2026-11-05T16:39:22+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3269128
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/G1.csv
+- Haber araması: https://news.google.com/rss/search?q=%22Panathinaikos%22%20%22CSKA%20Sofya%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:38:27+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Panathinaikos%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:38:30+03:00)
+- Haber araması: https://news.google.com/rss/search?q=CSKA%20Sofya%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:38:33+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Panathinaikos%20CSKA%20Sofya%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T16:38:35+03:00)</p>
+<h3>20:45 · UEFA Konferans Ligi · Lincoln Red – Hajduk Split (kod 3269247, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lincoln Red</td>
+<td>GGMGMGBGGG</td>
+<td>atılan 2.40 / yenilen 0.80</td>
+<td>2.5Ü %70.0</td>
+<td>KG %40.0</td>
+<td>gol yemeden %60.0</td>
+</tr>
+<tr>
+<td>Hajduk Split</td>
+<td>GBGGGGMGGG</td>
+<td>atılan 2.00 / yenilen 0.70</td>
+<td>2.5Ü %60.0</td>
+<td>KG %30.0</td>
+<td>gol yemeden %60.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Lincoln Red — sezon verisi/xG: veri yok (football-data'da tarih/skor ile doğrulanan takım yok (lig kapsam dışı olabilir))</li>
+<li>Hajduk Split — sezon verisi/xG: veri yok (football-data'da tarih/skor ile doğrulanan takım yok (lig kapsam dışı olabilir))</li>
+<li>Puan durumu (UEFA Conference League 26/27): Lincoln Red 33. sıra, 0 puan (2 maç, 2-6); Hajduk Split 8. sıra, 6 puan (2 maç, 3-1); puan farkı -6</li>
+<li>Sonraki maç (5 gün): Lincoln Red: bültende yok | Hajduk Split: 2026-11-08T17:00 Hırvatistan 1. HNL: Osijek - Hajduk Split</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: veri yok (kaynakta geçmiş karşılaşma yok)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Lincoln Red: maç başı kart veri yok, maç başı korner veri yok | Hajduk Split: maç başı kart 4.17, maç başı korner veri yok. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11: veri yok
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 0.71, λ dep 2.32 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
+- Piyasa λ: 0.71 / 2.32, uyduruldu: AU_1.5, AU_2.5, AU_3.5, HMS_2:0, KG, MS (pazarlar arası RMSE 0.0070)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 0.86, λ dep 2.19 (μ 0.21, ev avantajı 0.224, ligler arası -0.613, ρ -0.049); veri kalitesi 0.45
+- Ligler arası ayar: α=0.4589 × (ln C[GIB]=1.98 − ln C[CRO]=3.31) = -0.613 (log-λ)
+- Güç kaynağı: Lincoln Red: iddaa son 10 maç (rakip gücü düzeltilmemiş) | Hajduk Split: iddaa son 10 maç (rakip gücü düzeltilmemiş)
+- En olası 3 skor: 0-2 (%13.0), 0-1 (%10.8), 0-3 (%10.1)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (16:39)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MS 1</td>
+<td>%9.3</td>
+<td>%10.1</td>
+<td>%13.1</td>
+<td>8.59</td>
+</tr>
+<tr>
+<td>MS 0</td>
+<td>%17.5</td>
+<td>%17.1</td>
+<td>%19.8</td>
+<td>5.08</td>
+</tr>
+<tr>
+<td>MS 2</td>
+<td>%73.2</td>
+<td>%72.8</td>
+<td>%67.2</td>
+<td>1.19</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%58.3</td>
+<td>%58.4</td>
+<td>%58.8</td>
+<td>1.49</td>
+</tr>
+<tr>
+<td>AU_2.5 Alt</td>
+<td>%41.7</td>
+<td>%41.6</td>
+<td>%41.2</td>
+<td>2.09</td>
+</tr>
+<tr>
+<td>KG Var</td>
+<td>%46.2</td>
+<td>%46.0</td>
+<td>%51.7</td>
+<td>1.89</td>
+</tr>
+<tr>
+<td>KG Yok</td>
+<td>%53.8</td>
+<td>%54.0</td>
+<td>%48.3</td>
+<td>1.61</td>
+</tr>
+<tr>
+<td>CS 1 ve 0</td>
+<td>%26.8</td>
+<td>veri yok</td>
+<td>%32.8</td>
+<td>3.03</td>
+</tr>
+<tr>
+<td>CS 0 ve 2</td>
+<td>%90.7</td>
+<td>veri yok</td>
+<td>%86.9</td>
+<td>kapalı/yok</td>
+</tr>
+<tr>
+<td>IY 1</td>
+<td>%11.2</td>
+<td>%11.2</td>
+<td>%14.2</td>
+<td>7.77</td>
+</tr>
+<tr>
+<td>IY 0</td>
+<td>%35.4</td>
+<td>%34.2</td>
+<td>%36.5</td>
+<td>2.54</td>
+</tr>
+<tr>
+<td>IY 2</td>
+<td>%53.4</td>
+<td>%54.6</td>
+<td>%49.3</td>
+<td>1.59</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 3.5: <strong>Alt</strong> @1.37 — tahmin %64.2, pazar fiyatı %63.5, istatistik %63.6, değer -0.12, güven <strong>66</strong> (O 0.537, U 0.965, V 0.45, İ 0.608, H −0.0)
+<strong>Alternatif</strong>: 1. Yarı Alt/Üst 1.5: Alt @1.46 — model %61.4, piyasa %59.6, güven 65
+<strong>En büyük risk</strong>: takımlardan biri için sezon verisi yok (yalnızca son 10 maç, rakip gücü düzeltilmemiş)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3269247/tum-oranlar (2026-11-05T16:39:22+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3269247
+- Haber araması: https://news.google.com/rss/search?q=%22Lincoln%20Red%22%20%22Hajduk%20Split%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:35:18+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Lincoln%20Red%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:35:20+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Hajduk%20Split%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:35:23+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Lincoln%20Red%20Hajduk%20Split%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T16:35:26+03:00)</p>
+<h3>23:00 · UEFA Konferans Ligi · Monaco – Nordsjælland (kod 3269261, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Monaco</td>
+<td>MBGMGBGGBG</td>
+<td>atılan 1.60 / yenilen 1.10</td>
+<td>2.5Ü %60.0</td>
+<td>KG %70.0</td>
+<td>gol yemeden %20.0</td>
+</tr>
+<tr>
+<td>Nordsjælland</td>
+<td>MGBBBBBMGG</td>
+<td>atılan 1.60 / yenilen 1.40</td>
+<td>2.5Ü %50.0</td>
+<td>KG %60.0</td>
+<td>gol yemeden %40.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Monaco — Fransa Ligue 1 sezon verisi: iç saha 1.75/1.00 (4 maç), dış saha 1.00/1.20 (5 maç), xG 1.18 / xGA 1.36 (eşleşme Monaco, 7 maç tarih+skor ile doğrulandı)</li>
+<li>Nordsjælland — Danimarka Süper Lig sezon verisi: iç saha 1.50/0.67 (6 maç), dış saha 1.57/1.86 (7 maç), xG veri yok / xGA veri yok (eşleşme Nordsjaelland, 6 maç tarih+skor ile doğrulandı)</li>
+<li>Puan durumu (UEFA Conference League 26/27): Monaco 6. sıra, 6 puan (2 maç, 5-1); Nordsjælland 19. sıra, 2 puan (2 maç, 3-3); puan farkı 4</li>
+<li>Sonraki maç (5 gün): Monaco: 2026-11-08T19:15 Fransa Ligue 1: Le Mans - Monaco | Nordsjælland: 2026-11-08T18:00 Danimarka Süper Lig: Randers - Nordsjælland</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: veri yok (kaynakta geçmiş karşılaşma yok)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Monaco: maç başı kart 5.00, maç başı korner 9.50 | Nordsjælland: maç başı kart 5.50, maç başı korner 8.80. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): Monaco (Filipe Luis, 4-4-2): L.Hradecky, Vanderson, S.Sane, E.Dier, F.Nazinho, E.Diop, L.Camara, D.Zakaria, A.Golovin, S.Idumbo-Muzambo, P.J.Brunner
+- Nordsjælland (J.Olsen, 3-4-3): A.Hansen, Peter Ankersen, T.Salquist, N.Markmann, J.Janssen, N.Rojkjaer, L.Sadio, R.R.Norheim, J.Lahteenmaki, A.Lind, I.Adel
+- [sakatlik, kadro] American Player Folarin Balogun Added to AS Monaco’s Conference League Squad After Ansu Fati Injury - Nice-Matin — Nice-Matin, 2026-11-04T10:29 (<a href="https://news.google.com/rss/articles/CBMi3AFBVV95cUxQNGFqVTRLV2l3eFp5YjZ1NWhDSzVJRHZnQWZ6YllleHRIN0h2N1Y4a0s1dXRuaEFBVTBrSHRWajh5eGJtemRPYlhMUFNJaGlkdUlrVl9UZU5tNkkxVmNBX0JnMVFoYkJQUzhubEdyVDc4Rjh3QlVFUk5MREYzdU9rM2g1aDdPTldmOUY2aXlwLUtKMkl1QURfdTluRGdxdVNncHQ3RHU3UFl5ckJ3UTQwVE14UVExQWVmNzIzc1h5UVFUdjhpOGpuV0RVSndUSFJDTk1JdmZBMHI0OEx3?oc=5">bağlantı</a>)
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 2.35, λ dep 1.08 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
+- Piyasa λ: 2.35 / 1.08, uyduruldu: AU_2.5, AU_3.5, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0041)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 2.08, λ dep 1.02 (μ 0.276, ev avantajı 0.229, ligler arası +0.266, ρ -0.049); veri kalitesi 0.93
+- Ligler arası ayar: α=0.4589 × (ln C[FRA]=4.27 − ln C[DEN]=3.69) = +0.266 (log-λ)
+- Güç kaynağı: Monaco: football-data F1 (zaman ağırlıklı, 18.7 ağırlıklı maç) | Nordsjælland: football-data DNK (zaman ağırlıklı, 20.6 ağırlıklı maç)
+- En olası 3 skor: 2-1 (%9.7), 2-0 (%8.9), 1-1 (%8.7)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (16:39)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MS 1</td>
+<td>%65.0</td>
+<td>%64.8</td>
+<td>%61.3</td>
+<td>1.34</td>
+</tr>
+<tr>
+<td>MS 0</td>
+<td>%19.3</td>
+<td>%19.0</td>
+<td>%21.4</td>
+<td>4.58</td>
+</tr>
+<tr>
+<td>MS 2</td>
+<td>%15.7</td>
+<td>%16.2</td>
+<td>%17.3</td>
+<td>5.37</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%66.6</td>
+<td>%66.3</td>
+<td>%60.0</td>
+<td>1.31</td>
+</tr>
+<tr>
+<td>AU_2.5 Alt</td>
+<td>%33.4</td>
+<td>%33.7</td>
+<td>%40.0</td>
+<td>2.58</td>
+</tr>
+<tr>
+<td>KG Var</td>
+<td>%60.3</td>
+<td>%59.8</td>
+<td>%56.6</td>
+<td>1.45</td>
+</tr>
+<tr>
+<td>KG Yok</td>
+<td>%39.7</td>
+<td>%40.2</td>
+<td>%43.4</td>
+<td>2.16</td>
+</tr>
+<tr>
+<td>CS 1 ve 0</td>
+<td>%84.3</td>
+<td>veri yok</td>
+<td>%82.7</td>
+<td>kapalı/yok</td>
+</tr>
+<tr>
+<td>CS 0 ve 2</td>
+<td>%35.0</td>
+<td>veri yok</td>
+<td>%38.7</td>
+<td>2.39</td>
+</tr>
+<tr>
+<td>IY 1</td>
+<td>%48.5</td>
+<td>%49.7</td>
+<td>%45.1</td>
+<td>1.75</td>
+</tr>
+<tr>
+<td>IY 0</td>
+<td>%34.7</td>
+<td>%33.7</td>
+<td>%37.5</td>
+<td>2.58</td>
+</tr>
+<tr>
+<td>IY 2</td>
+<td>%16.8</td>
+<td>%16.6</td>
+<td>%17.4</td>
+<td>5.24</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: Maç Sonucu: <strong>1</strong> @1.34 — tahmin %65.0, pazar fiyatı %64.8, istatistik %61.3, değer -0.13, güven <strong>66</strong> (O 0.555, U 0.753, V 0.93, İ 0.533, H −3.0)
+<strong>Alternatif</strong>: Karşılıklı Gol: Var @1.45 — model %60.3, piyasa %59.8, güven 62
+<strong>En büyük risk</strong>: 1 sakatlık/ceza haberi</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3269261/tum-oranlar (2026-11-05T16:39:22+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3269261
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/F1.csv
+- Sezon verisi: https://www.football-data.co.uk/new/DNK.csv
+- Haber araması: https://news.google.com/rss/search?q=%22Monaco%22%20%22Nordsj%C3%A6lland%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:38:17+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Monaco%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:38:19+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Nordsj%C3%A6lland%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:38:22+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Monaco%20Nordsjaelland%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T16:38:25+03:00)</p>
+<h3>20:45 · UEFA Avrupa Ligi · Real Sociedad – Lyon (kod 3269201, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Real Sociedad</td>
+<td>MGGGBGMGMM</td>
+<td>atılan 2.20 / yenilen 1.60</td>
+<td>2.5Ü %80.0</td>
+<td>KG %70.0</td>
+<td>gol yemeden %10.0</td>
+</tr>
+<tr>
+<td>Lyon</td>
+<td>GMMGGMGGBG</td>
+<td>atılan 1.70 / yenilen 1.20</td>
+<td>2.5Ü %70.0</td>
+<td>KG %50.0</td>
+<td>gol yemeden %30.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Real Sociedad — İspanya La Liga sezon verisi: iç saha 1.40/1.40 (5 maç), dış saha 2.17/2.17 (6 maç), xG 1.39 / xGA 1.68 (eşleşme Sociedad, 6 maç tarih+skor ile doğrulandı)</li>
+<li>Lyon — Fransa Ligue 1 sezon verisi: iç saha 2.40/0.60 (5 maç), dış saha 0.75/1.00 (4 maç), xG 1.59 / xGA 1.15 (eşleşme Lyon, 7 maç tarih+skor ile doğrulandı)</li>
+<li>Puan durumu (UEFA Avrupa Ligi 26/27): Real Sociedad 14. sıra, 4 puan (3 maç, 8-3); Lyon 13. sıra, 6 puan (3 maç, 5-6); puan farkı -2</li>
+<li>Sonraki maç (5 gün): Real Sociedad: 2026-11-08T18:15 İspanya La Liga: Real Sociedad - Vallecano | Lyon: 2026-11-08T19:15 Fransa Ligue 1: Brest - Lyon</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: veri yok (kaynakta geçmiş karşılaşma yok)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Real Sociedad: maç başı kart 4.00, maç başı korner 9.33 | Lyon: maç başı kart 3.33, maç başı korner 11.17. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): Real Sociedad (P.Matarazzo, 4-4-2): Unai Marrero, Sergio Gómez, M. Sarr, Jon Martín, Igor Zubeldia, Gonçalo Guedes, Carlos Soler, Jon Gorrotxategi, T. Kubo, Mikel Oyarzabal, L. Sučić
+- Lyon (P.Fonseca, 4-3-3): D. Greif, Abner Vinícius, M. Niakhaté, F. Bacher, Z. Athekame, C. Tolisso, T. Tessmann, M. Bidstrup, K. Nakamura, E. Nuamah, J. Duranville
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 2.13, λ dep 1.12 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
+- Piyasa λ: 2.13 / 1.12, uyduruldu: AU_2.5, AU_3.5, CS, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0040)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 1.72, λ dep 1.46 (μ 0.176, ev avantajı 0.296, ligler arası +0.086, ρ -0.049); veri kalitesi 1.0
+- Ligler arası ayar: α=0.4589 × (ln C[ESP]=4.46 − ln C[FRA]=4.27) = +0.086 (log-λ)
+- Güç kaynağı: Real Sociedad: football-data SP1 (zaman ağırlıklı, 21.9 ağırlıklı maç) | Lyon: football-data F1 (zaman ağırlıklı, 18.7 ağırlıklı maç)
+- En olası 3 skor: 2-1 (%9.9), 1-1 (%9.7), 2-0 (%8.8)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (16:39)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MS 1</td>
+<td>%59.9</td>
+<td>%59.9</td>
+<td>%43.4</td>
+<td>1.45</td>
+</tr>
+<tr>
+<td>MS 0</td>
+<td>%21.3</td>
+<td>%21.2</td>
+<td>%24.4</td>
+<td>4.09</td>
+</tr>
+<tr>
+<td>MS 2</td>
+<td>%18.8</td>
+<td>%18.9</td>
+<td>%32.2</td>
+<td>4.60</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%63.1</td>
+<td>%62.9</td>
+<td>%61.5</td>
+<td>1.38</td>
+</tr>
+<tr>
+<td>AU_2.5 Alt</td>
+<td>%36.9</td>
+<td>%37.1</td>
+<td>%38.5</td>
+<td>2.34</td>
+</tr>
+<tr>
+<td>KG Var</td>
+<td>%60.0</td>
+<td>%59.6</td>
+<td>%63.5</td>
+<td>1.46</td>
+</tr>
+<tr>
+<td>KG Yok</td>
+<td>%40.0</td>
+<td>%40.4</td>
+<td>%36.5</td>
+<td>2.15</td>
+</tr>
+<tr>
+<td>CS 1 ve 0</td>
+<td>%81.2</td>
+<td>%80.9</td>
+<td>%67.8</td>
+<td>1.07</td>
+</tr>
+<tr>
+<td>CS 0 ve 2</td>
+<td>%40.1</td>
+<td>%41.0</td>
+<td>%56.6</td>
+<td>2.11</td>
+</tr>
+<tr>
+<td>IY 1</td>
+<td>%44.4</td>
+<td>%45.9</td>
+<td>%34.0</td>
+<td>1.89</td>
+</tr>
+<tr>
+<td>IY 0</td>
+<td>%36.9</td>
+<td>%35.7</td>
+<td>%38.8</td>
+<td>2.43</td>
+</tr>
+<tr>
+<td>IY 2</td>
+<td>%18.7</td>
+<td>%18.4</td>
+<td>%27.2</td>
+<td>4.73</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.38 — tahmin %63.1, pazar fiyatı %62.9, istatistik %61.5, değer -0.13, güven <strong>65</strong> (O 0.514, U 0.889, V 1.0, İ 0.167, H −0.0)
+<strong>Alternatif</strong>: 1. Yarı Alt/Üst 1.5: Alt @1.53 — model %59.3, piyasa %56.7, güven 64
+<strong>En büyük risk</strong>: sonuçları dalgalı takım(lar)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3269201/tum-oranlar (2026-11-05T16:39:22+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3269201
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/SP1.csv
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/F1.csv
+- Haber araması: https://news.google.com/rss/search?q=%22Real%20Sociedad%22%20%22Lyon%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:34:24+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Real%20Sociedad%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:34:26+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Lyon%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:34:27+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Sociedad%20Lyon%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T16:34:29+03:00)</p>
+<h3>20:45 · UEFA Konferans Ligi · Mjallby – Banja Luka (kod 3269056, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mjallby</td>
+<td>BGMBMGBMMB</td>
+<td>atılan 0.70 / yenilen 1.10</td>
+<td>2.5Ü %20.0</td>
+<td>KG %40.0</td>
+<td>gol yemeden %20.0</td>
+</tr>
+<tr>
+<td>Banja Luka</td>
+<td>GGGMGGGGMG</td>
+<td>atılan 1.90 / yenilen 0.80</td>
+<td>2.5Ü %40.0</td>
+<td>KG %40.0</td>
+<td>gol yemeden %50.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Mjallby — İsveç Allsvenskan sezon verisi: iç saha 0.86/1.50 (14 maç), dış saha 1.39/1.69 (13 maç), xG veri yok / xGA veri yok (eşleşme Mjallby, 7 maç tarih+skor ile doğrulandı)</li>
+<li>Banja Luka — sezon verisi/xG: veri yok (football-data'da tarih/skor ile doğrulanan takım yok (lig kapsam dışı olabilir))</li>
+<li>Puan durumu (UEFA Conference League 26/27): Mjallby 12. sıra, 4 puan (2 maç, 3-1); Banja Luka 13. sıra, 3 puan (2 maç, 3-2); puan farkı 1</li>
+<li>Sonraki maç (5 gün): Mjallby: 2026-11-08T18:30 İsveç Allsvenskan: Brommapojkarna - Mjallby | Banja Luka: 2026-11-08T17:00 Bosna Hersek Premier Ligi: Banja Luka - Rad. Bijelji</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: veri yok (kaynakta geçmiş karşılaşma yok)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Mjallby: maç başı kart 4.50, maç başı korner 9.33 | Banja Luka: maç başı kart veri yok, maç başı korner veri yok. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11: veri yok
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 1.45, λ dep 1.17 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
+- Piyasa λ: 1.45 / 1.17, uyduruldu: AU_1.5, AU_2.5, AU_3.5, CS, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0067)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 1.24, λ dep 1.17 (μ 0.229, ev avantajı 0.119, ligler arası +0.278, ρ -0.049); veri kalitesi 0.65
+- Ligler arası ayar: α=0.4589 × (ln C[SWE]=3.28 − ln C[BIH]=2.67) = +0.278 (log-λ)
+- Güç kaynağı: Mjallby: football-data SWE (zaman ağırlıklı, 23.3 ağırlıklı maç) | Banja Luka: iddaa son 10 maç (rakip gücü düzeltilmemiş)
+- En olası 3 skor: 1-1 (%13.0), 1-0 (%9.9), 2-1 (%8.9)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (16:39)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MS 1</td>
+<td>%42.9</td>
+<td>%42.6</td>
+<td>%37.2</td>
+<td>2.04</td>
+</tr>
+<tr>
+<td>MS 0</td>
+<td>%27.2</td>
+<td>%27.7</td>
+<td>%28.9</td>
+<td>3.14</td>
+</tr>
+<tr>
+<td>MS 2</td>
+<td>%30.0</td>
+<td>%29.8</td>
+<td>%33.9</td>
+<td>2.92</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%48.7</td>
+<td>%48.7</td>
+<td>%43.2</td>
+<td>1.78</td>
+</tr>
+<tr>
+<td>AU_2.5 Alt</td>
+<td>%51.3</td>
+<td>%51.3</td>
+<td>%56.8</td>
+<td>1.69</td>
+</tr>
+<tr>
+<td>KG Var</td>
+<td>%53.5</td>
+<td>%53.6</td>
+<td>%49.6</td>
+<td>1.62</td>
+</tr>
+<tr>
+<td>KG Yok</td>
+<td>%46.5</td>
+<td>%46.4</td>
+<td>%50.4</td>
+<td>1.87</td>
+</tr>
+<tr>
+<td>CS 1 ve 0</td>
+<td>%70.0</td>
+<td>%70.1</td>
+<td>%66.1</td>
+<td>1.24</td>
+</tr>
+<tr>
+<td>CS 0 ve 2</td>
+<td>%57.1</td>
+<td>%58.0</td>
+<td>%62.8</td>
+<td>1.50</td>
+</tr>
+<tr>
+<td>IY 1</td>
+<td>%32.6</td>
+<td>%32.5</td>
+<td>%28.5</td>
+<td>2.67</td>
+</tr>
+<tr>
+<td>IY 0</td>
+<td>%42.7</td>
+<td>%43.2</td>
+<td>%45.0</td>
+<td>2.01</td>
+</tr>
+<tr>
+<td>IY 2</td>
+<td>%24.7</td>
+<td>%24.3</td>
+<td>%26.5</td>
+<td>3.57</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: 1. Yarı Alt/Üst 0.5: <strong>Üst</strong> @1.29 — tahmin %68.5, pazar fiyatı %67.5, istatistik %65.4, değer -0.12, güven <strong>65</strong> (O 0.634, U 0.79, V 0.65, İ 0.583, H −2.0)
+<strong>Alternatif</strong>: 1. Yarı Alt/Üst 1.5: Alt @1.30 — model %67.8, piyasa %66.9, güven 64
+<strong>En büyük risk</strong>: takımlardan biri için sezon verisi yok (yalnızca son 10 maç, rakip gücü düzeltilmemiş) (diğer: ev: yoğun fikstür (son 7 günde 2 maç, 3 gün içinde yeni maç))</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3269056/tum-oranlar (2026-11-05T16:39:22+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3269056
+- Sezon verisi: https://www.football-data.co.uk/new/SWE.csv
+- Haber araması: https://news.google.com/rss/search?q=%22Mjallby%22%20%22Banja%20Luka%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:35:01+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Mjallby%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:35:02+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Banja%20Luka%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:35:05+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Mjallby%20Banja%20Luka%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T16:35:06+03:00)</p>
+<h3>23:00 · UEFA Konferans Ligi · Riga FC – Jablonec (kod 3268952, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Riga FC</td>
+<td>BGBGBGGGGB</td>
+<td>atılan 1.70 / yenilen 0.80</td>
+<td>2.5Ü %40.0</td>
+<td>KG %60.0</td>
+<td>gol yemeden %40.0</td>
+</tr>
+<tr>
+<td>Jablonec</td>
+<td>MGBMMGGBMG</td>
+<td>atılan 1.20 / yenilen 1.50</td>
+<td>2.5Ü %50.0</td>
+<td>KG %40.0</td>
+<td>gol yemeden %40.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Riga FC — sezon verisi/xG: veri yok (football-data'da tarih/skor ile doğrulanan takım yok (lig kapsam dışı olabilir))</li>
+<li>Jablonec — sezon verisi/xG: veri yok (football-data'da tarih/skor ile doğrulanan takım yok (lig kapsam dışı olabilir))</li>
+<li>Puan durumu (UEFA Conference League 26/27): Riga FC 20. sıra, 2 puan (2 maç, 2-2); Jablonec 24. sıra, 1 puan (2 maç, 2-3); puan farkı 1</li>
+<li>Sonraki maç (5 gün): Riga FC: 2026-11-08T14:00 Letonya Virsliga: Riga FC - Rigas Skola | Jablonec: 2026-11-08T17:00 Çekya 1. Lig: Jablonec - Mlada Boleslav</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: veri yok (kaynakta geçmiş karşılaşma yok)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Riga FC: maç başı kart veri yok, maç başı korner veri yok | Jablonec: maç başı kart 3.17, maç başı korner veri yok. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11: veri yok
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 1.45, λ dep 1.30 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-05 (1411 maç, eğitim/test yarıları))
+- Piyasa λ: 1.45 / 1.30, uyduruldu: AU_1.5, AU_2.5, AU_3.5, CS, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0066)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 1.14, λ dep 1.42 (μ 0.21, ev avantajı 0.224, ligler arası -0.531, ρ -0.049); veri kalitesi 0.45
+- Ligler arası ayar: α=0.4589 × (ln C[LVA]=2.67 − ln C[CZE]=3.82) = -0.531 (log-λ)
+- Güç kaynağı: Riga FC: iddaa son 10 maç (rakip gücü düzeltilmemiş) | Jablonec: iddaa son 10 maç (rakip gücü düzeltilmemiş)
+- En olası 3 skor: 1-1 (%12.6), 2-1 (%8.8), 1-0 (%8.7)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (16:39)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>MS 1</td>
+<td>%40.2</td>
+<td>%39.8</td>
+<td>%29.8</td>
+<td>2.18</td>
+</tr>
+<tr>
+<td>MS 0</td>
+<td>%26.6</td>
+<td>%27.1</td>
+<td>%27.6</td>
+<td>3.20</td>
+</tr>
+<tr>
+<td>MS 2</td>
+<td>%33.2</td>
+<td>%33.0</td>
+<td>%42.6</td>
+<td>2.63</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%52.0</td>
+<td>%52.0</td>
+<td>%47.1</td>
+<td>1.67</td>
+</tr>
+<tr>
+<td>AU_2.5 Alt</td>
+<td>%48.0</td>
+<td>%48.0</td>
+<td>%52.9</td>
+<td>1.81</td>
+</tr>
+<tr>
+<td>KG Var</td>
+<td>%56.4</td>
+<td>%56.5</td>
+<td>%52.2</td>
+<td>1.54</td>
+</tr>
+<tr>
+<td>KG Yok</td>
+<td>%43.6</td>
+<td>%43.5</td>
+<td>%47.8</td>
+<td>2.00</td>
+</tr>
+<tr>
+<td>CS 1 ve 0</td>
+<td>%66.8</td>
+<td>%66.8</td>
+<td>%57.4</td>
+<td>1.30</td>
+</tr>
+<tr>
+<td>CS 0 ve 2</td>
+<td>%59.8</td>
+<td>%60.8</td>
+<td>%70.2</td>
+<td>1.43</td>
+</tr>
+<tr>
+<td>IY 1</td>
+<td>%31.3</td>
+<td>%31.2</td>
+<td>%24.4</td>
+<td>2.78</td>
+</tr>
+<tr>
+<td>IY 0</td>
+<td>%41.6</td>
+<td>%42.0</td>
+<td>%43.4</td>
+<td>2.07</td>
+</tr>
+<tr>
+<td>IY 2</td>
+<td>%27.1</td>
+<td>%26.8</td>
+<td>%32.2</td>
+<td>3.24</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: 1. Yarı Alt/Üst 0.5: <strong>Üst</strong> @1.25 — tahmin %70.3, pazar fiyatı %69.4, istatistik %67.6, değer -0.12, güven <strong>65</strong> (O 0.674, U 0.819, V 0.45, İ 0.55, H −0.0)
+<strong>Alternatif</strong>: Alt/Üst 3.5: Alt @1.25 — model %70.2, piyasa %69.2, güven 62
+<strong>En büyük risk</strong>: takımlardan biri için sezon verisi yok (yalnızca son 10 maç, rakip gücü düzeltilmemiş)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3268952/tum-oranlar (2026-11-05T16:39:22+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3268952
+- Haber araması: https://news.google.com/rss/search?q=%22Riga%20FC%22%20%22Jablonec%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:37:59+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Riga%20FC%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:38:01+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Jablonec%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-05T16:38:03+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Riga%20FC%20Jablonec%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-05T16:38:05+03:00)</p>
+<h2>C) Kupon önerileri</h2>
+<p>Kombine olasılık, maçların birbirinden bağımsız olduğu varsayımıyla çarpılarak hesaplanır.</p>
+<p><strong>Düşük risk — tekli</strong> — toplam oran 1.26, kombine model olasılığı: %70 ≈ %70 (piyasa: %69), beklenen değer -0.12 (birim başına), en yüksek MBS 1
+- AGF Aarhus - Braga: 1. Yarı Alt/Üst 0.5: Üst @1.26 (model %70, MBS 1)</p>
+<p><strong>Düşük risk — ikili</strong> — toplam oran 1.64, kombine model olasılığı: %70 × %68 ≈ %47 (piyasa: %46), beklenen değer -0.22 (birim başına), en yüksek MBS 1
+- AGF Aarhus - Braga: 1. Yarı Alt/Üst 0.5: Üst @1.26 (model %70, MBS 1)
+- Celta Vigo - Union Saint Gilloise: 1. Yarı Alt/Üst 0.5: Üst @1.30 (model %68, MBS 1)</p>
+<p><strong>Dengeli — 3'lü</strong> — toplam oran 2.06, kombine model olasılığı: %70 × %68 × %69 ≈ %33 (piyasa: %32), beklenen değer -0.32 (birim başına), en yüksek MBS 1
+- AGF Aarhus - Braga: 1. Yarı Alt/Üst 0.5: Üst @1.26 (model %70, MBS 1)
+- Celta Vigo - Union Saint Gilloise: 1. Yarı Alt/Üst 0.5: Üst @1.30 (model %68, MBS 1)
+- Kuopion - KAA Gent: 1. Yarı Alt/Üst 0.5: Üst @1.26 (model %69, MBS 1)</p>
+<p>Not: iddaa marjı (~%15) nedeniyle bu seçimlerin beklenen değeri negatiftir; kupon büyüdükçe kayıp beklentisi artar.</p>
+<h2>D) Elenen maçlar</h2>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Saat</th>
+<th>Maç</th>
+<th>Lig</th>
+<th>Neden</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>16:30</td>
+<td>FC Bunyodkor - Xorazm Fk Urganch</td>
+<td>Özbekistan PFL</td>
+<td>başlamasına 8 dk var; analiz yetişmez (min 30)</td>
+</tr>
+<tr>
+<td>16:45</td>
+<td>Diyala FC - AL Minaa</td>
+<td>Iraq Irak U20 Şampiyonası Grup C</td>
+<td>lig türü dışarıda (genc_takim)</td>
+</tr>
+<tr>
+<td>17:00</td>
+<td>ATK Mohun Bagan - Odisha FC</td>
+<td>Hindistan Süper Ligi</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>17:00</td>
+<td>Bhutan - Bangladeş</td>
+<td>SAFF Şampiyonası, A Grubu</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>17:15</td>
+<td>Katar U23 - Al-Khoor</td>
+<td>Katar 2nd Division League</td>
+<td>kadın/genç/B takımı</td>
+</tr>
+<tr>
+<td>17:15</td>
+<td>AL Markhiya - AL Waab</td>
+<td>Katar 2nd Division League</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>18:00</td>
+<td>National Bank of Egypt SC - Port Fouad SC</td>
+<td>Mısır Kupası</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>18:00</td>
+<td>Chindia - SC Popesti Leordeni</td>
+<td>Romanya 2.Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>18:00</td>
+<td>Ittihad AL Ramtha - FC Maan</td>
+<td>Ürdün 1. Ligi</td>
+<td>sınırlı pazar (8 &lt; 10)</td>
+</tr>
+<tr>
+<td>18:00</td>
+<td>Amman FC - Al Hashemehya</td>
+<td>Ürdün 1. Ligi</td>
+<td>sınırlı pazar (8 &lt; 10)</td>
+</tr>
+<tr>
+<td>18:20</td>
+<td>Dhofar Scsc - Saham</td>
+<td>Umman Ligi</td>
+<td>sınırlı pazar (8 &lt; 10)</td>
+</tr>
+<tr>
+<td>18:30</td>
+<td>AL Mosul SC - Duhok FC</td>
+<td>Iraq Irak U20 Şampiyonası Grup C</td>
+<td>lig türü dışarıda (genc_takim)</td>
+</tr>
+<tr>
+<td>19:00</td>
+<td>Express FC - Blacks Power FC</td>
+<td>Uganda Premier Ligi</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>19:30</td>
+<td>AL Rayyan Nextgen - Kharitiyat</td>
+<td>Katar 2nd Division League</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>19:30</td>
+<td>Teungueth - US Ouakam</td>
+<td>Senegal Premier Lig</td>
+<td>sınırlı pazar (8 &lt; 10)</td>
+</tr>
+<tr>
+<td>20:00</td>
+<td>Police Xi - Township Rollers FC</td>
+<td>Botswana Premier Ligi</td>
+<td>sınırlı pazar (8 &lt; 10)</td>
+</tr>
+<tr>
+<td>20:00</td>
+<td>Vipers SC - Lugazi Municipal FC</td>
+<td>Uganda Premier Ligi</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>21:30</td>
+<td>Union de Santa Fe (K) - CA Talleres de Cordoba(K)</td>
+<td>Arjantin Primera Division A, Women, Cla</td>
+<td>lig türü dışarıda (kadin)</td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>CA Lito - Montevideo</td>
+<td>Uruguay Kupası Eleme</td>
+<td>sınırlı pazar (8 &lt; 10)</td>
+</tr>
+<tr>
+<td>22:45</td>
+<td>Valenciennes - Orleans</td>
+<td>Fransa Ulusal Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>Sparta Prag – Bournemouth</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 52 &lt; 55 (1. Yarı Alt/Üst 1.5: Alt @1.50)</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>Lillestrom – Viktoria Plzen</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 54 &lt; 55 (Karşılıklı Gol: Var @1.37)</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>Crystal Palace – Hoffenheim</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 58 &lt; 55 (Karşılıklı Gol: Var @1.35)</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>Levski Sofya – Jagiellonia Bialystok</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 63 &lt; 55 (1. Yarı Alt/Üst 1.5: Alt @1.25)</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>AC Milan – Ferencvaros</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 56 &lt; 55 (Alt/Üst 2.5: Üst @1.34)</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>Anderlecht – Salzburg</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 59 &lt; 55 (Karşılıklı Gol: Var @1.33)</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>Trabzonspor – Freiburg</td>
+<td>UEFA Konferans Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 62 &lt; 55 (Karşılıklı Gol: Var @1.37)</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>Kızıl Yıldız – Inter Club De Escaldes</td>
+<td>UEFA Konferans Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 36 &lt; 55 (Karşılıklı Gol: Yok @1.35)</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>Atalanta – K Almaty</td>
+<td>UEFA Konferans Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 58 &lt; 55 (Karşılıklı Gol: Yok @1.52)</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>Thun – Hearts</td>
+<td>UEFA Konferans Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 52 &lt; 55 (Karşılıklı Gol: Var @1.36)</td>
+</tr>
+<tr>
+<td>20:45</td>
+<td>Midtjylland – Ajax</td>
+<td>UEFA Konferans Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 64 &lt; 55 (Çifte Şans: 0 ve 2 @1.28)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>B. Leverkusen – Marsilya</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 40 &lt; 55 (Karşılıklı Gol: Var @1.50)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Celtic – Beşiktaş</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 64 &lt; 55 (Çifte Şans: 0 ve 2 @1.29)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Sunderland – Dinamo Zagreb</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 54 &lt; 55 (Maç Sonucu: 1 @1.29)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Benfica – Lech Poznan</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 49 &lt; 55 (1. Yarı Sonucu: 1 @1.30)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Sturm Graz – NK Celje</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 56 &lt; 55 (Maç Sonucu: 1 @1.38)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Torreense – Ararat</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 48 &lt; 55 (1. Yarı Alt/Üst 0.5: Üst @1.27)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Hapoel Beer Sheva – Ofi Crete</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 47 &lt; 55 (1. Yarı Alt/Üst 1.5: Alt @1.37)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>AZ Alkmaar – Juventus</td>
+<td>UEFA Avrupa Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 57 &lt; 55 (1. Yarı Alt/Üst 1.5: Alt @1.35)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Un. Craiova – KF Egnatia Rrogozhine</td>
+<td>UEFA Konferans Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 50 &lt; 55 (1. Yarı Alt/Üst 1.5: Alt @1.45)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>St. Truidense – Brann</td>
+<td>UEFA Konferans Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 60 &lt; 55 (Karşılıklı Gol: Var @1.31)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Getafe – Brighton</td>
+<td>UEFA Konferans Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 53 &lt; 55 (1. Yarı Alt/Üst 0.5: Üst @1.25)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Twente – Pafos FC</td>
+<td>UEFA Konferans Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 54 &lt; 55 (1. Yarı Sonucu: 1 @1.49)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Lugano – Zalgiris Kaunas</td>
+<td>UEFA Konferans Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 56 &lt; 55 (1. Yarı Sonucu: 1 @1.34)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Kopenhag – FC Iberia 1999</td>
+<td>UEFA Konferans Ligi</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 61 &lt; 55 (Karşılıklı Gol: Yok @1.41)</td>
+</tr>
+<tr>
+<td>21:00</td>
+<td>CA Aldosivi – River Plate</td>
+<td>Arjantin Primera LPF, Kapanış</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 60 &lt; 55 (Karşılıklı Gol: Yok @1.57)</td>
+</tr>
+</tbody>
+</table></div>
+<hr />
+<p><strong>Bu analiz istatistiksel bir tahmindir, sonuç garantisi vermez. Kaybetmeyi göze alabileceğin miktarla oyna.</strong></p></main></body></html>
