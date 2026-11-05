@@ -266,6 +266,16 @@ function liveDetail(kod) {
       + `<div class="lodds-note">Canlı tahmin: maç öncesi gol beklentisinin kalan süreye düşen payı ve mevcut skorla hesaplanır (kırmızı kart, tempo gibi etkenleri bilmez).</div>`;
   }
 
+  // Dakika etiketi: ilk yarı (durum 2) 45'ten sonra "45+N", ikinci yarı 90'dan sonra "90+N"
+  function minLabel(x) {
+    const mn = x.min ?? 0;
+    if (x.s === 2) return mn > 45 ? `45+${mn - 45}'` : `${mn}'`;
+    if (mn > 120) return `120+${mn - 120}'`;     // uzatma devreleri (kupa maçları)
+    if (mn > 105 && mn <= 120) return `${mn}'`;
+    if (mn > 90) return `90+${mn - 90}'`;
+    return `${mn}'`;
+  }
+
   // Maç durumu etiketi
   function liveTag(kod, big) {
     const x = LIVE[kod];
@@ -273,7 +283,7 @@ function liveDetail(kod) {
     const sc = `${x.h} - ${x.a}`;
     const red = (n) => (n ? `<i class="rc">${n > 1 ? n : ""}</i>` : "");
     if (x.phase === 2) return `<span class="lv end">MS <b>${sc}</b></span>`;
-    const t = x.s === 4 ? "İY" : `${x.min ?? ""}'`;
+    const t = x.s === 4 ? "İY" : minLabel(x);
     return `<span class="lv on"><i class="dot"></i>${t} <b>${red(x.hrc)}${sc}${red(x.arc)}</b></span>`;
   }
   // Üst tahmininin canlı durumu
@@ -306,7 +316,7 @@ function liveDetail(kod) {
     let mid;
     if (!x) mid = `<div class="sb-pill sb-pre">${esc(m.saat)}</div><div class="sb-score sb-vs">vs</div><div class="sb-ht">başlamadı</div>`;
     else {
-      const pill = x.phase === 2 ? `<div class="sb-pill sb-end">MS</div>` : x.s === 4 ? `<div class="sb-pill">İY</div>` : `<div class="sb-pill"><i class="dot"></i>${x.min ?? ""}'</div>`;
+      const pill = x.phase === 2 ? `<div class="sb-pill sb-end">MS</div>` : x.s === 4 ? `<div class="sb-pill">İY</div>` : `<div class="sb-pill"><i class="dot"></i>${minLabel(x)}</div>`;
       mid = `${pill}<div class="sb-score">${x.h} <span>-</span> ${x.a}</div><div class="sb-ht">İY: ${x.hh ?? "–"}-${x.ha ?? "–"}</div>`;
     }
     return `<div class="sb ${x?.phase === 1 ? "on" : ""}">
