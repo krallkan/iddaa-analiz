@@ -44,23 +44,33 @@
 
   // ---------- canlı skor (telefondan doğrudan; iddaa canlı sonuç servisi) ----------
   const LIVE_URL = (d) => `https://statisticsv2.iddaa.com/live-results?sportId=1&date=${d}`;
+  // Türkiye saatine göre bugünün tarihi (YYYY-MM-DD)
+  const todayTR = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Istanbul" });
   async function fetchLive() {
     if (!DATA || !live || liveBusy) return;
     liveBusy = true;
     try {
-      const r = await fetch(LIVE_URL(DATA.tarih), { cache: "no-store" });
-      if (!r.ok) throw new Error(r.status);
-      const j = (await r.json()).data || {};
-      const sc = j.sc || {}, out = {};
-      for (const e of j.events || []) {
-        const k = String(e.eventId), x = sc[k];
-        if (!x || !e.phase) continue;           // phase 0 = başlamadı
-        out[k] = { phase: e.phase, s: x.s, min: x.min, h: x.ht?.r ?? 0, a: x.at?.r ?? 0,
-                   hh: x.ht?.ht ?? null, ha: x.at?.ht ?? null, hco: x.ht?.co, aco: x.at?.co,
-                   hrc: x.ht?.rc || 0, arc: x.at?.rc || 0, hyc: x.ht?.yc, ayc: x.at?.yc };
+      // Gece yarısından sonra süren maçlar yeni günün listesine geçer: iki günü de çek, birleştir
+      const dates = [...new Set([DATA.tarih, todayTR(), ...DATA.maclar.map((m) => (m.baslama || "").slice(0, 10)).filter(Boolean)])].slice(0, 3);
+      const res = await Promise.all(dates.map((d) => fetch(LIVE_URL(d), { cache: "no-store" })
+        .then((r) => (r.ok ? r.json() : null)).catch(() => null)));
+      if (!res.some(Boolean)) throw new Error("canlı veri yok");
+      const out = {};
+      for (const j of res) {
+        const data = (j && j.data) || {}, sc = data.sc || {};
+        for (const e of data.events || []) {
+          const k = String(e.eventId), x = sc[k];
+          if (!x || !e.phase) continue;           // phase 0 = başlamadı
+          const prev = out[k];
+          if (prev && prev.phase === 1 && e.phase !== 1) continue;   // canlı kayıt öncelikli
+          out[k] = { phase: e.phase, s: x.s, min: x.min, h: x.ht?.r ?? 0, a: x.at?.r ?? 0,
+                     hh: x.ht?.ht ?? null, ha: x.at?.ht ?? null, hco: x.ht?.co, aco: x.at?.co,
+                     hrc: x.ht?.rc || 0, arc: x.at?.rc || 0, hyc: x.ht?.yc, ayc: x.at?.yc };
+        }
       }
       LIVE = out; liveAt = Date.now();
       paintLive();
+      if (curKod && dTab === "ist" && dSub.ist === "canli") { const el = $("#dtab"); if (el) el.innerHTML = tabIst(byKod(curKod)); }
       if (!oddsTimer && DATA.maclar.some((m) => LIVE[m.kod]?.phase === 1)) fetchOdds();
       if (curKod && !evTimer && !evBusy && LIVE[curKod]?.phase === 1) fetchEvent(curKod);
     } catch (e) { /* ağ hatası: bir sonraki turda tekrar dener */ }
@@ -515,50 +525,191 @@ function liveDetail(kod) {
   let curMt = "MS", curKod = null;
   function openDetail(kod) {
     const m = byKod(kod); if (!m) return;
-    curKod = kod;
+    curKod = kod; dTab = "oran";
     drawDetail(m);
     $("#sheet").classList.remove("hidden"); document.body.style.overflow = "hidden";
     $("#sheetBody").scrollTop = 0;
     history.pushState({ detay: kod }, "");   // Android geri tuşu paneli kapatsın
     fetchEvent(kod);
   }
+  // ---------- maç detayı: sekmeler ----------
+  const ST = "https://statisticsv2.iddaa.com/statistics/soccer";
+  const DET = {};   // {kod: {lineup, standings, rh, ra, h2h, ins, cc}}  (oturum içi önbellek)
+  let dTab = "oran", dSub = { bilgi: "ozet", ist: "canli" };
+  async function detFetch(kod, key, path) {
+    DET[kod] = DET[kod] || {};
+    if (DET[kod][key] !== undefined) return DET[kod][key];
+    DET[kod][key] = null;   // yükleniyor
+    try {
+      const r = await fetch(`${ST}/${path}`, { cache: "no-store" });
+      const j = r.ok ? await r.json() : null;
+      DET[kod][key] = j && j.isSuccess ? j.data : false;
+    } catch (e) { DET[kod][key] = false; }
+    if (curKod === kod) drawTab(byKod(kod));
+    return DET[kod][key];
+  }
+  const need = (kod, key, path) => { const v = DET[kod]?.[key]; if (v === undefined) detFetch(kod, key, path); return v; };
+  const loading = `<div class="lodds-note">Yükleniyor…</div>`;
+  const nodata = (t) => `<div class="lodds-note">${t || "Kaynakta veri yok."}</div>`;
+  const fbadge = (s) => [...(s || "")].map((c) => `<span class="fb ${c}">${c}</span>`).join("");
+  const o2 = (x) => (x == null ? "–" : Number(x).toFixed(2));
+  const dt = (ts) => { const d = new Date(ts * 1000); return d.toLocaleDateString("tr-TR", { day: "2-digit", month: "2-digit", year: "2-digit", timeZone: "Europe/Istanbul" }); };
+
   function drawDetail(m) {
-    const ord = (o) => (DATA.pazarlar || []).findIndex((z) => z.pazar === o.p && z.secenek === o.s);
-    const groups = { "Maç öncesi Üst tahminleri": [...m.secenekler].sort((a, b) => ord(a) - ord(b)) };
-    const bar = (cls, v, l) => `<div>${l} ${pct(v)}</div><div class="bar ${cls}"><i style="width:${v == null ? 0 : Math.min(100, 100 * v)}%"></i></div>`;
-    const fb = (s) => [...(s || "")].map((c) => `<span class="fb ${c}">${c}</span>`).join("");
-    const o2 = (x) => (x == null ? "–" : Number(x).toFixed(2));
-    const pr = (p) => (p ? `${p.sira}. · ${p.puan} puan` : "–");
-    let h = `<div class="sh-top"><div class="grab"></div><div class="sh-head"><div>${meta(m)}<h3>${esc(m.ev)} – ${esc(m.dep)}</h3></div>
+    const tabs = [["oran", "Oranlar"], ["bilgi", "Bilgiler"], ["ist", "İstatistik"], ["analiz", "Analiz"]];
+    $("#sheetBody").innerHTML = `<div class="sh-top"><div class="grab"></div><div class="sh-head"><div>${meta(m)}<h3>${esc(m.ev)} – ${esc(m.dep)}</h3></div>
       <button class="close" data-close="1" aria-label="Kapat">✕</button></div>
-</div>
       <div data-livebox="${esc(m.kod)}">${liveBox(m.kod)}</div>
-      <div data-ldet="${esc(m.kod)}">${liveDetail(m.kod)}</div>
-`;
-    for (const [pa, os] of Object.entries(groups)) {
-      h += `<div class="mkt"><div class="mkt-h">${esc(pa)} <span class="mkt-s">oranlar ${esc((m.oran_zamani || DATA.oran_zamani || "").slice(11, 16))}</span></div>`;
-      for (const o of os) {
-        const sub = `tahmin ${pct(o.m)} · piyasa ${o.pk == null ? "–" : pct(o.pk)} · istatistik ${o.i == null ? "–" : pct(o.i)}`
-          + (o.o == null ? "" : ` · güven ${Math.round(o.g)}`) + (o.sup ? " · <span style='color:#ffcf70'>şüpheli</span>" : "");
-        const dis = o.o == null ? "yok" : m.baslamis ? odd(o.o) : null;
-        h += oddRow(esc((o.etiket || o.s).replace(/(\d)\.5/, "$1,5")), sub, rowBtn(`data-k="${esc(m.kod)}" data-p="${esc(o.p)}" data-s="${esc(o.s)}"`, o.o, isOn(m, o), dis));
-      }
-      h += `</div>`;
-    }
-    h += `<div class="sec">En olası skorlar</div><div class="scores">${(m.skorlar || []).map((s) => `<div class="score"><b>${esc(s.skor)}</b><small>${pct(s.olasilik, 1)}</small></div>`).join("")}
-      <div class="score"><b>${o2(m.lambda?.ev)} : ${o2(m.lambda?.dep)}</b><small>beklenen gol</small></div></div>
-      <div class="sec">Form (son 10)</div><div style="font-size:.8rem;color:var(--muted);margin-bottom:4px">${esc(m.ev)}</div><div class="form">${fb(m.form?.ev)}</div>
-      <div style="font-size:.8rem;color:var(--muted);margin:8px 0 4px">${esc(m.dep)}</div><div class="form">${fb(m.form?.dep)}</div>
-      <div class="sec">Son 10 maç ortalamaları</div><div class="kv"><span class="k"></span><div><b>${esc(m.ev)}</b></div><div><b>${esc(m.dep)}</b></div>
-      ${[["Atılan gol", "atilan_ort", 0], ["Yenilen gol", "yenilen_ort", 0], ["2.5 Üst %", "ust25_yuzde", 1], ["KG Var %", "kg_var_yuzde", 1], ["Gol yemeden %", "gol_yemeden_yuzde", 1]]
-        .map(([l, k, p]) => `<span class="k">${l}</span><div>${m.ort?.ev?.[k] ?? "–"}${p && m.ort?.ev?.[k] != null ? "%" : ""}</div><div>${m.ort?.dep?.[k] ?? "–"}${p && m.ort?.dep?.[k] != null ? "%" : ""}</div>`).join("")}
-      ${m.puan?.turnuva ? `<span class="k">${esc(m.puan.turnuva)}</span><div>${pr(m.puan.ev)}</div><div>${pr(m.puan.dep)}</div>` : ""}</div>
-      <div class="sec">Kafa kafaya</div><div style="font-size:.84rem">${m.h2h?.length ? m.h2h.map((x) => `<div>${esc(x.tarih)} · ${esc(x.skor)} <span style="color:var(--muted)">(İY ${esc(x.iy)})</span></div>`).join("") : "<span style='color:var(--muted)'>Veri yok</span>"}</div>
-      <div class="sec">Haberler (son 72 saat)</div><div class="news">${m.haberler?.length ? m.haberler.map((n) => `<a href="${esc(safeUrl(n.l))}" target="_blank" rel="noopener">${esc(n.b)}<small>${esc(n.k)} · ${esc((n.t || "").slice(0, 16).replace("T", " "))}${(n.kat || []).filter((c) => c !== "kadro" && c !== "onizleme").length ? " · " + esc(n.kat.join(", ")) : ""}</small></a>`).join("") : "<span style='color:var(--muted);font-size:.84rem'>İlgili haber bulunamadı</span>"}</div>
-      ${(m.risk || []).length ? `<div class="note">⚠ Risk: ${m.risk.map(esc).join(" · ")}</div>` : ""}
-      <div class="note">Veri kalitesi ${m.veri_kalitesi} · İstatistik modelinin beklenen golü ${o2(m.ist_lambda?.ev)} : ${o2(m.ist_lambda?.dep)} · maç kodu ${esc(m.kod)}</div>`;
-    $("#sheetBody").innerHTML = h;
+      <div class="dtabs">${tabs.map(([id, ad]) => `<button class="dtab ${id === dTab ? "on" : ""}" data-dtab="${id}">${ad}${id === "ist" && LIVE[m.kod]?.phase === 1 ? ' <i class="dot"></i>' : ""}</button>`).join("")}</div></div>
+      <div id="dtab"></div>`;
+    drawTab(m);
     paintLive();
+  }
+  function subtabs(group, list) {
+    return `<div class="dsubs">${list.map(([id, ad]) => `<button class="dsub ${dSub[group] === id ? "on" : ""}" data-dsub="${group}|${id}">${ad}</button>`).join("")}</div>`;
+  }
+  function drawTab(m) {
+    const el = $("#dtab"); if (!el || !m) return;
+    const y = $("#sheetBody").scrollTop;
+    el.innerHTML = dTab === "oran" ? tabOran(m) : dTab === "bilgi" ? tabBilgi(m) : dTab === "ist" ? tabIst(m) : tabAnaliz(m);
+    $("#sheetBody").scrollTop = y;
+    paintLive();
+  }
+
+  // --- Oranlar ---
+  function tabOran(m) {
+    const ord = (o) => (DATA.pazarlar || []).findIndex((z) => z.pazar === o.p && z.secenek === o.s);
+    let h = `<div data-ldet="${esc(m.kod)}">${liveDetail(m.kod)}</div>
+      <div class="mkt"><div class="mkt-h">Maç öncesi Üst tahminleri <span class="mkt-s">oranlar ${esc((m.oran_zamani || DATA.oran_zamani || "").slice(11, 16))}</span></div>`;
+    for (const o of [...m.secenekler].sort((a, b) => ord(a) - ord(b))) {
+      const sub = `tahmin ${pct(o.m)} · piyasa ${o.pk == null ? "–" : pct(o.pk)} · istatistik ${o.i == null ? "–" : pct(o.i)}`
+        + (o.o == null ? "" : ` · güven ${Math.round(o.g)}`) + (o.sup ? " · <span style='color:#ffcf70'>şüpheli</span>" : "");
+      const dis = o.o == null ? "yok" : m.baslamis ? odd(o.o) : null;
+      h += oddRow(esc((o.etiket || o.s).replace(/(\d)\.5/, "$1,5")), sub, rowBtn(`data-k="${esc(m.kod)}" data-p="${esc(o.p)}" data-s="${esc(o.s)}"`, o.o, isOn(m, o), dis));
+    }
+    return h + `</div>`;
+  }
+
+  // --- Bilgiler ---
+  function tabBilgi(m) {
+    let h = subtabs("bilgi", [["ozet", "Özet"], ["kadro", "Kadro"], ["sakat", "Sakat/Ceza"]]);
+    if (dSub.bilgi === "ozet") {
+      const x = LIVE[m.kod];
+      h += `<div class="mkt"><div class="mkt-h">Maç bilgisi</div>
+        <div class="kv2"><span>Turnuva</span><b>${esc(m.lig)}</b><span>Başlama</span><b>${esc(m.baslama.slice(0, 10).split("-").reverse().join("."))} ${esc(m.saat)}</b>
+        <span>MBS</span><b>${esc(m.mbs)}</b><span>Maç kodu</span><b>${esc(m.kod)}</b>
+        ${x ? `<span>Durum</span><b>${x.phase === 2 ? "Maç sonu" : x.s === 4 ? "Devre arası" : minLabel(x)}</b><span>İlk yarı</span><b>${x.hh ?? "–"} - ${x.ha ?? "–"}</b>` : ""}</div></div>
+        <div class="mkt"><div class="mkt-h">En olası skorlar <span class="mkt-s">maç öncesi model</span></div><div class="scores">${(m.skorlar || []).map((s) => `<div class="score"><b>${esc(s.skor)}</b><small>${pct(s.olasilik, 1)}</small></div>`).join("")}
+        <div class="score"><b>${o2(m.lambda?.ev)} : ${o2(m.lambda?.dep)}</b><small>beklenen gol</small></div></div></div>
+        <div class="mkt"><div class="mkt-h">Sonraki maçlar</div><div class="kv2"><span>${esc(m.ev)}</span><b>${esc((m.sonraki?.ev_sonraki || [])[0] || "bültende yok")}</b>
+        <span>${esc(m.dep)}</span><b>${esc((m.sonraki?.dep_sonraki || [])[0] || "bültende yok")}</b></div></div>
+        <div class="lodds-note">Gol ve kart dakikaları (maç akışı) iddaa'nın açık servislerinde bulunmuyor; anlık skor, korner ve kartlar İstatistik › Canlı sekmesinde.</div>`;
+    } else if (dSub.bilgi === "kadro") {
+      const L = need(m.kod, "lineup", `lineup/${m.kod}`);
+      h += L === null || L === undefined ? loading : !L ? nodata("Kadro bilgisi yok.") : lineupView(L);
+    } else {
+      const hs = (m.haberler || []);
+      const inj = hs.filter((n) => (n.kat || []).some((c) => c === "sakatlik" || c === "ceza"));
+      h += `<div class="mkt"><div class="mkt-h">Sakat / cezalı haberleri <span class="mkt-s">son 72 saat</span></div>
+        <div class="news">${inj.length ? inj.map(newsItem).join("") : nodata("Bu maç için sakatlık/ceza haberi bulunamadı.")}</div></div>
+        <div class="mkt"><div class="mkt-h">Diğer haberler</div><div class="news">${hs.filter((n) => !inj.includes(n)).map(newsItem).join("") || nodata("Haber yok.")}</div></div>
+        <div class="lodds-note">Resmi sakat/cezalı listesi kaynakta yok; haber başlıklarından derlenir, doğruluğu garanti değildir.</div>`;
+    }
+    return h;
+  }
+  const newsItem = (n) => `<a href="${esc(safeUrl(n.l))}" target="_blank" rel="noopener">${esc(n.b)}<small>${esc(n.k)} · ${esc((n.t || "").slice(0, 16).replace("T", " "))}</small></a>`;
+  function lineupView(L) {
+    const rows = (team) => {
+      const xi = (team.p || []).filter((p) => !p.r);
+      const g = { Kaleci: [], Savunma: [], Orta: [], Forvet: [] };
+      for (const p of xi) {
+        const pos = (p.lp || p.p || "");
+        (/kaleci/i.test(pos) ? g.Kaleci : /savun|defans|bek|stoper/i.test(pos) ? g.Savunma : /forvet|santrafor|kanat forvet/i.test(pos) ? g.Forvet : g.Orta).push(p);
+      }
+      return [g.Kaleci, g.Savunma, g.Orta, g.Forvet].filter((r) => r.length);
+    };
+    const player = (p, cls) => `<div class="pl ${cls}"><span class="pj">${esc(p.j ?? "")}</span><span class="pn">${esc((p.n || "").replace(/^(\w)\.\s?/, "$1. "))}</span></div>`;
+    const half = (team, cls, rev) => { const rs = rows(team); return `<div class="half ${cls}">${(rev ? [...rs].reverse() : rs).map((r) => `<div class="prow">${r.map((p) => player(p, cls)).join("")}</div>`).join("")}</div>`; };
+    const subs = (team) => (team.p || []).filter((p) => p.r).map((p) => `${esc(p.n)}${p.j ? ` (${esc(p.j)})` : ""}`).join(", ") || "–";
+    return `<div class="mkt"><div class="mkt-h">Kadro <span class="mkt-s">${L.pm === true || L.pm === "true" ? "resmi" : "tahmini"}</span></div>
+      <div class="lteams"><div><b>${esc(L.h?.n)}</b><small>${esc(L.h?.f || "")} · TD ${esc(L.h?.m || "–")}</small></div><div style="text-align:right"><b>${esc(L.a?.n)}</b><small>${esc(L.a?.f || "")} · TD ${esc(L.a?.m || "–")}</small></div></div>
+      <div class="pitch">${half(L.a || {}, "away", false)}<div class="midline"></div>${half(L.h || {}, "home", true)}</div>
+      <div class="lodds-note"><b>${esc(L.h?.n)} yedekler:</b> ${subs(L.h || {})}<br><b>${esc(L.a?.n)} yedekler:</b> ${subs(L.a || {})}</div></div>`;
+  }
+
+  // --- İstatistik ---
+  function cmpBar(label, a, b) {
+    const A = Number(a) || 0, B = Number(b) || 0, t = A + B || 1;
+    return `<div class="cmp"><div class="cmp-h"><b>${a ?? "–"}</b><span>${label}</span><b>${b ?? "–"}</b></div>
+      <div class="cmp-b"><div class="ca"><i style="width:${100 * A / t}%"></i></div><div class="cb"><i style="width:${100 * B / t}%"></i></div></div></div>`;
+  }
+  function tabIst(m) {
+    let h = subtabs("ist", [["canli", "Canlı"], ["kars", "Karşılaştırma"], ["puan", "Puan Durumu"]]);
+    if (dSub.ist === "canli") {
+      const x = LIVE[m.kod];
+      if (!x) return h + nodata("Maç başlayınca canlı istatistikler burada görünür.");
+      h += `<div class="mkt"><div class="cmp-t"><b>${esc(m.ev)}</b><b>${esc(m.dep)}</b></div>
+        ${cmpBar("Gol", x.h, x.a)}${cmpBar("İlk yarı gol", x.hh, x.ha)}${cmpBar("Korner", x.hco, x.aco)}${cmpBar("Sarı kart", x.hyc, x.ayc)}${cmpBar("Kırmızı kart", x.hrc, x.arc)}</div>
+        <div class="lodds-note">xG, topla oynama ve şut istatistikleri iddaa'nın açık servislerinde bulunmuyor. Veriler saniyede bir güncellenir.</div>`;
+    } else if (dSub.ist === "kars") {
+      h += `<div class="mkt"><div class="mkt-h">Form (son 10)</div><div class="frow"><span>${esc(m.ev)}</span><div class="form">${fbadge(m.form?.ev)}</div></div>
+        <div class="frow"><span>${esc(m.dep)}</span><div class="form">${fbadge(m.form?.dep)}</div></div></div>
+        <div class="mkt"><div class="mkt-h">Son 10 maç ortalamaları</div><div class="cmp-t"><b>${esc(m.ev)}</b><b>${esc(m.dep)}</b></div>
+        ${[["Attığı gol", "atilan_ort"], ["Yediği gol", "yenilen_ort"], ["2,5 Üst %", "ust25_yuzde"], ["KG Var %", "kg_var_yuzde"], ["Gol yemeden %", "gol_yemeden_yuzde"]].map(([l, k]) => cmpBar(l, m.ort?.ev?.[k], m.ort?.dep?.[k])).join("")}</div>`;
+      const cc = need(m.kod, "cc", `card-corners/${m.kod}`);
+      if (cc) {
+        const av = (t) => { const ms = t?.m || []; const me = t?.n; let co = 0, n = 0, ca = 0;
+          for (const g of ms) { const mine = g.h?.n === me ? g.h : g.a; if ((g.h?.c || 0) + (g.a?.c || 0) > 0) { co += mine?.c || 0; n++; } ca += (mine?.yc || 0) + (mine?.rc || 0); }
+          return { co: n ? (co / n).toFixed(1) : null, ca: ms.length ? (ca / ms.length).toFixed(1) : null }; };
+        const A = av(cc.h), B = av(cc.a);
+        h += `<div class="mkt"><div class="mkt-h">Korner ve kart (son 6 maç ort.)</div>${cmpBar("Korner", A.co, B.co)}${cmpBar("Kart", A.ca, B.ca)}</div>`;
+      }
+      const rh = need(m.kod, "rh", `recent-matches/${m.kod}?matchHistoryType=0&isOnlyCurrentTournament=false`);
+      const ra = need(m.kod, "ra", `recent-matches/${m.kod}?matchHistoryType=1&isOnlyCurrentTournament=false`);
+      const hh = need(m.kod, "h2h", `recent-matches/${m.kod}?matchHistoryType=2&isOnlyCurrentTournament=false`);
+      const list = (d, team) => !d ? (d === false ? nodata() : loading) : (d.m || []).slice(0, 8).map((g) => {
+        const res = g.mr || "", me = team;
+        return `<div class="rm"><span class="rd">${dt(g.t)}</span><span class="rl">${esc(g.l?.a || "")}</span>
+          <span class="rt ${g.h?.n === me ? "me" : ""}">${esc(g.h?.n)}</span><b>${g.h?.rs ?? "–"} - ${g.a?.rs ?? "–"}</b><span class="rt ${g.a?.n === me ? "me" : ""}">${esc(g.a?.n)}</span>${res ? `<span class="fb ${res}">${res}</span>` : ""}</div>`; }).join("") || nodata();
+      h += `<div class="mkt"><div class="mkt-h">Kafa kafaya</div>${list(hh, null)}</div>
+        <div class="mkt"><div class="mkt-h">${esc(m.ev)} son maçlar</div>${list(rh, rh && rh.h?.n)}</div>
+        <div class="mkt"><div class="mkt-h">${esc(m.dep)} son maçlar</div>${list(ra, ra && ra.a?.n)}</div>`;
+    } else {
+      const S = need(m.kod, "standings", `standings/${m.kod}?standingType=0&isLive=false`);
+      if (S === null || S === undefined) return h + loading;
+      if (!S || !(S.g || []).length) return h + nodata("Puan durumu yok.");
+      const names = [m.ev, m.dep];
+      for (const g of S.g) {
+        h += `<div class="mkt"><div class="mkt-h">${esc(g.n || S.ss?.n || "Puan durumu")}</div><div class="tbl"><div class="tr th"><span>#</span><span>Takım</span><span>O</span><span>G</span><span>B</span><span>M</span><span>A</span><span>P</span></div>
+          ${(g.t || []).map((r) => `<div class="tr ${names.some((n) => n && r.n && (r.n.includes(n) || n.includes(r.n))) ? "hl" : ""}"><span>${r.r}</span><span class="tn">${esc(r.n)}</span><span>${r.p}</span><span>${r.w}</span><span>${r.d}</span><span>${r.l}</span><span>${r.gd > 0 ? "+" : ""}${r.gd}</span><b>${r.pt}</b></div>`).join("")}</div></div>`;
+      }
+    }
+    return h;
+  }
+
+  // --- Analiz ---
+  function tabAnaliz(m) {
+    const ins = need(m.kod, "ins", `bet-insights/${m.kod}`);
+    const best = m.secim ? m.secenekler.find((o) => o.p === m.secim.p && o.s === m.secim.s) : null;
+    const top = [...m.secenekler].filter((o) => o.o != null).sort((a, b) => (b.g || 0) - (a.g || 0))[0];
+    const lt = (m.lambda?.ev || 0) + (m.lambda?.dep || 0);
+    const o25 = m.secenekler.find((o) => o.p === "AU_2.5");
+    const lines = [];
+    lines.push(`Model bu maçta toplam <b>${lt.toFixed(2)}</b> gol bekliyor (${esc(m.ev)} ${o2(m.lambda?.ev)}, ${esc(m.dep)} ${o2(m.lambda?.dep)}).`);
+    if (o25) lines.push(`2,5 Üst olasılığı <b>${pct(o25.m)}</b>${o25.o ? ` (iddaa oranı ${odd(o25.o)}, piyasa ${pct(o25.pk)})` : ""}${o25.i != null ? `; bağımsız istatistik modeli ${pct(o25.i)} diyor` : ""}.`);
+    const e = m.ort?.ev, d = m.ort?.dep;
+    if (e && d) lines.push(`Son 10 maçta ${esc(m.ev)} maç başı ${e.atilan_ort ?? "–"} gol atıp ${e.yenilen_ort ?? "–"} yedi (2,5 Üst %${e.ust25_yuzde ?? "–"}); ${esc(m.dep)} ${d.atilan_ort ?? "–"} atıp ${d.yenilen_ort ?? "–"} yedi (2,5 Üst %${d.ust25_yuzde ?? "–"}).`);
+    if (m.form?.ev && m.form?.dep) lines.push(`Form: ${esc(m.ev)} ${fbadge(m.form.ev.slice(0, 5))} · ${esc(m.dep)} ${fbadge(m.form.dep.slice(0, 5))} (son 5).`);
+    if (m.risk?.length) lines.push(`Dikkat: ${m.risk.map(esc).join(" · ")}.`);
+    let h = `<div class="mkt ai"><div class="mkt-h">🤖 Model yorumu</div>${lines.map((l) => `<p>${l}</p>`).join("")}
+      ${best || top ? `<div class="pickbox"><span>Öne çıkan Üst tahmini</span><b>${esc((best || top).etiket || "")}</b><em>${odd((best || top).o)} · %${Math.round(100 * (best || top).m)} · güven ${Math.round((best || top).g)}</em></div>` : ""}</div>`;
+    h += `<div class="mkt"><div class="mkt-h">Akıllı analiz notları <span class="mkt-s">iddaa istatistik</span></div>${ins === null || ins === undefined ? loading
+      : !ins || !(ins.bi || []).length ? nodata("Bu maç için analiz notu yok.") : ins.bi.map((x) => `<div class="insight">💡 ${esc(x.f)}</div>`).join("")}</div>`;
+    h += `<div class="mkt"><div class="mkt-h">Üst tahminleri</div>${[...m.secenekler].map((o) => oddRow(esc((o.etiket || o.s).replace(/(\d)\.5/, "$1,5")),
+      `tahmin ${pct(o.m)}${o.g != null ? ` · güven ${Math.round(o.g)}` : ""}${o.d != null ? ` · değer ${o.d > 0 ? "+" : ""}${o.d.toFixed(2)}` : ""}`,
+      rowBtn(`data-k="${esc(m.kod)}" data-p="${esc(o.p)}" data-s="${esc(o.s)}"`, o.o, isOn(m, o), o.o == null ? "yok" : m.baslamis ? odd(o.o) : null))).join("")}</div>
+      <div class="lodds-note">Bu yorumlar istatistiksel tahmindir, sonuç garantisi vermez.</div>`;
+    return h;
   }
   function hideDetail() { $("#sheet").classList.add("hidden"); document.body.style.overflow = ""; curKod = null; clearTimeout(evTimer); evTimer = null; }
   function closeDetail() { if (history.state && history.state.detay) history.back(); else hideDetail(); }
@@ -575,7 +726,7 @@ function liveDetail(kod) {
     if (tab === "gecmis") { vGecmis(); return; }
     view.innerHTML = tab === "secim" ? vSecim() : tab === "mac" ? vMac() : tab === "fav" ? vFav() : vKupon();
     if (keepScroll) window.scrollTo(0, y);
-    if (curKod && byKod(curKod)) drawDetail(byKod(curKod));
+    if (curKod && byKod(curKod)) drawTab(byKod(curKod));
     paintLive();
     if (tab === "kupon") paintKupon();
   }
@@ -588,6 +739,8 @@ function liveDetail(kod) {
     if (!t) { if (e.target.id === "sheet") closeDetail(); return; }
     const d = t.dataset;
     if (d.tab) { tab = d.tab; window.scrollTo(0, 0); render(); if (tab === "kupon") fetchKuponOdds(); else { clearTimeout(kTimer); kTimer = null; } return; }
+    if (d.dtab) { dTab = d.dtab; document.querySelectorAll(".dtab").forEach((b) => b.classList.toggle("on", b.dataset.dtab === dTab)); drawTab(byKod(curKod)); $("#sheetBody").scrollTop = 0; return; }
+    if (d.dsub) { const [g, id] = d.dsub.split("|"); dSub[g] = id; drawTab(byKod(curKod)); return; }
     if (d.lk) {
       e.stopPropagation(); const m = byKod(d.lk); const z = m && (liveOvers(m) || []).find((q) => q.p === d.lp);
       if (m && z) {
