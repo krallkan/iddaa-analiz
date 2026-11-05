@@ -384,7 +384,7 @@ function liveDetail(kod) {
   }
   function valChip(d) { return `<span class="chip ${d > 0 ? "pos" : "neg"}">değer ${d > 0 ? "+" : ""}${d.toFixed(2)}</span>`; }
   const teams = (m) => `<div class="teams"><span>${esc(m.ev)}<span class="vs">–</span>${esc(m.dep)}</span>${favBtn(m)}</div>`;
-  const meta = (m) => `<div class="meta"><span class="lig">${esc(m.lig)}</span><span><span data-live="${esc(m.kod)}">${liveTag(m.kod)}</span> ${esc(m.saat)} · MBS ${esc(m.mbs)}</span></div>`;
+  const meta = (m) => `<div class="meta"><span class="lig">${esc(m.lig)}</span><span class="mlive" data-live="${esc(m.kod)}">${liveTag(m.kod)}</span><span class="mtime">${esc(m.saat)} · MBS ${esc(m.mbs)}</span></div>`;
 
   // ---------- sekmeler ----------
   function vSecim() {
