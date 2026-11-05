@@ -19,7 +19,7 @@
   const NAME = { "1": "1", "0": "X", "2": "2", "1 ve 0": "1-X", "1 ve 2": "1-2", "0 ve 2": "X-2" };
   const nice = (s) => NAME[s] || s.replace(/\b0\b/g, "X");
 
-  let DATA = null, live = true, tab = "secim", lig = "Tümü", q = "";
+  let DATA = null, live = true, tab = "secim", lig = "Tümü", q = "", lastLoad = 0;
   let kupon = LS.get("kupon", {}); // {kod: {p,s,o,m,pk,mbs,mac,pa,tarih}}
 
   // ---------- veri ----------
@@ -28,7 +28,7 @@
     try {
       const r = await fetch(url + (url.includes("?") ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" });
       if (!r.ok) throw new Error(r.status);
-      DATA = await r.json(); live = isLive;
+      DATA = await r.json(); live = isLive; lastLoad = Date.now();
       if (isLive) LS.set("son_veri", DATA);
       cleanKupon();
       render();
@@ -256,6 +256,10 @@
     if (e.target.id === "q") { q = e.target.value; const pos = e.target.selectionStart; render(); const el = $("#q"); el.focus(); el.setSelectionRange(pos, pos); }
     if (e.target.id === "stake") { const v = Math.max(1, Number(e.target.value) || 1); LS.set("stake", v);
       clearTimeout(window.__st); window.__st = setTimeout(() => { render(true); const el = $("#stake"); if (el) { el.focus(); el.setSelectionRange?.(9, 9); } }, 500); }
+  });
+  // Uygulama arka plandan 10 dakikadan sonra dönerse güncel raporu kendiliğinden çek
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible" && live && Date.now() - lastLoad > 10 * 60 * 1000) load("../data.json", true);
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDetail(); });
   // Android geri tuşu: önce detay panelini kapat
