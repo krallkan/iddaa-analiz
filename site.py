@@ -11,6 +11,8 @@ import json
 import shutil
 from pathlib import Path
 
+import math
+
 import httpx
 import markdown
 
@@ -47,6 +49,56 @@ def render_md(md_text: str) -> str:
     return h.replace("<table>", "<div class='tw'><table>").replace("</table>", "</table></div>")
 
 
+def carry_over(cur: dict, manifest_url: str, manifest: list[dict]) -> dict:
+    """Aynı gün önceki analizlerde gösterilip artık başlamış maçları (son tahminleriyle) listede tutar;
+    böylece uygulama bu maçların canlı skorunu ve tahminin tutup tutmadığını gösterebilir."""
+    base = manifest_url.rsplit("/", 1)[0]
+    have = {m["kod"] for m in cur["maclar"]}
+    picks = {o["kod"] for o in cur["ozet"]}
+    for mm in sorted(manifest, key=lambda x: x["ad"], reverse=True):
+        if mm.get("tarih") != cur["tarih"] or not mm.get("data"):
+            continue
+        try:
+            r = httpx.get(f"{base}/{mm['data']}", timeout=20)
+            old = r.json() if r.status_code == 200 else None
+        except Exception:  # noqa: BLE001
+            old = None
+        if not old:
+            continue
+        for m in old.get("maclar", []):
+            if m["kod"] in have:
+                continue
+            m["baslamis"] = True              # oranlar artık güncellenmiyor; canlı skor uygulamada
+            m["oran_zamani"] = old.get("oran_zamani")
+            if cur.get("pazarlar"):           # eski analizde izinli olmayan seçenekleri gösterme
+                ok = {(z["pazar"], z["secenek"]) for z in cur["pazarlar"]}
+                m["secenekler"] = [o for o in m["secenekler"] if (o["p"], o["s"]) in ok]
+                have_o = {(o["p"], o["s"]) for o in m["secenekler"]}
+                lam = m.get("lambda") or {}
+                for z in cur["pazarlar"]:     # eksik izinli seçenek: kayıtlı λ'dan Poisson ile tahmin
+                    if (z["pazar"], z["secenek"]) in have_o or not lam or not z["pazar"].startswith("AU_"):
+                        continue
+                    line, mu = float(z["pazar"][3:]), lam["ev"] + lam["dep"]
+                    p_over = 1 - sum(math.exp(-mu) * mu ** k / math.factorial(k) for k in range(int(line) + 1))
+                    m["secenekler"].append({"p": z["pazar"], "pa": z["pazar_adi"], "s": z["secenek"], "o": None,
+                                            "m": round(p_over, 4), "pk": None, "i": None, "d": None, "g": None,
+                                            "ok": False, "sup": False, "mbs": m.get("mbs"), "etiket": z["etiket"]})
+                for o in m["secenekler"]:
+                    o.setdefault("etiket", next((z["etiket"] for z in cur["pazarlar"]
+                                                 if (z["pazar"], z["secenek"]) == (o["p"], o["s"])), o["s"]))
+                if m.get("secim") and (m["secim"]["p"], m["secim"]["s"]) not in ok:
+                    m["secim"] = None
+            cur["maclar"].append(m)
+            have.add(m["kod"])
+            for o in old.get("ozet", []):
+                if o["kod"] == m["kod"] and o["kod"] not in picks and (
+                        not cur.get("pazarlar") or (o["p"], o["s"]) in {(z["pazar"], z["secenek"]) for z in cur["pazarlar"]}):
+                    cur["ozet"].append({**o, "baslamis": True})
+                    picks.add(o["kod"])
+    cur["maclar"].sort(key=lambda x: (x["baslama"], x["lig"]))
+    return cur
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--onceki", help="Önceki manifest.json adresi (geçmiş raporlar listesi için)")
@@ -70,7 +122,10 @@ def main():
     shutil.copytree(ROOT / "web", out / "app", dirs_exist_ok=True)
     (out / "d").mkdir(exist_ok=True)
     if (ROOT / "reports" / "app.json").exists():
-        shutil.copy(ROOT / "reports" / "app.json", out / "data.json")
+        cur = json.loads((ROOT / "reports" / "app.json").read_text(encoding="utf-8"))
+        if a.onceki:
+            cur = carry_over(cur, a.onceki, manifest)
+        (out / "data.json").write_text(json.dumps(cur, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
     for p in (ROOT / "reports").glob("app_????-??-??_????.json"):
         shutil.copy(p, out / "d" / f"{p.stem[4:]}.json")
     for p in reps:
