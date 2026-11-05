@@ -55,8 +55,13 @@ def carry_over(cur: dict, manifest_url: str, manifest: list[dict]) -> dict:
     base = manifest_url.rsplit("/", 1)[0]
     have = {m["kod"] for m in cur["maclar"]}
     picks = {o["kod"] for o in cur["ozet"]}
+    import datetime as _dt
+    today = _dt.date.fromisoformat(cur["tarih"])
+    prev_day = (today - _dt.timedelta(days=1)).isoformat()
+    now = _dt.datetime.now(_dt.timezone(_dt.timedelta(hours=3)))
     for mm in sorted(manifest, key=lambda x: x["ad"], reverse=True):
-        if mm.get("tarih") != cur["tarih"] or not mm.get("data"):
+        # aynı gün + önceki gün (gece yarısını geçen maçlar için; aşağıda son 6 saatle sınırlanır)
+        if mm.get("tarih") not in (cur["tarih"], prev_day) or not mm.get("data"):
             continue
         try:
             r = httpx.get(f"{base}/{mm['data']}", timeout=20)
@@ -68,6 +73,12 @@ def carry_over(cur: dict, manifest_url: str, manifest: list[dict]) -> dict:
         for m in old.get("maclar", []):
             if m["kod"] in have:
                 continue
+            if mm.get("tarih") == prev_day:   # önceki gün: yalnızca son 6 saatte başlamış (hâlâ sürüyor olabilecek) maçlar
+                try:
+                    if now - _dt.datetime.fromisoformat(m["baslama"]) > _dt.timedelta(hours=6):
+                        continue
+                except (KeyError, ValueError):
+                    continue
             m["baslamis"] = True              # oranlar artık güncellenmiyor; canlı skor uygulamada
             m["oran_zamani"] = old.get("oran_zamani")
             if cur.get("pazarlar"):           # eski analizde izinli olmayan seçenekleri gösterme

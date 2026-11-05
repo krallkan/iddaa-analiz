@@ -6,6 +6,10 @@
   Favoriler (☆ ile işaretlenen maçlar, canlı olanlar üstte; cihazda saklanır) · Kupon
   (toplam oran, kombine olasılık, MBS uyarısı) · Geçmiş. Bir maça dokununca tüm pazarlar, en olası skorlar, form,
   haberler açılır. Kupon yalnızca cihazda tutulur; uygulama bahis yapmaz ve hiçbir bahis hesabına bağlanmaz.
+  Maç detayı sekmeleri: **Oranlar** · **Bilgiler** (Özet, Kadro: sahada dizilim, Sakat/Ceza haberleri) ·
+  **İstatistik** (Canlı: gol/İY/korner/kart, Karşılaştırma: form, ortalamalar, son maçlar, kafa kafaya, Puan Durumu) ·
+  **Analiz** (model yorumu, iddaa analiz notları, Üst tahminleri). Detaylar maça dokununca iddaa istatistik
+  servisinden anlık çekilir. Gece yarısını geçen maçların canlı skoru için iki günün listesi birleştirilir.
   Kupon ekranı: **Kuponu kopyala** (maç · seçim · güncel oran listesi), **Bilyoner'i aç** (kuponu orada elle kurmak için)
   ve **oran kontrolü** (kupondaki her seçimin güncel oranı 10 sn'de bir iddaa maç servisinden; değiştiyse/kapandıysa uyarı).
   **Canlı skor:** başlayan maçlarda dakika, skor, İY skoru, korner ve kırmızı kart; Üst tahminlerinin anlık durumu
