@@ -42,6 +42,7 @@ günlük önbellekten okunur, haberler ve tahmini 11'ler her seferinde yeniden t
 - `manuel_duzeltme.json` — haber kaynaklı λ düzeltmeleri (gerekçe + kaynak zorunlu, yalnızca o günün tarihi uygulanır)
 - `takim_alias.json` — iddaa ↔ football-data takım adı eşleme
 - `takim_ulke.json` — otomatik bulunamayan takım ülkeleri
+- `pazarlar.json` — uygulamada ve seçimlerde gösterilecek seçenekler (şu an: İY 1.5 Üst, 2.5/3.5/4.5 Üst; Alt yok)
 
 ## Kaynaklar
 iddaa bülten (`sportsbookv2.iddaa.com`), iddaa istatistik (`statisticsv2.iddaa.com`, Betradar/Perform verisi),

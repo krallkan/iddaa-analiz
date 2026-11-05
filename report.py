@@ -169,8 +169,8 @@ def match_detail(code: str, m: dict, st: dict, nw: dict | None, pr: dict, gv: li
     L.append("- En olası 3 skor: " + ", ".join(f"{x['skor']} (%{100*x['olasilik']:.1f})" for x in P["_en_olasi_skorlar"]))
     L.append("")
     L += [f"| Pazar | Tahmin | Pazar fiyatı (marjsız) | İstatistik | Oran ({deger_time[11:16]}) |", "|---|---|---|---|---|"]
-    want = [("MS", "1"), ("MS", "0"), ("MS", "2"), ("AU_2.5", "Üst"), ("AU_2.5", "Alt"), ("KG", "Var"),
-            ("KG", "Yok"), ("CS", "1 ve 0"), ("CS", "0 ve 2"), ("IY", "1"), ("IY", "0"), ("IY", "2")]
+    izin = _izinli()
+    want = [(z["pazar"], z["secenek"]) for z in izin] if izin else [("AU_2.5", "Üst"), ("AU_3.5", "Üst")]
     idx = {(r["pazar"], r["secenek"]): r for r in gv}
     for mk, oc in want:
         r = idx.get((mk, oc))
@@ -311,6 +311,11 @@ PAZAR_SIRA = ["MS", "CS", "AU_0.5", "AU_1.5", "AU_2.5", "AU_3.5", "AU_4.5", "KG"
               "IY_AU_1.5", "IY_KG", "IYMS", "HMS_1:0", "HMS_0:1", "HMS_2:0", "HMS_0:2", "HMS_3:0", "HMS_0:3"]
 
 
+def _izinli() -> list[dict] | None:
+    f = Path(__file__).resolve().parent / "config" / "pazarlar.json"
+    return json.loads(f.read_text(encoding="utf-8"))["izinli"] if f.exists() else None
+
+
 def _r(x, n=4):
     return None if x is None else round(float(x), n)
 
@@ -336,6 +341,19 @@ def build_app(day: str, root: Path, data: dict, stats: dict, haber: dict | None,
                          "g": r["guven"], "ok": r["ozete_uygun"], "sup": r.get("supheli", False), "mbs": r["mbs"]})
         # pazar sırası sabit; pazar içi seçenekler bültendeki doğal sırada (1, X, 2 / Alt, Üst ...)
         natural = {(r["pazar"], r["secenek"]): i for i, r in enumerate(deger["maclar"].get(code, []))}
+        izin = _izinli()
+        if izin:
+            opts = [o for o in opts if (o["p"], o["s"]) in {(z["pazar"], z["secenek"]) for z in izin}]
+            have = {(o["p"], o["s"]) for o in opts}
+            P = (anc.get("olasiliklar") or {}); S = model["maclar"][code]["olasiliklar"]
+            for z in izin:   # bültende oranı olmayan izinli seçenek: yalnızca tahmin
+                if (z["pazar"], z["secenek"]) not in have and z["pazar"] in P:
+                    opts.append({"p": z["pazar"], "pa": z["pazar_adi"], "s": z["secenek"], "o": None,
+                                 "m": _r(P[z["pazar"]][z["secenek"]]), "pk": None,
+                                 "i": _r((S.get(z["pazar"]) or {}).get(z["secenek"])), "d": None, "g": None,
+                                 "ok": False, "sup": False, "mbs": m["mbs"], "not": "iddaa bu pazarı açmamış"})
+            for o in opts:
+                o["etiket"] = next(z["etiket"] for z in izin if (z["pazar"], z["secenek"]) == (o["p"], o["s"]))
         opts.sort(key=lambda x: (PAZAR_SIRA.index(x["p"]) if x["p"] in PAZAR_SIRA else 99, x["p"],
                                  natural.get((x["p"], x["s"]), 999)))
         hs = [h for h in nw.get("haberler", []) if not h["eski"]]
@@ -369,7 +387,7 @@ def build_app(day: str, root: Path, data: dict, stats: dict, haber: dict | None,
             "secenekler": opts,
         })
     maclar.sort(key=lambda x: (x["baslama"], x["lig"]))
-    app = {"tarih": day, "rapor_zamani": stamp, "oran_zamani": deger["oran_zamani"], "not": backtest_note,
+    app = {"pazarlar": _izinli(), "tarih": day, "rapor_zamani": stamp, "oran_zamani": deger["oran_zamani"], "not": backtest_note,
            "formul": guven["formul"], "uyari": DISCLAIMER,
            "ozet": [{"kod": p["mac_kodu"], "p": p["secim"]["pazar"], "s": p["secim"]["secenek"]} for p in picks],
            "kuponlar": [{"ad": c["ad"], "uyari": c.get("uyari"), "secimler": [s["mac_kodu"] for s in c["secimler"]]}

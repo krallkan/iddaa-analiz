@@ -17,16 +17,20 @@ Gerekçe: geri testte saf piyasa λ'sı en iyi sonucu verdi (config/model.json);
 from __future__ import annotations
 
 import datetime as dt
+import json
+from pathlib import Path
 
 W_O, W_U, W_V, W_I = 30, 30, 20, 20
 H_MAX = 15
 MIN_ORAN, MAX_ORAN = 1.25, 5.0
 MIN_OLASILIK = 0.55  # özete girmek için model olasılığı alt sınırı
+_PZ = Path(__file__).resolve().parent.parent / "config" / "pazarlar.json"
+IZINLI = {(x["pazar"], x["secenek"]) for x in json.loads(_PZ.read_text(encoding="utf-8"))["izinli"]} if _PZ.exists() else None
 
 FORMUL = ("GÜVEN = 30·O + 30·U + 20·V + 20·İ − H | p=piyasaya dayalı olasılık | O=(p−0.40)/0.45 | "
           "U=1−|p_istatistik−p|/0.15 (şüpheli→0) | "
           "V=veri kalitesi | İ=1−(puan_sd−0.9)/0.6 | H=haber/rotasyon riski (≤15) | "
-          "Özet şartı: oran 1.25-5.00, model ≥%55, korner hariç")
+          "Özet şartı: yalnızca config/pazarlar.json'daki seçenekler (İY 1.5 Üst, 2.5/3.5/4.5 Üst), oran 1.25-5.00, model ≥%55")
 
 
 def _clip(x, lo=0.0, hi=1.0):
@@ -77,6 +81,8 @@ def score(rec: dict, pred: dict, stats: dict, news: dict | None, start_iso: str)
 
 
 def eligible_for_summary(rec: dict) -> tuple[bool, str]:
+    if IZINLI is not None and (rec["pazar"], rec["secenek"]) not in IZINLI:
+        return False, "izinli pazarlar dışında (config/pazarlar.json)"
     if rec["kapali"]:
         return False, "seçenek kapalı"
     if rec.get("piyasa") is None:

@@ -1,0 +1,9 @@
+{
+  "_aciklama": "Uygulamada ve seçimlerde gösterilecek seçenekler (pazar anahtarı, seçenek). Alt seçenekleri bilinçli olarak yok. Bültende oranı olmayan seçenek (ör. 4.5 Üst) yalnızca tahmin olarak gösterilir, seçime/kupona giremez.",
+  "izinli": [
+    {"pazar": "IY_AU_1.5", "secenek": "Üst", "etiket": "İY 1.5 Üst", "pazar_adi": "1. Yarı Alt/Üst 1.5"},
+    {"pazar": "AU_2.5", "secenek": "Üst", "etiket": "2.5 Üst", "pazar_adi": "Alt/Üst 2.5"},
+    {"pazar": "AU_3.5", "secenek": "Üst", "etiket": "3.5 Üst", "pazar_adi": "Alt/Üst 3.5"},
+    {"pazar": "AU_4.5", "secenek": "Üst", "etiket": "4.5 Üst", "pazar_adi": "Alt/Üst 4.5"}
+  ]
+}
