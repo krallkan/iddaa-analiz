@@ -68,7 +68,10 @@
                      hrc: x.ht?.rc || 0, arc: x.at?.rc || 0, hyc: x.ht?.yc, ayc: x.at?.yc };
         }
       }
+      const finBefore = new Set(DATA.maclar.filter((m) => LIVE[m.kod]?.phase === 2).map((m) => m.kod));
       LIVE = out; liveAt = Date.now();
+      const finNow = DATA.maclar.filter((m) => LIVE[m.kod]?.phase === 2).map((m) => m.kod);
+      if (finNow.some((k) => !finBefore.has(k)) && ["secim", "mac", "fav"].includes(tab) && document.activeElement?.id !== "q") render(true);
       paintLive();
       if (curKod && dTab === "ist" && dSub.ist === "canli") { const el = $("#dtab"); if (el) el.innerHTML = tabIst(byKod(curKod)); }
       if (!oddsTimer && DATA.maclar.some((m) => LIVE[m.kod]?.phase === 1)) fetchOdds();
@@ -365,6 +368,9 @@ function liveDetail(kod) {
     } finally { btn.classList.remove("spin"); }
   }
   const byKod = (k) => DATA.maclar.find((m) => m.kod === k);
+  // Biten maç: canlı servis "MS" diyorsa ya da (canlı kaydı yoksa) başlamasının üzerinden 2,5 saat geçmişse
+  const isFinished = (m) => { const x = LIVE[m.kod]; if (x) return x.phase === 2;
+    return Date.now() - new Date(m.baslama).getTime() > 150 * 60e3; };
   const opt = (m, p, s) => m.secenekler.find((o) => o.p === p && o.s === s);
 
   function cleanKupon() { // başlamış maçları ve farklı günün seçimlerini kupondan çıkar
@@ -408,7 +414,7 @@ function liveDetail(kod) {
 
   // ---------- sekmeler ----------
   function vSecim() {
-    const picks = DATA.ozet.map((p) => ({ m: byKod(p.kod), o: null, p })).filter((x) => x.m);
+    const picks = DATA.ozet.map((p) => ({ m: byKod(p.kod), o: null, p })).filter((x) => x.m && !isFinished(x.m));
     picks.forEach((x) => (x.o = opt(x.m, x.p.p, x.p.s)));
     let h = `<div class="hero"><div class="big">${picks.length}</div><p><b>Günün seçimleri</b><br>Yalnızca Üst tahminleri (İY 1.5, 2.5, 3.5, 4.5). Güven ≥55, maç başına 1 seçim. Başlamış maçlar canlı skoruyla listede kalır. Oranlar ${esc((DATA.oran_zamani || "").slice(11, 16))} itibarıyla.</p></div>`;
     for (const { m, o } of picks) {
@@ -445,7 +451,7 @@ function liveDetail(kod) {
     const ks = Object.keys(FAV);
     if (!ks.length) return `<div class="empty"><div style="font-size:2.6rem;opacity:.5">☆</div>
       <p>Henüz favori maçın yok.<br>Takip etmek istediğin maçın yanındaki <b>☆</b> yıldıza dokun.</p></div>`;
-    const here = DATA.maclar.filter((m) => FAV[m.kod]);
+    const here = DATA.maclar.filter((m) => FAV[m.kod] && !isFinished(m));
     const liveN = here.filter((m) => LIVE[m.kod]?.phase === 1).length;
     let h = `<div class="h"><h2>★ Favorilerim</h2><span>${ks.length} maç${liveN ? ` · <b style="color:#ff8a85">${liveN} canlı</b>` : ""}</span></div>`;
     // canlı olanlar üstte, sonra başlama saatine göre
@@ -462,11 +468,11 @@ function liveDetail(kod) {
   }
 
   function vMac() {
-    const ligs = ["Tümü", "Canlı", ...new Set(DATA.maclar.map((m) => m.lig))];
+    const ligs = ["Tümü", "Canlı", ...new Set(DATA.maclar.filter((m) => !isFinished(m)).map((m) => m.lig))];
     let h = `<input class="search" id="q" placeholder="Takım ara…" value="${esc(q)}">
       <div class="filters">${ligs.map((l) => `<button class="fchip ${l === lig ? "on" : ""}" data-lig="${esc(l)}">${esc(l)}</button>`).join("")}</div>`;
     const ql = q.toLocaleLowerCase("tr");
-    const list = DATA.maclar.filter((m) => (lig === "Tümü" || m.lig === lig || (lig === "Canlı" && LIVE[m.kod]?.phase === 1)) && (!ql || (m.ev + " " + m.dep).toLocaleLowerCase("tr").includes(ql)));
+    const list = DATA.maclar.filter((m) => !isFinished(m) && (lig === "Tümü" || m.lig === lig || (lig === "Canlı" && LIVE[m.kod]?.phase === 1)) && (!ql || (m.ev + " " + m.dep).toLocaleLowerCase("tr").includes(ql)));
     let last = "";
     for (const m of list) {
       if (m.lig !== last) { h += `<div class="lgroup">${esc(m.lig)}</div>`; last = m.lig; }
