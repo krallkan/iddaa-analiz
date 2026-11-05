@@ -21,6 +21,22 @@
 
   let DATA = null, live = true, tab = "secim", lig = "Tümü", q = "", lastLoad = 0;
   let kupon = LS.get("kupon", {}); // {kod: {p,s,o,m,pk,mbs,mac,pa,tarih}}
+  // Favoriler: {kod: {ev, dep, lig, saat, baslama, tarih}} — cihazda saklanır, 2 gün sonra silinir
+  let FAV = LS.get("favs", {});
+  function saveFav() {
+    const now = Date.now();
+    for (const [k, f] of Object.entries(FAV)) if (now - new Date(f.baslama).getTime() > 48 * 3600e3) delete FAV[k];
+    LS.set("favs", FAV);
+    const n = Object.keys(FAV).length, b = $("#fcount"); if (b) { b.textContent = n; b.classList.toggle("hidden", !n); }
+  }
+  const isFav = (kod) => !!FAV[kod];
+  function toggleFav(kod) {
+    const m = byKod(kod);
+    if (FAV[kod]) { delete FAV[kod]; toast("Favorilerden çıkarıldı"); }
+    else if (m) { FAV[kod] = { ev: m.ev, dep: m.dep, lig: m.lig, saat: m.saat, baslama: m.baslama, tarih: DATA.tarih }; toast("★ Favorilere eklendi"); }
+    saveFav();
+  }
+  const favBtn = (m) => `<button class="fav ${isFav(m.kod) ? "on" : ""}" data-fav="${esc(m.kod)}" aria-label="Favori">${isFav(m.kod) ? "★" : "☆"}</button>`;
   let LIVE = {}, liveAt = 0, liveTimer = null, liveBusy = false;   // canlı skorlar: {kod: {...}}
   const LIVE_FAST = 1000;      // canlı maç varken: her yanıttan 1 sn sonra yeni istek (~12 KB, sıkıştırılmış)
   const LIVE_SOON = 15000;     // maç başlamak üzereyken
@@ -143,7 +159,7 @@
   // ---------- parçalar ----------
   function oddBtn(m, o, label, extraCls = "") {
     if (!o) return `<button class="odd dis"><span class="n">${esc(label)}</span><span class="o">–</span><span class="p">kapalı</span></button>`;
-    if (m.baslamis) return `<div class="odd nood" title="maç başladı"><span class="n">${esc(label)}</span><span class="o">${odd(o.o)}</span><span class="p">${pct(o.m)}</span></div>`;
+    if (m.baslamis) return `<div class="odd nood" title="maç başladı"><span class="n">${esc(label)}</span><span class="o">${o.o == null ? "–" : odd(o.o)}</span><span class="p">${pct(o.m)}</span></div>`;
     if (o.o == null) return `<div class="odd nood" title="iddaa bu pazarı açmamış"><span class="n">${esc(label)}</span><span class="o">${pct(o.m)}</span><span class="p">oran yok</span></div>`;
     const best = m.secim && m.secim.p === o.p && m.secim.s === o.s;
     return `<button class="odd ${isOn(m, o) ? "on" : ""} ${best ? "best" : ""} ${extraCls}" data-k="${esc(m.kod)}" data-p="${esc(o.p)}" data-s="${esc(o.s)}">
@@ -154,7 +170,7 @@
     return `<div class="ring" style="--v:${g};--c:${c}"><b>${Math.round(g)}<small>güven</small></b></div>`;
   }
   function valChip(d) { return `<span class="chip ${d > 0 ? "pos" : "neg"}">değer ${d > 0 ? "+" : ""}${d.toFixed(2)}</span>`; }
-  const teams = (m) => `<div class="teams">${esc(m.ev)}<span class="vs">–</span>${esc(m.dep)}</div>`;
+  const teams = (m) => `<div class="teams"><span>${esc(m.ev)}<span class="vs">–</span>${esc(m.dep)}</span>${favBtn(m)}</div>`;
   const meta = (m) => `<div class="meta"><span class="lig">${esc(m.lig)}</span><span><span data-live="${esc(m.kod)}">${liveTag(m.kod)}</span> ${esc(m.saat)} · MBS ${esc(m.mbs)}</span></div>`;
 
   // ---------- sekmeler ----------
@@ -183,6 +199,33 @@
     return h;
   }
 
+  function matchRow(m) {
+    const g = (p, s) => opt(m, p, s);
+    return `<div class="card mrow"><div class="tap" data-open="${esc(m.kod)}">${meta(m)}${teams(m)}</div>
+        <div class="grid4">${(DATA.pazarlar || []).map((z) => oddBtn(m, g(z.pazar, z.secenek), z.etiket.replace(" Üst", "Ü"))).join("")}</div>
+        <button class="more" data-open="${esc(m.kod)}">detay · form · skor olasılıkları · haberler</button></div>`;
+  }
+
+  function vFav() {
+    const ks = Object.keys(FAV);
+    if (!ks.length) return `<div class="empty"><div style="font-size:2.6rem;opacity:.5">☆</div>
+      <p>Henüz favori maçın yok.<br>Takip etmek istediğin maçın yanındaki <b>☆</b> yıldıza dokun.</p></div>`;
+    const here = DATA.maclar.filter((m) => FAV[m.kod]);
+    const liveN = here.filter((m) => LIVE[m.kod]?.phase === 1).length;
+    let h = `<div class="h"><h2>★ Favorilerim</h2><span>${ks.length} maç${liveN ? ` · <b style="color:#ff8a85">${liveN} canlı</b>` : ""}</span></div>`;
+    // canlı olanlar üstte, sonra başlama saatine göre
+    here.sort((a, b) => ((LIVE[b.kod]?.phase === 1) - (LIVE[a.kod]?.phase === 1)) || a.baslama.localeCompare(b.baslama));
+    for (const m of here) h += matchRow(m);
+    const other = ks.filter((k) => !byKod(k));
+    if (other.length) {
+      h += `<div class="lgroup">Bu raporda olmayan favoriler</div>`;
+      for (const k of other) { const f = FAV[k];
+        h += `<div class="card"><div class="meta"><span class="lig">${esc(f.lig)}</span><span>${esc(f.tarih)} ${esc(f.saat)}</span></div>
+          <div class="teams"><span>${esc(f.ev)}<span class="vs">–</span>${esc(f.dep)}</span><button class="fav on" data-fav="${esc(k)}">★</button></div></div>`; }
+    }
+    return h + `<div class="disc">Favoriler yalnızca bu cihazda saklanır; maçtan 2 gün sonra kendiliğinden silinir.</div>`;
+  }
+
   function vMac() {
     const ligs = ["Tümü", "Canlı", ...new Set(DATA.maclar.map((m) => m.lig))];
     let h = `<input class="search" id="q" placeholder="Takım ara…" value="${esc(q)}">
@@ -192,10 +235,7 @@
     let last = "";
     for (const m of list) {
       if (m.lig !== last) { h += `<div class="lgroup">${esc(m.lig)}</div>`; last = m.lig; }
-      const g = (p, s) => opt(m, p, s);
-      h += `<div class="card mrow"><div class="tap" data-open="${esc(m.kod)}">${meta(m)}${teams(m)}</div>
-        <div class="grid4">${(DATA.pazarlar || []).map((z) => oddBtn(m, g(z.pazar, z.secenek), z.etiket.replace(" Üst", "Ü"))).join("")}</div>
-        <button class="more" data-open="${esc(m.kod)}">detay · form · skor olasılıkları · haberler</button></div>`;
+      h += matchRow(m);
     }
     if (!list.length) h += `<div class="empty">${lig === "Canlı" ? "Şu an oynanan maç yok." : "Eşleşen maç yok."}</div>`;
     return h;
@@ -296,7 +336,7 @@
     if (!live) b.innerHTML = `Geçmiş rapor görüntüleniyor (${esc(DATA.tarih)} ${esc((DATA.rapor_zamani || "").slice(11, 16))}). Geçmiş sekmesinden güncele dönebilirsin.`;
     document.querySelectorAll(".tabs button").forEach((x) => x.classList.toggle("on", x.dataset.tab === tab));
     if (tab === "gecmis") { vGecmis(); return; }
-    view.innerHTML = tab === "secim" ? vSecim() : tab === "mac" ? vMac() : vKupon();
+    view.innerHTML = tab === "secim" ? vSecim() : tab === "mac" ? vMac() : tab === "fav" ? vFav() : vKupon();
     if (keepScroll) window.scrollTo(0, y);
     if (curKod && byKod(curKod)) drawDetail(byKod(curKod));
     paintLive();
@@ -310,6 +350,7 @@
     if (!t) { if (e.target.id === "sheet") closeDetail(); return; }
     const d = t.dataset;
     if (d.tab) { tab = d.tab; window.scrollTo(0, 0); render(); return; }
+    if (d.fav) { e.stopPropagation(); toggleFav(d.fav); render(true); return; }
     if (d.k) { e.stopPropagation(); const m = byKod(d.k); const o = opt(m, d.p, d.s); if (m && o) toggle(m, o); return; }
     if (d.open) { openDetail(d.open); return; }
     if (d.close) { closeDetail(); return; }
@@ -343,5 +384,6 @@
   window.addEventListener("popstate", () => hideDetail());
 
   saveKupon();
+  saveFav();
   load("../data.json", true);
 })();

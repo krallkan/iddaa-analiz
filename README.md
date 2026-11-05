@@ -2,7 +2,8 @@
 
 ## Telefonda kullanım
 - **Uygulama (APK):** https://github.com/krallkan/iddaa-analiz/releases/latest/download/iddaa-analiz.apk
-  Sekmeler: Seçimler (güven halkalı günün seçimleri) · Maçlar (lig filtresi, dokunulabilir oranlar) · Kupon
+  Sekmeler: Seçimler (güven halkalı günün seçimleri) · Maçlar (lig filtresi, dokunulabilir oranlar) ·
+  Favoriler (☆ ile işaretlenen maçlar, canlı olanlar üstte; cihazda saklanır) · Kupon
   (toplam oran, kombine olasılık, MBS uyarısı) · Geçmiş. Bir maça dokununca tüm pazarlar, en olası skorlar, form,
   haberler açılır. Kupon yalnızca cihazda tutulur; uygulama bahis yapmaz.
   **Canlı skor:** başlayan maçlarda dakika, skor, İY skoru, korner ve kırmızı kart; Üst tahminlerinin anlık durumu

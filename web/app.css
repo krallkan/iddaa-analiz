@@ -29,7 +29,7 @@ main{max-width:560px;margin:0 auto;padding:12px 16px}
 @media(min-width:592px){.banner{margin-left:auto;margin-right:auto}}
 
 /* alt sekmeler */
-.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(4,1fr);
+.tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;grid-template-columns:repeat(5,1fr);
   background:#0f1528;border-top:1px solid var(--line);padding-bottom:var(--safe-b)}
 .tabs button{position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:9px 0 8px;color:var(--muted);font-size:.72rem}
 .tabs svg{width:22px;height:22px;fill:currentColor}
@@ -166,3 +166,9 @@ main{max-width:560px;margin:0 auto;padding:12px 16px}
 .lbox .lsc{font-size:2rem;font-weight:900;letter-spacing:2px}.lbox .lsc span{color:var(--muted)}
 .lbox .lmeta{font-size:.74rem;color:var(--muted)}
 .livecount{color:#ff8a85;font-weight:700}
+
+/* favoriler */
+.teams{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.fav{flex:none;width:38px;height:38px;border-radius:12px;background:var(--card2);font-size:1.25rem;line-height:1;color:var(--muted)}
+.fav.on{color:#ffc93c;background:#3a3012}
+.fav:active{transform:scale(.92)}
