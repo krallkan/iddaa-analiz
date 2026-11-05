@@ -125,6 +125,74 @@
       evTimer = setTimeout(() => { if (document.visibilityState === "visible") fetchEvent(kod); else evTimer = setTimeout(() => fetchEvent(kod), 3000); }, 2000);
   }
 
+  // ---------- kupon oran kontrolü ----------
+  let KODDS = {}, kTimer = null, kBusy = false;      // {kod: {m, at}}
+  async function fetchKuponOdds() {
+    clearTimeout(kTimer); kTimer = null;
+    if (!DATA || kBusy || tab !== "kupon" || !Object.keys(kupon).length) return;
+    kBusy = true;
+    for (const k of Object.keys(kupon)) {
+      try {
+        const r = await fetch(EVENT_URL(k), { cache: "no-store" });
+        if (!r.ok) continue;
+        let e = (await r.json()).data; if (Array.isArray(e)) e = e[0];
+        KODDS[k] = { m: (e && e.m) || [], at: Date.now() };
+      } catch (e) {}
+    }
+    kBusy = false;
+    paintKupon();
+    if (tab === "kupon" && document.visibilityState === "visible") kTimer = setTimeout(fetchKuponOdds, 10000);
+  }
+  // Kupondaki seçimin şu anki oranı: {o} | {kapali: neden} | null (henüz bilinmiyor)
+  function currentOdd(k, sel) {
+    const K = KODDS[k]; if (!K) return null;
+    const mt = /^(LIVE_)?(IY_)?AU_(\d+\.5)$/.exec(sel.p); if (!mt) return null;
+    const fh = !!mt[2], line = mt[3], isLive = LIVE[k]?.phase === 1 || !!mt[1];
+    if (LIVE[k]?.phase === 2) return { kapali: "maç bitti" };
+    if (!mt[1] && LIVE[k]?.phase === 1) return { kapali: "maç başladı; maç öncesi oran artık oynanamaz" };
+    const ok = (mk) => isLive ? mk.t === 4 && (fh ? IY_ST.has(mk.st) : FT_ST.has(mk.st))
+                              : mk.t === 2 && mk.st === (fh ? 60 : 101);
+    const mk = K.m.find((x) => ok(x) && String(x.sov) === line);
+    const ov = mk && mk.o.find((o) => o.n === "Üst");
+    if (!mk || !ov || ov.odd <= 1 || mk.s !== 1) return { kapali: isLive ? "bu canlı oran şu an kapalı/askıda" : "bu oran şu an kapalı" };
+    return { o: ov.odd };
+  }
+  function kuponCheck(k) {
+    const sel = kupon[k]; if (!sel) return "";
+    const c = currentOdd(k, sel);
+    if (!c) return `<span class="kc wait">oran kontrol ediliyor…</span>`;
+    if (c.kapali) return `<span class="kc bad">⚠ ${esc(c.kapali)}</span>`;
+    if (Math.abs(c.o - sel.o) < 0.005) return `<span class="kc ok">✓ oran güncel</span>`;
+    const up = c.o > sel.o;
+    return `<span class="kc ${up ? "up" : "down"}">${up ? "↑" : "↓"} oran değişti: ${odd(sel.o)} → <b>${odd(c.o)}</b></span>
+      <button class="kc-upd" data-kupd="${esc(k)}">güncelle</button>`;
+  }
+  function paintKupon() {
+    document.querySelectorAll("[data-kchk]").forEach((el) => (el.innerHTML = kuponCheck(el.dataset.kchk)));
+    const changed = Object.keys(kupon).filter((k) => { const c = currentOdd(k, kupon[k]); return c && (c.kapali || Math.abs(c.o - kupon[k].o) >= 0.005); });
+    const pv = $("#kprev"); if (pv && Object.keys(kupon).length) pv.innerHTML = esc(kuponText()).replace(/\n/g, "<br>");
+    const el = $("#kwarn");
+    if (el) el.innerHTML = changed.length ? `⚠ ${changed.length} seçimde oran değişti veya seçenek kapandı. Bilyoner'de oynamadan önce kontrol et.` : "";
+  }
+  function kuponText() {
+    const ks = Object.entries(kupon);
+    const lines = ks.map(([k, s], i) => {
+      const c = currentOdd(k, s), o = c && c.o ? c.o : s.o;
+      const lbl = (s.pa || "").replace(/^(Canlı )?(1\. Yarı )?Alt\/Üst (\d)\.5$/, (_, cl, iy, n) => `${cl ? "CANLI " : ""}${iy ? "İY " : ""}${n},5 Üst`);
+      return `${i + 1}) ${s.mac} · ${lbl || s.s} · ${odd(o)}${c && c.kapali ? " (⚠ " + c.kapali + ")" : ""}`;
+    });
+    const to = ks.reduce((a, [k, s]) => { const c = currentOdd(k, s); return a * (c && c.o ? c.o : s.o); }, 1);
+    const maxMbs = Math.max(...ks.map(([, s]) => Number(s.mbs) || 1));
+    return `Maç Analiz kuponu (${DATA.tarih})\n${lines.join("\n")}\nToplam oran: ${odd(to)} · ${ks.length} maç · en yüksek MBS ${maxMbs}`;
+  }
+  async function copyText(t) {
+    try { await navigator.clipboard.writeText(t); return true; } catch (e) {}
+    try {   // WebView/eski tarayıcı yedeği
+      const ta = document.createElement("textarea"); ta.value = t; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select(); const ok = document.execCommand("copy"); ta.remove(); return ok;
+    } catch (e) { return false; }
+  }
+
   // Poisson: P(N >= k), N ~ Poisson(mu)
   function pAtLeast(k, mu) {
     if (k <= 0) return 1;
@@ -396,7 +464,8 @@ function liveDetail(kod) {
     for (const [k, s] of ks) {
       h += `<div class="card kitem"><button class="x" data-del="${esc(k)}" aria-label="Sil">✕</button>
         <div class="info"><div class="t">${esc(s.saat)} · ${esc(s.mac)}</div><div class="s">${esc(s.pa)}: ${esc(nice(s.s))}</div>
-        <div class="t">tahmin ${pct(s.m)} · MBS ${esc(s.mbs)} <span data-live="${esc(k)}">${liveTag(k)}</span> <span data-ps="${esc(k)}|${esc(s.p)}">${pickState(k, s.p)}</span></div></div><div class="o">${odd(s.o)}</div></div>`;
+        <div class="t">tahmin ${pct(s.m)} · MBS ${esc(s.mbs)} <span data-live="${esc(k)}">${liveTag(k)}</span> <span data-ps="${esc(k)}|${esc(s.p)}">${pickState(k, s.p)}</span></div>
+        <div class="kchk" data-kchk="${esc(k)}">${kuponCheck(k)}</div></div><div class="o">${odd(s.o)}</div></div>`;
     }
     const to = ks.reduce((a, [, s]) => a * s.o, 1), tp = ks.reduce((a, [, s]) => a * s.m, 1);
     const maxMbs = Math.max(...ks.map(([, s]) => Number(s.mbs) || 1));
@@ -411,8 +480,13 @@ function liveDetail(kod) {
       <div class="row"><span>Beklenen sonuç (uzun vadede)</span><b style="color:${ev >= 0 ? "#7ff0a8" : "#ff9b97"}">${ev >= 0 ? "+" : ""}${ev.toFixed(2)} ₺</b></div>
       ${ks.length < maxMbs ? `<div class="warn">⚠ Bu kupondaki en yüksek MBS ${maxMbs}. En az ${maxMbs} maç eklemelisin; bu haliyle oynanamaz.</div>` : ""}
       ${ks.length >= 4 ? `<div class="warn">Her eklenen maç kazanma ihtimalini düşürür (şu an ${pct(tp)}).</div>` : ""}
-      </div><button class="btn" id="clear">Kuponu temizle</button>
-      <div class="disc">Kupon yalnızca bu cihazda tutulur; bahis yapılmaz. ${esc(DATA.uyari)}</div>`;
+      </div>
+      <div class="warn" id="kwarn"></div>
+      <div class="kbtns"><button class="btn pri" id="kcopy">📋 Kuponu kopyala</button>
+        <a class="btn bil" href="https://www.bilyoner.com/" target="_blank" rel="noopener">Bilyoner'i aç ↗</a></div>
+      <div class="kpreview" id="kprev">${esc(kuponText()).replace(/\n/g, "<br>")}</div>
+      <button class="btn" id="clear">Kuponu temizle</button>
+      <div class="disc">Kupon yalnızca bu cihazda tutulur; uygulama bahis yapmaz ve hesabına bağlanmaz. Kopyaladığın listeye bakarak kuponu Bilyoner'de kendin kurup oynarsın. ${esc(DATA.uyari)}</div>`;
     return h;
   }
 
@@ -493,6 +567,7 @@ function liveDetail(kod) {
     if (keepScroll) window.scrollTo(0, y);
     if (curKod && byKod(curKod)) drawDetail(byKod(curKod));
     paintLive();
+    if (tab === "kupon") paintKupon();
   }
   let toastT;
   function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.remove("hidden"); clearTimeout(toastT); toastT = setTimeout(() => el.classList.add("hidden"), 1800); }
@@ -502,7 +577,7 @@ function liveDetail(kod) {
     const t = e.target.closest("button,a,[data-open]");
     if (!t) { if (e.target.id === "sheet") closeDetail(); return; }
     const d = t.dataset;
-    if (d.tab) { tab = d.tab; window.scrollTo(0, 0); render(); return; }
+    if (d.tab) { tab = d.tab; window.scrollTo(0, 0); render(); if (tab === "kupon") fetchKuponOdds(); else { clearTimeout(kTimer); kTimer = null; } return; }
     if (d.lk) {
       e.stopPropagation(); const m = byKod(d.lk); const z = m && (liveOvers(m) || []).find((q) => q.p === d.lp);
       if (m && z) {
@@ -521,6 +596,8 @@ function liveDetail(kod) {
     if (d.mt) { curMt = d.mt; if (curKod) drawDetail(byKod(curKod)); return; }
     if (d.lig) { lig = d.lig; render(); return; }
     if (d.del) { delete kupon[d.del]; saveKupon(); render(true); return; }
+    if (t.id === "kcopy") { copyText(kuponText()).then((ok) => toast(ok ? "📋 Kupon panoya kopyalandı" : "Kopyalanamadı; aşağıdaki listeyi elle seçebilirsin")); return; }
+    if (d.kupd) { const c = currentOdd(d.kupd, kupon[d.kupd]); if (c && c.o) { kupon[d.kupd].o = c.o; saveKupon(); toast("Oran güncellendi"); render(true); } return; }
     if (t.id === "clear") { kupon = {}; saveKupon(); render(); return; }
     if (d.hazir !== undefined) {
       const c = DATA.kuponlar[+d.hazir];
@@ -541,7 +618,7 @@ function liveDetail(kod) {
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState !== "visible") return;
     if (live && Date.now() - lastLoad > 10 * 60 * 1000) load("../data.json", true);
-    else { fetchLive(); fetchOdds(); if (curKod) fetchEvent(curKod); }   // ekrana dönünce hemen güncelle
+    else { fetchLive(); fetchOdds(); if (curKod) fetchEvent(curKod); if (tab === "kupon") fetchKuponOdds(); }   // ekrana dönünce hemen güncelle
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDetail(); });
   // Android geri tuşu: önce detay panelini kapat
