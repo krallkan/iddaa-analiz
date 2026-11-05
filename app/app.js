@@ -67,6 +67,7 @@
   // ---------- parçalar ----------
   function oddBtn(m, o, label, extraCls = "") {
     if (!o) return `<button class="odd dis"><span class="n">${esc(label)}</span><span class="o">–</span><span class="p">kapalı</span></button>`;
+    if (o.o == null) return `<div class="odd nood" title="iddaa bu pazarı açmamış"><span class="n">${esc(label)}</span><span class="o">${pct(o.m)}</span><span class="p">oran yok</span></div>`;
     const best = m.secim && m.secim.p === o.p && m.secim.s === o.s;
     return `<button class="odd ${isOn(m, o) ? "on" : ""} ${best ? "best" : ""} ${extraCls}" data-k="${esc(m.kod)}" data-p="${esc(o.p)}" data-s="${esc(o.s)}">
       <span class="n">${esc(label)}</span><span class="o">${odd(o.o)}</span><span class="p">${pct(o.m)}</span></button>`;
@@ -83,11 +84,11 @@
   function vSecim() {
     const picks = DATA.ozet.map((p) => ({ m: byKod(p.kod), o: null, p })).filter((x) => x.m);
     picks.forEach((x) => (x.o = opt(x.m, x.p.p, x.p.s)));
-    let h = `<div class="hero"><div class="big">${picks.length}</div><p><b>Günün seçimleri</b><br>Güven skoru ≥55, maç başına en fazla 1 seçim. Oranlar ${esc((DATA.oran_zamani || "").slice(11, 16))} itibarıyla.</p></div>`;
+    let h = `<div class="hero"><div class="big">${picks.length}</div><p><b>Günün seçimleri</b><br>Yalnızca Üst tahminleri (İY 1.5, 2.5, 3.5, 4.5). Güven ≥55, maç başına 1 seçim. Oranlar ${esc((DATA.oran_zamani || "").slice(11, 16))} itibarıyla.</p></div>`;
     for (const { m, o } of picks) {
       if (!o) continue;
       h += `<div class="card tap" data-open="${esc(m.kod)}">${meta(m)}${teams(m)}
-        <div class="pick">${ring(o.g)}<div class="lbl"><div class="mk">${esc(o.pa)}</div><div class="sel">${esc(nice(o.s))}</div></div>${oddBtn(m, o, "oran")}</div>
+        <div class="pick">${ring(o.g)}<div class="lbl"><div class="mk">Üst tahmini</div><div class="sel">${esc(o.etiket || o.pa + " " + o.s)}</div></div>${oddBtn(m, o, "oran")}</div>
         <div class="stats"><span class="chip">tahmin ${pct(o.m)}</span><span class="chip">istatistik ${pct(o.i)}</span>${valChip(o.d)}
         ${(m.risk || []).slice(0, 1).map((r) => `<span class="chip warn">${esc(r)}</span>`).join("")}</div></div>`;
     }
@@ -116,10 +117,8 @@
       if (m.lig !== last) { h += `<div class="lgroup">${esc(m.lig)}</div>`; last = m.lig; }
       const g = (p, s) => opt(m, p, s);
       h += `<div class="card mrow"><div class="tap" data-open="${esc(m.kod)}">${meta(m)}${teams(m)}</div>
-        <div class="glbl"><span>Maç Sonucu</span><span></span><span>2.5 Alt/Üst</span></div>
-        <div class="grid">${oddBtn(m, g("MS", "1"), "1")}${oddBtn(m, g("MS", "0"), "X")}${oddBtn(m, g("MS", "2"), "2")}<div class="sep"></div>
-        ${oddBtn(m, g("AU_2.5", "Alt"), "Alt")}${oddBtn(m, g("AU_2.5", "Üst"), "Üst")}</div>
-        <button class="more" data-open="${esc(m.kod)}">+${m.secenekler.length} seçenek · detay ve istatistik</button></div>`;
+        <div class="grid4">${(DATA.pazarlar || []).map((z) => oddBtn(m, g(z.pazar, z.secenek), z.etiket.replace(" Üst", "Ü"))).join("")}</div>
+        <button class="more" data-open="${esc(m.kod)}">detay · form · skor olasılıkları · haberler</button></div>`;
     }
     if (!list.length) h += `<div class="empty">Eşleşen maç yok.</div>`;
     return h;
@@ -169,30 +168,26 @@
   function openDetail(kod) {
     const m = byKod(kod); if (!m) return;
     curKod = kod;
-    curMt = m.secim ? (MT.find(([, , f]) => f && f(m.secim.p))?.[0] || "MS") : "MS";
     drawDetail(m);
     $("#sheet").classList.remove("hidden"); document.body.style.overflow = "hidden";
     $("#sheetBody").scrollTop = 0;
     history.pushState({ detay: kod }, "");   // Android geri tuşu paneli kapatsın
   }
   function drawDetail(m) {
-    const has = MT.filter(([id, , f]) => m.secenekler.some((o) => (f ? f(o.p) : !MT.some(([, , g]) => g && g(o.p)))));
-    if (!has.find(([id]) => id === curMt)) curMt = has[0]?.[0];
-    const f = MT.find(([id]) => id === curMt)?.[2];
-    const opts = m.secenekler.filter((o) => (f ? f(o.p) : !MT.some(([, , g]) => g && g(o.p))));
-    const groups = {}; opts.forEach((o) => (groups[o.pa] = groups[o.pa] || []).push(o));
+    const ord = (o) => (DATA.pazarlar || []).findIndex((z) => z.pazar === o.p && z.secenek === o.s);
+    const groups = { "Üst tahminleri": [...m.secenekler].sort((a, b) => ord(a) - ord(b)) };
     const bar = (cls, v, l) => `<div>${l} ${pct(v)}</div><div class="bar ${cls}"><i style="width:${v == null ? 0 : Math.min(100, 100 * v)}%"></i></div>`;
     const fb = (s) => [...(s || "")].map((c) => `<span class="fb ${c}">${c}</span>`).join("");
     const o2 = (x) => (x == null ? "–" : Number(x).toFixed(2));
     const pr = (p) => (p ? `${p.sira}. · ${p.puan} puan` : "–");
     let h = `<div class="sh-top"><div class="grab"></div><div class="sh-head"><div>${meta(m)}<h3>${esc(m.ev)} – ${esc(m.dep)}</h3></div>
       <button class="close" data-close="1" aria-label="Kapat">✕</button></div>
-      <div class="mtabs">${has.map(([id, ad]) => `<button class="mt ${id === curMt ? "on" : ""}" data-mt="${id}">${ad}</button>`).join("")}</div></div>
+</div>
       <div class="legend"><span><i style="background:var(--acc)"></i>tahmin</span><span><i style="background:var(--blue)"></i>pazar fiyatı</span><span><i style="background:var(--amber)"></i>istatistik</span></div>`;
     for (const [pa, os] of Object.entries(groups)) {
       h += `<div class="sec" style="margin-top:10px">${esc(pa)}</div><div class="optgrid">`;
-      for (const o of os) h += `<div class="opt">${oddBtn(m, o, nice(o.s))}<div class="bars">${bar("", o.m, "tahmin")}${bar("mk", o.pk, "pazar")}${bar("st", o.i, "istatistik")}</div>
-        <div style="font-size:.66rem;color:${o.d > 0 ? "#7ff0a8" : "var(--muted)"}">değer ${o.d > 0 ? "+" : ""}${o.d.toFixed(2)} · güven ${Math.round(o.g)}${o.sup ? " · <span style='color:#ffcf70'>şüpheli</span>" : ""}</div></div>`;
+      for (const o of os) h += `<div class="opt">${oddBtn(m, o, o.etiket || o.s)}<div class="bars">${bar("", o.m, "tahmin")}${bar("mk", o.pk, "pazar")}${bar("st", o.i, "istatistik")}</div>
+        <div style="font-size:.66rem;color:${o.d > 0 ? "#7ff0a8" : "var(--muted)"}">${o.o == null ? "iddaa bu pazarı açmamış" : `değer ${o.d > 0 ? "+" : ""}${o.d.toFixed(2)} · güven ${Math.round(o.g)}`}${o.sup ? " · <span style='color:#ffcf70'>şüpheli</span>" : ""}</div></div>`;
       h += `</div>`;
     }
     h += `<div class="sec">En olası skorlar</div><div class="scores">${(m.skorlar || []).map((s) => `<div class="score"><b>${esc(s.skor)}</b><small>${pct(s.olasilik, 1)}</small></div>`).join("")}
