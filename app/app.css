@@ -367,3 +367,5 @@ body{background:var(--bg)}
 .kes-tr.hd{font-size:.72rem;opacity:.6;text-transform:uppercase}
 .kes-tr.on{background:#2dd4bf14;border-radius:6px}
 .kes-tr .pos{color:#4ade80;font-weight:700}.kes-tr .neg{color:#f87171}
+
+.sb-goals .var{opacity:.5;text-decoration:line-through}
