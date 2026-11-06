@@ -292,3 +292,38 @@ main{max-width:560px;margin:0 auto;padding:12px 16px}
 .pickbox{margin-top:10px;padding:10px 12px;border-radius:12px;background:#15382a;border:1px solid #2c7a55;display:grid;gap:2px}
 .pickbox span{font-size:.72rem;color:#9fe3bd}.pickbox b{font-size:1.1rem}.pickbox em{font-style:normal;font-size:.78rem;color:#c9f3da}
 .insight{background:var(--card2);border-radius:12px;padding:10px 12px;margin:8px 0;font-size:.86rem;line-height:1.45}
+
+/* bülten ve bütün bahisler */
+.abadge{display:inline-block;font-size:.72rem;font-weight:700;color:#9fe3bd;background:#15382a;border:1px solid #2c7a55;border-radius:999px;padding:3px 9px;margin:0 0 8px}
+.mgrid{display:grid;gap:6px}
+.mgrid.c1{grid-template-columns:1fr}.mgrid.c2{grid-template-columns:1fr 1fr}.mgrid.c3{grid-template-columns:repeat(3,1fr)}
+.mgrid .odd{width:100%;min-width:0;flex-direction:row;justify-content:space-between;padding:10px 12px;gap:8px}
+.mgrid .odd .n{font-size:.78rem;text-align:left;line-height:1.2}
+.mgrid .odd .o{margin:0;font-size:1rem}
+.mgrid .odd.nood{justify-content:space-between}
+.mrow .mgrid{margin-top:2px}
+.lsel{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--fg);font-size:.92rem;margin:0 0 6px}
+.badge.live{background:#e5484d;color:#fff}
+.sec .mkt-s{font-weight:500;font-size:.72rem;color:var(--muted);margin-left:6px}
+
+/* sade maç satırı: saat | takımlar | MS 1-X-2 */
+.crow{display:grid;grid-template-columns:48px 1fr auto;gap:10px;align-items:center;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;padding:10px 10px 10px 12px;margin:7px 0;cursor:pointer}
+.crow:active{background:var(--card2)}
+.crow.is-live{border-color:#5a1f22;background:linear-gradient(90deg,#24141a,var(--card) 40%)}
+.cl{font-size:.82rem;color:var(--muted);font-weight:700;text-align:center;line-height:1.2}
+.cl.live{color:#ff8a85;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:.84rem}
+.ct{min-width:0;position:relative}
+.ctn{display:flex;align-items:center;gap:8px;font-weight:600;font-size:.92rem;line-height:1.35}
+.ctn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.csc{min-width:16px;text-align:center;font-weight:900;font-size:1.02rem;color:#fff}
+.ctag{position:absolute;right:0;top:-2px;font-size:.7rem;color:#ffc93c}
+.cms{display:grid;grid-template-columns:repeat(3,52px);gap:5px}
+.cms-o{display:flex;flex-direction:column;align-items:center;justify-content:center;height:46px;border-radius:10px;background:var(--odd);
+  font-weight:800;font-size:.92rem;border:1px solid transparent}
+.cms-o small{font-size:.6rem;color:var(--muted);font-weight:600;line-height:1}
+.cms-o.on{background:var(--acc);color:var(--acc-ink)}.cms-o.on small{color:#0b3d1d}
+.cms-o.dis{color:var(--muted);background:transparent;border:1px dashed var(--line)}
+.crow.is-live .cms-o:not(.dis){background:#2a1a24;border-color:#5a2a35}
+.shbtns{display:flex;gap:8px;align-items:flex-start}
+@media(max-width:360px){.cms{grid-template-columns:repeat(3,46px)}.crow{grid-template-columns:42px 1fr auto;gap:8px}}

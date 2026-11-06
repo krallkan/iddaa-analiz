@@ -21,6 +21,10 @@
   (`sportsbook/events?type=1`, yalnızca değişenler); maç detayı açıkken o maçın BÜTÜN canlı Üst çizgileri
   (`sportsbook/event/<kod>`) 2 sn'de bir. Her çizgide canlı tahmin (maç öncesi λ'nın kalan süreye düşen payı +
   mevcut skor, Poisson), piyasa olasılığı ve değer. Canlı orana dokununca o anki oranla kupona eklenir.
+- **Bülten ve Canlı:** iddaa'daki bütün maçlar (telefon bülteni doğrudan iddaa'dan çeker, ~1 MB ilk açılışta, sonra
+  yalnızca değişenler) ve o an oynanan bütün maçlar. Listede her maç tek satır: saat/canlı dakika, takımlar, MS 1-X-2.
+  Satıra dokununca maçın bütün bahisleri (kategorili), canlı oranlar, kadro, istatistik ve analiz açılır.
+  Uygulama kapalıyken bildirim gönderilmez.
 - **Tarayıcıdan:** https://krallkan.github.io/iddaa-analiz/ (aynı arayüz) · metin rapor: `rapor.html`
 - **Otomatik çalışma:** `.github/workflows/analiz.yml` her gün 09:07, 12:07, 15:07, 18:07 ve 20:07'de (TSİ) analizi
   çalıştırıp sayfayı günceller (GitHub zamanlanmış işleri bazen geciktirir/atlar; sık çalıştırma bunu telafi eder); elle çalıştırmak için Actions → "Günlük analiz" → Run workflow. Her pazartesi geri test yapılır.

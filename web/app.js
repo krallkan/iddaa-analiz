@@ -38,6 +38,7 @@
   }
   const favBtn = (m) => `<button class="fav ${isFav(m.kod) ? "on" : ""}" data-fav="${esc(m.kod)}" aria-label="Favori">${isFav(m.kod) ? "★" : "☆"}</button>`;
   let LIVE = {}, liveAt = 0, liveTimer = null, liveBusy = false;   // canlı skorlar: {kod: {...}}
+  const LIVEMETA = {}, LIVECOMP = {};   // canlı sonuç servisinden takım/lig adları
   const LIVE_FAST = 1000;      // canlı maç varken: her yanıttan 1 sn sonra yeni istek (~12 KB, sıkıştırılmış)
   const LIVE_SOON = 15000;     // maç başlamak üzereyken
   const LIVE_IDLE = 5 * 60e3;  // canlı maç yokken
@@ -58,8 +59,10 @@
       const out = {};
       for (const j of res) {
         const data = (j && j.data) || {}, sc = data.sc || {};
+        for (const c of Object.values(data.competitions || {})) LIVECOMP[c.i] = c.n;
         for (const e of data.events || []) {
           const k = String(e.eventId), x = sc[k];
+          LIVEMETA[k] = { ev: e.homeTeam, dep: e.awayTeam, ci: e.ci, d: e.eventDate };
           if (!x || !e.phase) continue;           // phase 0 = başlamadı
           const prev = out[k];
           if (prev && prev.phase === 1 && e.phase !== 1) continue;   // canlı kayıt öncelikli
@@ -80,11 +83,17 @@
     liveBusy = false;
     scheduleLive();
   }
+  // Sık yenileme yalnızca gerektiğinde: bizim/favori/kupon maçları canlıyken, Canlı sekmesinde ya da açık detay canlıyken
+  function wantFast() {
+    const L = (k) => LIVE[k]?.phase === 1;
+    return DATA.maclar.some((m) => L(m.kod)) || Object.keys(FAV).some(L) || Object.keys(kupon).some(L)
+      || (curKod && L(curKod)) || (tab === "canli" && Object.values(LIVE).some((x) => x.phase === 1));
+  }
   function scheduleLive() {
     clearTimeout(liveTimer);
     if (!DATA || !live) return;
     const now = Date.now();
-    const anyLive = DATA.maclar.some((m) => LIVE[m.kod]?.phase === 1);   // yalnızca bizim maçlar
+    const anyLive = wantFast();
     const soon = DATA.maclar.some((m) => { const t = new Date(m.baslama).getTime(); return t - now < 15 * 60e3 && now - t < 3 * 3600e3; });
     liveTimer = setTimeout(() => { if (document.visibilityState === "visible") fetchLive(); else scheduleLive(); },
                            anyLive ? LIVE_FAST : soon ? LIVE_SOON : LIVE_IDLE);
@@ -101,11 +110,10 @@
       const r = await fetch(ODDS_URL(oddsVer), { cache: "no-store" });
       if (!r.ok) throw new Error(r.status);
       const d = (await r.json()).data || {};
-      const mine = new Set(DATA.maclar.map((m) => m.kod));
       if (!d.isdiff) LODDS = {};
       for (const e of d.events || []) {          // değişen maç, bütün pazarlarıyla gelir
         const k = String(e.i);
-        if (e.sid === 1 && mine.has(k)) LODDS[k] = { m: e.m || [], at: Date.now() };
+        if (e.sid === 1) LODDS[k] = { m: e.m || [], at: Date.now() };
       }
       oddsVer = d.version || oddsVer; oddsAt = Date.now();
       paintLive();
@@ -116,7 +124,7 @@
   function scheduleOdds() {
     clearTimeout(oddsTimer);
     if (!DATA || !live) return;
-    const anyLive = DATA.maclar.some((m) => LIVE[m.kod]?.phase === 1);
+    const anyLive = wantFast();
     oddsTimer = setTimeout(() => { if (document.visibilityState === "visible") fetchOdds(); else scheduleOdds(); },
                            anyLive ? ODDS_EVERY : 60e3);
   }
@@ -125,17 +133,127 @@
   let EVODDS = {}, evTimer = null, evBusy = false;
   async function fetchEvent(kod) {
     clearTimeout(evTimer); evTimer = null;
-    if (!DATA || !live || evBusy || curKod !== kod || LIVE[kod]?.phase !== 1) return;
+    if (!DATA || evBusy || curKod !== kod) return;
     evBusy = true;
     try {
       const r = await fetch(EVENT_URL(kod), { cache: "no-store" });
       if (!r.ok) throw new Error(r.status);
       let e = (await r.json()).data; if (Array.isArray(e)) e = e[0];
-      if (e) { EVODDS[kod] = { m: e.m || [], at: Date.now() }; oddsAt = Date.now(); paintLive(); }
+      if (e) { EVODDS[kod] = { m: e.m || [], at: Date.now() }; oddsAt = Date.now(); paintLive(); paintMarkets(); }
     } catch (e) { /* bir sonraki turda tekrar dener */ }
     evBusy = false;
-    if (curKod === kod && LIVE[kod]?.phase === 1)
-      evTimer = setTimeout(() => { if (document.visibilityState === "visible") fetchEvent(kod); else evTimer = setTimeout(() => fetchEvent(kod), 3000); }, 2000);
+    if (curKod === kod) {
+      const wait = LIVE[kod]?.phase === 1 ? 2000 : 30000;
+      evTimer = setTimeout(() => { if (document.visibilityState === "visible") fetchEvent(kod); else evTimer = setTimeout(() => fetchEvent(kod), 3000); }, wait);
+    }
+  }
+
+  // ---------- tüm iddaa bülteni (telefondan doğrudan) ----------
+  const SB = "https://sportsbookv2.iddaa.com/sportsbook";
+  let BUL = null, bulVer = 0, bulBusy = false, bulTimer = null, bulErr = false;
+  let COMPS = LS.get("comps", null), MCFG = LS.get("mcfg", null);
+  let bday = null, blig = "", bq = "", bshow = 60, mcatSel = "Tümü";
+  async function loadMeta() {        // lig ve pazar adları: günde bir, cihazda saklanır
+    const d = todayTR();
+    if (!COMPS || COMPS._d !== d) { try { const j = await (await fetch(`${SB}/competitions`)).json();
+      COMPS = { _d: d, m: Object.fromEntries((j.data || []).map((c) => [c.i, [c.n, c.p ?? 9999]])) }; LS.set("comps", COMPS); } catch (e) {} }
+    if (!MCFG || MCFG._d !== d) { try { const j = await (await fetch(`${SB}/get_market_config`)).json();
+      const m = {}; for (const [k, v] of Object.entries((j.data && j.data.m) || {})) m[k] = v.n;
+      MCFG = { _d: d, m }; LS.set("mcfg", MCFG); } catch (e) {} }
+  }
+  async function loadBulletin() {
+    if (bulBusy) return; bulBusy = true;
+    try {
+      await loadMeta();
+      const r = await fetch(`${SB}/events?st=1&type=0&version=${BUL ? bulVer : 0}`, { cache: "no-store" });
+      if (!r.ok) throw new Error(r.status);
+      const d = (await r.json()).data || {};
+      const first = !BUL;
+      if (!BUL || !d.isdiff) BUL = new Map();
+      for (const e of d.events || []) if (e.sid === 1) BUL.set(String(e.i), e);
+      bulVer = d.version || bulVer; bulErr = false;
+      if (tab === "bulten" && (first || document.activeElement?.id !== "bq")) render(!first);
+    } catch (e) { bulErr = true; if (tab === "bulten" && !BUL) render(); }
+    bulBusy = false;
+    clearTimeout(bulTimer);
+    bulTimer = setTimeout(() => { if (document.visibilityState === "visible" && (tab === "bulten" || tab === "fav")) loadBulletin(); }, 60000);
+  }
+  const ligName = (ci) => (COMPS?.m?.[ci] || [])[0] || LIVECOMP[ci] || "";
+  const ligPrio = (ci) => (COMPS?.m?.[ci] || [])[1] ?? 9999;
+  const isoTR = (sec) => new Date(sec * 1000 + 3 * 3600e3).toISOString().slice(0, 19) + "+03:00";
+  function extMatch(e) {
+    const iso = isoTR(e.d);
+    return { kod: String(e.i), ev: (e.hn || "").trim(), dep: (e.an || "").trim(), lig: ligName(e.ci), ci: e.ci,
+             baslama: iso, saat: iso.slice(11, 16), mbs: e.mbc ?? 1, ext: true, secenekler: [], raw: e };
+  }
+  const hcpLbl = (sov) => { const v = parseFloat(sov); if (isNaN(v)) return sov; const a = Math.abs(v); return v > 0 ? `${a}:0` : `0:${a}`; };
+  function marketName(mk) {
+    let n = MCFG?.m?.[`${mk.t}_${mk.st}`] || "Bahis";
+    const sov = mk.sov == null ? "" : String(mk.sov), parts = sov.split("|");
+    n = n.replace("{h}", hcpLbl(sov)).replace("{0}", sov.replace(".", ",")).replace("{1}", parts[1] || "").replace("{2}", (parts[2] || parts[0] || "").replace(".", ","));
+    return n.replace(/\s+/g, " ").trim();
+  }
+  function niceOut(n) {
+    if (/^[012]$/.test(n)) return { 1: "1", 0: "X", 2: "2" }[n];
+    if (/^[012] ve [012]$/.test(n) || /^[012]\/[012]$/.test(n)) return n.replace(/0/g, "X").replace(" ve ", "-");
+    return n;
+  }
+  function mcat(name) {
+    if (/Korner/i.test(name)) return "Korner";
+    if (/Kart/i.test(name)) return "Kart";
+    if (/Handikap/i.test(name)) return "Handikap";
+    if (/Yarı/i.test(name)) return "Yarı";
+    if (/Alt|Üst|Gol|Tek \/ Çift/i.test(name)) return "Gol";
+    if (/Maç Sonucu|Çifte Şans|Kazanır/i.test(name)) return "Maç Sonucu";
+    return "Diğer";
+  }
+  const mktSource = (kod) => (EVODDS[kod] && EVODDS[kod].m) || (LODDS[kod] && LODDS[kod].m) || (BUL && BUL.get(kod) && BUL.get(kod).m) || [];
+  const mkKey = (mk) => `M_${mk.t}_${mk.st}_${mk.sov ?? ""}`;
+  function mOddBtn(m, mk, o, label) {
+    const p = mkKey(mk), on = kupon[m.kod] && kupon[m.kod].p === p && kupon[m.kod].s === o.n;
+    const closed = !(o.odd > 1) || (mk.s != null && mk.s !== 1);
+    if (closed) return `<div class="odd nood"><span class="n">${esc(label || niceOut(o.n))}</span><span class="o">–</span><span class="p">kapalı</span></div>`;
+    return `<button class="odd ${on ? "on" : ""} ${mk.t === 4 ? "live" : ""}" data-mk="${esc(m.kod)}|${mk.t}|${mk.st}|${esc(mk.sov ?? "")}|${esc(o.n)}">
+      <span class="n">${esc(label || niceOut(o.n))}</span><span class="o">${odd(o.odd)}</span></button>`;
+  }
+  function genericToggle(kod, t, st, sov, name) {
+    const m = byKod(kod); if (!m) return;
+    const mk = mktSource(kod).find((x) => x.t == t && x.st == st && String(x.sov ?? "") === sov);
+    const o = mk && mk.o.find((x) => x.n === name);
+    if (!mk || !o || !(o.odd > 1)) { toast("Bu oran şu an kapalı"); return; }
+    const p = mkKey(mk), cur = kupon[kod];
+    if (cur && cur.p === p && cur.s === name) { delete kupon[kod]; toast("Kupondan çıkarıldı"); }
+    else {
+      const inv = mk.o.filter((x) => x.odd > 1).map((x) => 1 / x.odd), sum = inv.reduce((a, b) => a + b, 0) || 1;
+      const pk = (1 / o.odd) / sum;
+      kupon[kod] = { p, s: name, o: o.odd, m: pk, pk, mbs: mk.mbc || m.mbs || 1, mac: `${m.ev} – ${m.dep}`, pa: marketName(mk),
+                     saat: m.saat, baslama: m.baslama, mk: { t: mk.t, st: mk.st, sov: mk.sov ?? null } };
+      toast(cur ? "Aynı maçtan tek seçim: değiştirildi" : `Kupona eklendi · ${Object.keys(kupon).length} maç`);
+    }
+    saveKupon(); render(true);
+  }
+  // Bütün pazarlar (maç detayı)
+  function renderMarkets(m) {
+    const full = EVODDS[m.kod] && EVODDS[m.kod].m;
+    const list = (full || mktSource(m.kod)).filter((mk) => mk.o && mk.o.length);
+    if (!list.length) return `<div class="lodds-note">${full ? "Bu maç için açık bahis yok." : "Bahisler yükleniyor…"}</div>`;
+    const cats = ["Tümü", ...["Maç Sonucu", "Gol", "Yarı", "Handikap", "Korner", "Kart", "Diğer"].filter((c) => list.some((mk) => mcat(marketName(mk)) === c))];
+    if (!cats.includes(mcatSel)) mcatSel = "Tümü";
+    const shown = list.filter((mk) => mcatSel === "Tümü" || mcat(marketName(mk)) === mcatSel);
+    return `<div class="dsubs">${cats.map((c) => `<button class="dsub ${c === mcatSel ? "on" : ""}" data-mcat="${esc(c)}">${c === "Yarı" ? "İlk/2. Yarı" : c}</button>`).join("")}</div>
+      ${shown.map((mk) => `<div class="mkt"><div class="mkt-h">${mk.t === 4 ? '<span class="lbadge">CANLI</span> ' : ""}${esc(marketName(mk))}${mk.mbc ? ` <span class="mkt-s">MBS ${esc(mk.mbc)}</span>` : ""}</div>
+        <div class="mgrid c${Math.min(mk.o.length, 3)}">${mk.o.map((o) => mOddBtn(m, mk, o)).join("")}</div></div>`).join("")}
+      ${full ? "" : `<div class="lodds-note">Bütün bahisler yükleniyor…</div>`}`;
+  }
+  function paintMarkets() {
+    const el = document.querySelector("[data-allmk]");
+    if (el && curKod) el.innerHTML = renderMarkets(byKod(curKod));
+  }
+  function msGrid(m, live) {      // satır için MS 1-X-2 (canlıysa canlı oran)
+    const src = live ? (LODDS[m.kod] && LODDS[m.kod].m) || [] : (m.raw ? m.raw.m : (BUL && BUL.get(m.kod) ? BUL.get(m.kod).m : [])) || [];
+    const mk = src.find((x) => (live ? x.t === 4 && x.st === 4 : x.t === 1 && x.st === 1));
+    if (!mk) return `<div class="lodds-note">${live ? "canlı MS oranı kapalı/askıda" : "MS oranı yok"}</div>`;
+    return `<div class="mgrid c3">${["1", "0", "2"].map((n) => { const o = mk.o.find((x) => x.n === n); return o ? mOddBtn(m, mk, o, (live ? "CANLI " : "MS ") + niceOut(n)) : ""; }).join("")}</div>`;
   }
 
   // ---------- kupon oran kontrolü ----------
@@ -159,6 +277,14 @@
   // Kupondaki seçimin şu anki oranı: {o} | {kapali: neden} | null (henüz bilinmiyor)
   function currentOdd(k, sel) {
     const K = KODDS[k]; if (!K) return null;
+    if (sel.mk) {     // iddaa'nın herhangi bir pazarı
+      if (LIVE[k]?.phase === 2) return { kapali: "maç bitti" };
+      if (sel.mk.t !== 4 && LIVE[k]?.phase === 1) return { kapali: "maç başladı; maç öncesi oran artık oynanamaz" };
+      const mk = K.m.find((x) => x.t === sel.mk.t && x.st === sel.mk.st && String(x.sov ?? "") === String(sel.mk.sov ?? ""));
+      const o = mk && mk.o.find((x) => x.n === sel.s);
+      if (!mk || !o || !(o.odd > 1) || (mk.s != null && mk.s !== 1)) return { kapali: "bu oran şu an kapalı/askıda" };
+      return { o: o.odd };
+    }
     const mt = /^(LIVE_)?(IY_)?AU_(\d+\.5)$/.exec(sel.p); if (!mt) return null;
     const fh = !!mt[2], line = mt[3], isLive = LIVE[k]?.phase === 1 || !!mt[1];
     if (LIVE[k]?.phase === 2) return { kapali: "maç bitti" };
@@ -191,7 +317,7 @@
     const ks = Object.entries(kupon);
     const lines = ks.map(([k, s], i) => {
       const c = currentOdd(k, s), o = c && c.o ? c.o : s.o;
-      const lbl = (s.pa || "").replace(/^(Canlı )?(1\. Yarı )?Alt\/Üst (\d)\.5$/, (_, cl, iy, n) => `${cl ? "CANLI " : ""}${iy ? "İY " : ""}${n},5 Üst`);
+      const lbl = s.mk ? `${s.pa}: ${niceOut(s.s)}` : (s.pa || "").replace(/^(Canlı )?(1\. Yarı )?Alt\/Üst (\d)\.5$/, (_, cl, iy, n) => `${cl ? "CANLI " : ""}${iy ? "İY " : ""}${n},5 Üst`);
       return `${i + 1}) ${s.mac} · ${lbl || s.s} · ${odd(o)}${c && c.kapali ? " (⚠ " + c.kapali + ")" : ""}`;
     });
     const to = ks.reduce((a, [k, s]) => { const c = currentOdd(k, s); return a * (c && c.o ? c.o : s.o); }, 1);
@@ -317,9 +443,13 @@ function liveDetail(kod) {
     document.querySelectorAll("[data-ps]").forEach((el) => { const [k, p] = el.dataset.ps.split("|"); el.innerHTML = pickState(k, p); });
     document.querySelectorAll("[data-livebox]").forEach((el) => (el.innerHTML = liveBox(el.dataset.livebox)));
     document.querySelectorAll("[data-lodds]").forEach((el) => (el.innerHTML = liveOddsGrid(el.dataset.lodds)));
+    document.querySelectorAll("[data-crow]").forEach((el) => { const m = byKod(el.dataset.crow); if (m) { el.innerHTML = compactInner(m); el.classList.toggle("is-live", LIVE[m.kod]?.phase === 1); } });
+    document.querySelectorAll("[data-lms]").forEach((el) => { const m = byKod(el.dataset.lms); if (m) el.innerHTML = msGrid(m, LIVE[m.kod]?.phase === 1); });
     document.querySelectorAll("[data-ldet]").forEach((el) => (el.innerHTML = liveDetail(el.dataset.ldet)));
     document.querySelectorAll("[data-pre]").forEach((el) => el.classList.toggle("pre-live", LIVE[el.dataset.pre]?.phase === 1));
     const mine = DATA.maclar.filter((m) => LIVE[m.kod]?.phase === 1).length;
+    const all = Object.values(LIVE).filter((x) => x.phase === 1).length, lc = $("#lcount");
+    if (lc) { lc.textContent = all > 99 ? "99+" : all; lc.classList.toggle("hidden", !all); }
     const el = $("#livecount"); if (el) { el.textContent = mine ? `● ${mine} canlı` : ""; el.classList.toggle("hidden", !mine); }
   }
   function liveBox(kod) {
@@ -367,7 +497,12 @@ function liveDetail(kod) {
       else view.innerHTML = `<div class="empty"><p>Rapor yüklenemedi.<br>İnternet bağlantınızı kontrol edip yenileyin.</p></div>`;
     } finally { btn.classList.remove("spin"); }
   }
-  const byKod = (k) => DATA.maclar.find((m) => m.kod === k);
+  const byKod = (k) => {
+    const a = DATA && DATA.maclar.find((m) => m.kod === k); if (a) return a;
+    const e = BUL && BUL.get(k); if (e) return extMatch(e);
+    const L = LIVEMETA[k]; if (L) return extMatch({ i: k, hn: L.ev, an: L.dep, ci: L.ci, d: L.d, mbc: null, m: [] });
+    return null;
+  };
   // Biten maç: canlı servis "MS" diyorsa ya da (canlı kaydı yoksa) başlamasının üzerinden 2,5 saat geçmişse
   const isFinished = (m) => { const x = LIVE[m.kod]; if (x) return x.phase === 2;
     return Date.now() - new Date(m.baslama).getTime() > 150 * 60e3; };
@@ -376,9 +511,9 @@ function liveDetail(kod) {
   function cleanKupon() { // başlamış maçları ve farklı günün seçimlerini kupondan çıkar
     const now = Date.now();
     for (const k of Object.keys(kupon)) {
-      const m = byKod(k);
       if (!live) continue;
-      if (!m || now - new Date(m.baslama).getTime() > 6 * 3600e3) delete kupon[k];   // maç bittikten sonra da sonucu görünsün
+      const b = kupon[k].baslama || (byKod(k) || {}).baslama;
+      if (b && now - new Date(b).getTime() > 6 * 3600e3) delete kupon[k];   // maç bittikten sonra 6 saat sonucu görünsün
     }
     saveKupon();
   }
@@ -388,7 +523,7 @@ function liveDetail(kod) {
     const cur = kupon[m.kod];
     if (cur && cur.p === o.p && cur.s === o.s) { delete kupon[m.kod]; toast("Kupondan çıkarıldı"); }
     else {
-      kupon[m.kod] = { p: o.p, s: o.s, o: o.o, m: o.m, pk: o.pk, mbs: o.mbs || m.mbs, mac: `${m.ev} – ${m.dep}`, pa: o.pa, saat: m.saat };
+      kupon[m.kod] = { p: o.p, s: o.s, o: o.o, m: o.m, pk: o.pk, mbs: o.mbs || m.mbs, mac: `${m.ev} – ${m.dep}`, pa: o.pa, saat: m.saat, baslama: m.baslama };
       toast(cur ? "Aynı maçtan tek seçim: değiştirildi" : `Kupona eklendi · ${Object.keys(kupon).length} maç`);
     }
     saveKupon(); render(true);
@@ -434,7 +569,7 @@ function liveDetail(kod) {
           <button class="btn" data-hazir="${i}">Kupona ekle</button></div>`;
       });
     }
-    h += `<div class="note">${esc(DATA.not)}</div><div class="disc">${esc(DATA.uyari)}</div>`;
+    h += `<button class="btn" data-tab="gecmis">🕘 Geçmiş raporlar</button><div class="note">${esc(DATA.not)}</div><div class="disc">${esc(DATA.uyari)}</div>`;
     return h;
   }
 
@@ -448,15 +583,16 @@ function liveDetail(kod) {
   }
 
   function vFav() {
+    if (!BUL && !bulBusy) loadBulletin();     // MS oranları için
     const ks = Object.keys(FAV);
     if (!ks.length) return `<div class="empty"><div style="font-size:2.6rem;opacity:.5">☆</div>
       <p>Henüz favori maçın yok.<br>Takip etmek istediğin maçın yanındaki <b>☆</b> yıldıza dokun.</p></div>`;
-    const here = DATA.maclar.filter((m) => FAV[m.kod] && !isFinished(m));
+    const here = Object.keys(FAV).map(byKod).filter((m) => m && !isFinished(m));
     const liveN = here.filter((m) => LIVE[m.kod]?.phase === 1).length;
     let h = `<div class="h"><h2>★ Favorilerim</h2><span>${ks.length} maç${liveN ? ` · <b style="color:#ff8a85">${liveN} canlı</b>` : ""}</span></div>`;
     // canlı olanlar üstte, sonra başlama saatine göre
     here.sort((a, b) => ((LIVE[b.kod]?.phase === 1) - (LIVE[a.kod]?.phase === 1)) || a.baslama.localeCompare(b.baslama));
-    for (const m of here) h += matchRow(m);
+    for (const m of here) h += compactRow(m);
     const other = ks.filter((k) => !byKod(k));
     if (other.length) {
       h += `<div class="lgroup">Bu raporda olmayan favoriler</div>`;
@@ -465,6 +601,81 @@ function liveDetail(kod) {
           <div class="teams"><span>${esc(f.ev)}<span class="vs">–</span>${esc(f.dep)}</span><button class="fav on" data-fav="${esc(k)}">★</button></div></div>`; }
     }
     return h + `<div class="disc">Favoriler yalnızca bu cihazda saklanır; maçtan 2 gün sonra kendiliğinden silinir.</div>`;
+  }
+
+  const dayLabel = (d) => { const t = todayTR(); const tm = new Date(Date.parse(t + "T12:00:00Z") + 864e5).toISOString().slice(0, 10);
+    return d === t ? "Bugün" : d === tm ? "Yarın" : d.slice(8, 10) + "." + d.slice(5, 7); };
+  function msMarket(m) {
+    const lv = LIVE[m.kod]?.phase === 1;
+    const src = lv ? (LODDS[m.kod] && LODDS[m.kod].m) || [] : (m.raw ? m.raw.m : (BUL && BUL.get(m.kod) ? BUL.get(m.kod).m : [])) || [];
+    return src.find((x) => (lv ? x.t === 4 && x.st === 4 : x.t === 1 && x.st === 1));
+  }
+  function compactInner(m) {
+    const x = LIVE[m.kod], lv = x?.phase === 1;
+    const left = lv ? `<span class="cl live"><i class="dot"></i>${x.s === 4 ? "İY" : minLabel(x)}</span>`
+      : `<span class="cl">${esc(m.saat)}</span>`;
+    const sc = (v) => (lv ? `<b class="csc">${v}</b>` : "");
+    const mk = msMarket(m);
+    const btn = (n) => { const o = mk && mk.o.find((q) => q.n === n);
+      if (!o || !(o.odd > 1) || (mk.s != null && mk.s !== 1)) return `<span class="cms-o dis">–</span>`;
+      const on = kupon[m.kod] && kupon[m.kod].p === mkKey(mk) && kupon[m.kod].s === n;
+      return `<button class="cms-o ${on ? "on" : ""}" data-mk="${esc(m.kod)}|${mk.t}|${mk.st}|${esc(mk.sov ?? "")}|${n}"><small>${niceOut(n)}</small>${odd(o.odd)}</button>`; };
+    const an = DATA.maclar.some((q) => q.kod === m.kod);
+    return `${left}<div class="ct"><div class="ctn">${sc(x?.h)}<span>${esc(m.ev)}</span></div><div class="ctn">${sc(x?.a)}<span>${esc(m.dep)}</span></div>
+      ${an || isFav(m.kod) ? `<div class="ctag">${an ? "📊" : ""}${isFav(m.kod) ? "★" : ""}</div>` : ""}</div>
+      <div class="cms">${["1", "0", "2"].map(btn).join("")}</div>`;
+  }
+  const compactRow = (m) => `<div class="crow ${LIVE[m.kod]?.phase === 1 ? "is-live" : ""}" data-open="${esc(m.kod)}" data-crow="${esc(m.kod)}">${compactInner(m)}</div>`;
+  function bultenRow(m) { return compactRow(m); }
+  function bultenRowOld(m) {
+    const a = DATA.maclar.find((x) => x.kod === m.kod);
+    const o25 = a && a.secenekler.find((o) => o.p === "AU_2.5");
+    const lv = LIVE[m.kod]?.phase === 1;
+    const n = (m.raw && m.raw.oc) || (BUL && BUL.get(m.kod) && BUL.get(m.kod).oc);
+    return `<div class="card mrow"><div class="tap" data-open="${esc(m.kod)}">${meta(m)}${teams(m)}</div>
+      ${a ? `<div class="abadge">📊 Analiz${o25 ? ` · 2,5 Üst %${Math.round(100 * o25.m)}` : ""}</div>` : ""}
+      <div data-lms="${esc(m.kod)}">${msGrid(m, lv)}</div>
+      ${lv ? `<div data-lodds="${esc(m.kod)}">${liveOddsGrid(m.kod)}</div>` : ""}
+      <button class="more" data-open="${esc(m.kod)}">${n ? `+${n} bahis · ` : ""}bütün bahisler · istatistik · kadro</button></div>`;
+  }
+  function vBulten() {
+    if (!BUL) { loadBulletin();
+      return `<div class="empty">${bulErr ? "Bülten yüklenemedi. İnternet bağlantını kontrol edip yenile." : "Tüm iddaa bülteni yükleniyor… (yaklaşık 1 MB, yalnızca ilk açılışta)"}</div>`; }
+    const all = [...BUL.values()].map(extMatch).filter((m) => !isFinished(m));
+    const days = [...new Set(all.map((m) => m.baslama.slice(0, 10)))].sort();
+    if (!bday || (bday !== "analiz" && !days.includes(bday))) bday = days.includes(todayTR()) ? todayTR() : days[0] || "analiz";
+    let h = `<div class="filters">${[["analiz", "📊 Analizli"], ...days.map((d) => [d, dayLabel(d)])].map(([id, ad]) =>
+      `<button class="fchip ${bday === id ? "on" : ""}" data-bday="${id}">${ad}</button>`).join("")}</div>`;
+    if (bday === "analiz") return h + vMac();   // BUL zaten yüklü (MS oranları)
+    const dayList = all.filter((m) => m.baslama.slice(0, 10) === bday);
+    const ligs = [...new Map(dayList.map((m) => [m.ci, m.lig])).entries()].sort((a, b) => ligPrio(a[0]) - ligPrio(b[0]));
+    h += `<input class="search" id="bq" placeholder="Takım veya lig ara…" value="${esc(bq)}">
+      <select class="lsel" id="blig"><option value="">Bütün ligler (${ligs.length})</option>${ligs.map(([ci, n]) => `<option value="${esc(ci)}" ${String(ci) === blig ? "selected" : ""}>${esc(n || "Lig " + ci)}</option>`).join("")}</select>`;
+    const ql = bq.toLocaleLowerCase("tr");
+    const list = dayList.filter((m) => (!blig || String(m.ci) === blig) && (!ql || `${m.ev} ${m.dep} ${m.lig}`.toLocaleLowerCase("tr").includes(ql)))
+      .sort((a, b) => a.baslama.localeCompare(b.baslama) || ligPrio(a.ci) - ligPrio(b.ci));
+    h += `<div class="h"><h2>${dayLabel(bday)} · ${list.length} maç</h2><span>oranlar iddaa</span></div>`;
+    let last = "";
+    for (const m of list.slice(0, bshow)) {
+      const grp = `${m.saat} · ${m.lig}`;
+      if (m.lig !== last) { h += `<div class="lgroup">${esc(m.lig || "Diğer")}</div>`; last = m.lig; }
+      h += bultenRow(m);
+    }
+    if (list.length > bshow) h += `<button class="btn" data-more="1">Daha fazla göster (${list.length - bshow} maç daha)</button>`;
+    if (!list.length) h += `<div class="empty">Eşleşen maç yok.</div>`;
+    return h;
+  }
+  function vCanli() {
+    const ks = Object.keys(LIVE).filter((k) => LIVE[k].phase === 1);
+    if (!liveAt) return `<div class="empty">Canlı maçlar yükleniyor…</div>`;
+    if (!ks.length) return `<div class="empty">Şu an oynanan maç yok.</div>`;
+    const ms = ks.map(byKod).filter(Boolean).sort((a, b) => ligPrio(a.ci) - ligPrio(b.ci) || a.lig.localeCompare(b.lig) || a.baslama.localeCompare(b.baslama));
+    let h = `<div class="h"><h2>● Canlı · ${ms.length} maç</h2><span>skor 1 sn, oran 2 sn'de bir</span></div>`, last = "";
+    for (const m of ms) {
+      if (m.lig !== last) { h += `<div class="lgroup">${esc(m.lig || "Diğer")}</div>`; last = m.lig; }
+      h += compactRow(m);
+    }
+    return h;
   }
 
   function vMac() {
@@ -476,7 +687,7 @@ function liveDetail(kod) {
     let last = "";
     for (const m of list) {
       if (m.lig !== last) { h += `<div class="lgroup">${esc(m.lig)}</div>`; last = m.lig; }
-      h += matchRow(m);
+      h += compactRow(m);
     }
     if (!list.length) h += `<div class="empty">${lig === "Canlı" ? "Şu an oynanan maç yok." : "Eşleşen maç yok."}</div>`;
     return h;
@@ -489,7 +700,7 @@ function liveDetail(kod) {
     let h = `<div class="h"><h2>Kuponum</h2><span>${ks.length} maç</span></div>`;
     for (const [k, s] of ks) {
       h += `<div class="card kitem"><button class="x" data-del="${esc(k)}" aria-label="Sil">✕</button>
-        <div class="info"><div class="t">${esc(s.saat)} · ${esc(s.mac)}</div><div class="s">${esc(s.pa)}: ${esc(nice(s.s))}</div>
+        <div class="info"><div class="t">${esc(s.saat)} · ${esc(s.mac)}</div><div class="s">${esc(s.pa)}: ${esc(s.mk ? niceOut(s.s) : nice(s.s))}</div>
         <div class="t">tahmin ${pct(s.m)} · MBS ${esc(s.mbs)} <span data-live="${esc(k)}">${liveTag(k)}</span> <span data-ps="${esc(k)}|${esc(s.p)}">${pickState(k, s.p)}</span></div>
         <div class="kchk" data-kchk="${esc(k)}">${kuponCheck(k)}</div></div><div class="o">${odd(s.o)}</div></div>`;
     }
@@ -564,7 +775,7 @@ function liveDetail(kod) {
   function drawDetail(m) {
     const tabs = [["oran", "Oranlar"], ["bilgi", "Bilgiler"], ["ist", "İstatistik"], ["analiz", "Analiz"]];
     $("#sheetBody").innerHTML = `<div class="sh-top"><div class="grab"></div><div class="sh-head"><div>${meta(m)}<h3>${esc(m.ev)} – ${esc(m.dep)}</h3></div>
-      <button class="close" data-close="1" aria-label="Kapat">✕</button></div>
+      <div class="shbtns"><span data-favd="${esc(m.kod)}">${favBtn(m)}</span><button class="close" data-close="1" aria-label="Kapat">✕</button></div></div>
       <div data-livebox="${esc(m.kod)}">${liveBox(m.kod)}</div>
       <div class="dtabs">${tabs.map(([id, ad]) => `<button class="dtab ${id === dTab ? "on" : ""}" data-dtab="${id}">${ad}${id === "ist" && LIVE[m.kod]?.phase === 1 ? ' <i class="dot"></i>' : ""}</button>`).join("")}</div></div>
       <div id="dtab"></div>`;
@@ -585,7 +796,9 @@ function liveDetail(kod) {
   // --- Oranlar ---
   function tabOran(m) {
     const ord = (o) => (DATA.pazarlar || []).findIndex((z) => z.pazar === o.p && z.secenek === o.s);
-    let h = `<div data-ldet="${esc(m.kod)}">${liveDetail(m.kod)}</div>
+    let h = `<div data-ldet="${esc(m.kod)}">${liveDetail(m.kod)}</div>`;
+    if (!m.secenekler.length) return h + `<div class="sec">Bütün bahisler <span class="mkt-s">iddaa</span></div><div data-allmk="1">${renderMarkets(m)}</div>`;
+    h += `
       <div class="mkt"><div class="mkt-h">Maç öncesi Üst tahminleri <span class="mkt-s">oranlar ${esc((m.oran_zamani || DATA.oran_zamani || "").slice(11, 16))}</span></div>`;
     for (const o of [...m.secenekler].sort((a, b) => ord(a) - ord(b))) {
       const sub = `tahmin ${pct(o.m)} · piyasa ${o.pk == null ? "–" : pct(o.pk)} · istatistik ${o.i == null ? "–" : pct(o.i)}`
@@ -593,7 +806,7 @@ function liveDetail(kod) {
       const dis = o.o == null ? "yok" : m.baslamis ? odd(o.o) : null;
       h += oddRow(esc((o.etiket || o.s).replace(/(\d)\.5/, "$1,5")), sub, rowBtn(`data-k="${esc(m.kod)}" data-p="${esc(o.p)}" data-s="${esc(o.s)}"`, o.o, isOn(m, o), dis));
     }
-    return h + `</div>`;
+    return h + `</div><div class="sec">Bütün bahisler <span class="mkt-s">iddaa</span></div><div data-allmk="1">${renderMarkets(m)}</div>`;
   }
 
   // --- Bilgiler ---
@@ -658,7 +871,7 @@ function liveDetail(kod) {
         ${cmpBar("Gol", x.h, x.a)}${cmpBar("İlk yarı gol", x.hh, x.ha)}${cmpBar("Korner", x.hco, x.aco)}${cmpBar("Sarı kart", x.hyc, x.ayc)}${cmpBar("Kırmızı kart", x.hrc, x.arc)}</div>
         <div class="lodds-note">xG, topla oynama ve şut istatistikleri iddaa'nın açık servislerinde bulunmuyor. Veriler saniyede bir güncellenir.</div>`;
     } else if (dSub.ist === "kars") {
-      h += `<div class="mkt"><div class="mkt-h">Form (son 10)</div><div class="frow"><span>${esc(m.ev)}</span><div class="form">${fbadge(m.form?.ev)}</div></div>
+      if (m.form) h += `<div class="mkt"><div class="mkt-h">Form (son 10)</div><div class="frow"><span>${esc(m.ev)}</span><div class="form">${fbadge(m.form?.ev)}</div></div>
         <div class="frow"><span>${esc(m.dep)}</span><div class="form">${fbadge(m.form?.dep)}</div></div></div>
         <div class="mkt"><div class="mkt-h">Son 10 maç ortalamaları</div><div class="cmp-t"><b>${esc(m.ev)}</b><b>${esc(m.dep)}</b></div>
         ${[["Attığı gol", "atilan_ort"], ["Yediği gol", "yenilen_ort"], ["2,5 Üst %", "ust25_yuzde"], ["KG Var %", "kg_var_yuzde"], ["Gol yemeden %", "gol_yemeden_yuzde"]].map(([l, k]) => cmpBar(l, m.ort?.ev?.[k], m.ort?.dep?.[k])).join("")}</div>`;
@@ -696,6 +909,9 @@ function liveDetail(kod) {
   // --- Analiz ---
   function tabAnaliz(m) {
     const ins = need(m.kod, "ins", `bet-insights/${m.kod}`);
+    if (!m.secenekler.length) return `<div class="mkt ai"><div class="mkt-h">🤖 Model yorumu</div><p>Bu maç günlük analiz listesinde değil (filtre: öncelikli ligler, yeterli veri). Model tahmini yok; iddaa'nın analiz notları aşağıda.</p></div>
+      <div class="mkt"><div class="mkt-h">Akıllı analiz notları <span class="mkt-s">iddaa istatistik</span></div>${ins === null || ins === undefined ? loading
+        : !ins || !(ins.bi || []).length ? nodata("Bu maç için analiz notu yok.") : ins.bi.map((x) => `<div class="insight">💡 ${esc(x.f)}</div>`).join("")}</div>`;
     const best = m.secim ? m.secenekler.find((o) => o.p === m.secim.p && o.s === m.secim.s) : null;
     const top = [...m.secenekler].filter((o) => o.o != null).sort((a, b) => (b.g || 0) - (a.g || 0))[0];
     const lt = (m.lambda?.ev || 0) + (m.lambda?.dep || 0);
@@ -730,7 +946,8 @@ function liveDetail(kod) {
     if (!live) b.innerHTML = `Geçmiş rapor görüntüleniyor (${esc(DATA.tarih)} ${esc((DATA.rapor_zamani || "").slice(11, 16))}). Geçmiş sekmesinden güncele dönebilirsin.`;
     document.querySelectorAll(".tabs button").forEach((x) => x.classList.toggle("on", x.dataset.tab === tab));
     if (tab === "gecmis") { vGecmis(); return; }
-    view.innerHTML = tab === "secim" ? vSecim() : tab === "mac" ? vMac() : tab === "fav" ? vFav() : vKupon();
+    if (tab === "mac") { tab = "bulten"; bday = "analiz"; }
+    view.innerHTML = tab === "secim" ? vSecim() : tab === "bulten" ? vBulten() : tab === "canli" ? vCanli() : tab === "fav" ? vFav() : vKupon();
     if (keepScroll) window.scrollTo(0, y);
     if (curKod && byKod(curKod)) drawTab(byKod(curKod));
     paintLive();
@@ -744,7 +961,7 @@ function liveDetail(kod) {
     const t = e.target.closest("button,a,[data-open]");
     if (!t) { if (e.target.id === "sheet") closeDetail(); return; }
     const d = t.dataset;
-    if (d.tab) { tab = d.tab; window.scrollTo(0, 0); render(); if (tab === "kupon") fetchKuponOdds(); else { clearTimeout(kTimer); kTimer = null; } return; }
+    if (d.tab) { tab = d.tab; window.scrollTo(0, 0); render(); if (tab === "canli") { fetchLive(); fetchOdds(); } if (tab === "kupon") fetchKuponOdds(); else { clearTimeout(kTimer); kTimer = null; } return; }
     if (d.dtab) { dTab = d.dtab; document.querySelectorAll(".dtab").forEach((b) => b.classList.toggle("on", b.dataset.dtab === dTab)); drawTab(byKod(curKod)); $("#sheetBody").scrollTop = 0; return; }
     if (d.dsub) { const [g, id] = d.dsub.split("|"); dSub[g] = id; drawTab(byKod(curKod)); return; }
     if (d.lk) {
@@ -758,7 +975,12 @@ function liveDetail(kod) {
       }
       return;
     }
-    if (d.fav) { e.stopPropagation(); toggleFav(d.fav); render(true); return; }
+    if (d.mk) { e.stopPropagation(); const [k, t, st, sov, ...rest] = d.mk.split("|"); genericToggle(k, +t, +st, sov, rest.join("|")); return; }
+    if (d.mcat) { mcatSel = d.mcat; paintMarkets(); return; }
+    if (d.bday) { bday = d.bday; bshow = 60; window.scrollTo(0, 0); render(); return; }
+    if (d.more) { bshow += 60; render(true); return; }
+    if (d.fav) { e.stopPropagation(); toggleFav(d.fav); render(true);
+      document.querySelectorAll("[data-favd]").forEach((el) => { const m = byKod(el.dataset.favd); if (m) el.innerHTML = favBtn(m); }); return; }
     if (d.k) { e.stopPropagation(); const m = byKod(d.k); const o = opt(m, d.p, d.s); if (m && o) toggle(m, o); return; }
     if (d.open) { openDetail(d.open); return; }
     if (d.close) { closeDetail(); return; }
@@ -778,7 +1000,9 @@ function liveDetail(kod) {
     if (d.latest) { e.preventDefault(); tab = "secim"; load("../data.json", true); return; }
     if (t.id === "refresh") { load("../data.json", true); return; }
   });
+  document.addEventListener("change", (e) => { if (e.target.id === "blig") { blig = e.target.value; bshow = 60; render(); } });
   document.addEventListener("input", (e) => {
+    if (e.target.id === "bq") { bq = e.target.value; bshow = 60; const pos = e.target.selectionStart; render(true); const el = $("#bq"); if (el) { el.focus(); el.setSelectionRange(pos, pos); } return; }
     if (e.target.id === "q") { q = e.target.value; const pos = e.target.selectionStart; render(); const el = $("#q"); el.focus(); el.setSelectionRange(pos, pos); }
     if (e.target.id === "stake") { const v = Math.max(1, Number(e.target.value) || 1); LS.set("stake", v);
       clearTimeout(window.__st); window.__st = setTimeout(() => { render(true); const el = $("#stake"); if (el) { el.focus(); el.setSelectionRange?.(9, 9); } }, 500); }
