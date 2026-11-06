@@ -73,6 +73,8 @@
       }
       const finBefore = new Set(DATA.maclar.filter((m) => LIVE[m.kod]?.phase === 2).map((m) => m.kod));
       LIVE = out; liveAt = Date.now();
+      const hm2 = /^#mac=(\d+)$/.exec(location.hash || "");   // paylaşılan bağlantı canlı veriyle bulunabiliyorsa aç
+      if (hm2 && !curKod && !window.__hashOpened && byKod(hm2[1])) { window.__hashOpened = true; setTimeout(() => openDetail(hm2[1]), 0); }
       const finNow = DATA.maclar.filter((m) => LIVE[m.kod]?.phase === 2).map((m) => m.kod);
       if (finNow.some((k) => !finBefore.has(k)) && ["secim", "mac", "fav"].includes(tab) && document.activeElement?.id !== "q") render(true);
       paintLive();
@@ -365,9 +367,20 @@
   const ST_TR = { "Full Time": "Maç sonu", "Halftime": "Devre arası", "Scheduled": "Başlamadı", "First Half": "1. yarı", "Second Half": "2. yarı",
     "Final": "Maç sonu", "Postponed": "Ertelendi", "Canceled": "İptal", "Abandoned": "Yarıda kaldı", "Extra Time": "Uzatma", "Penalties": "Penaltılar" };
   const stTr = (t) => ST_TR[t] || t || "";
+  // Olay kaynağı olmayan maçlar: iddaa canlı özeti (skor, İY, korner, kartlar) — her saniye yenilenir
+  function iddaaSummary(m) {
+    const x = LIVE[m.kod];
+    if (!x) return `<div class="mkt"><div class="mkt-h">Maç akışı <span class="mkt-s">başlamadı</span></div>
+      <div class="lodds-note">Maç başlayınca skor, korner ve kartlar burada anlık görünür.</div></div>`;
+    const st = x.phase === 2 ? "Maç sonu" : x.s === 4 ? "Devre arası" : minLabel(x);
+    const row = (ic, l, a, b) => `<div class="sm-r"><b>${a ?? "–"}</b><span>${ic} ${l}</span><b>${b ?? "–"}</b></div>`;
+    return `<div class="mkt"><div class="mkt-h">Maç akışı <span class="mkt-s">${esc(st)} · iddaa</span></div>
+      <div class="tl-teams"><b>${esc(m.ev)}</b><b>${esc(m.dep)}</b></div>
+      ${row("⚽", "Gol", x.h, x.a)}${row("⏱", "İlk yarı", x.hh, x.ha)}${row("⚑", "Korner", x.hco, x.aco)}${row("🟨", "Sarı kart", x.hyc, x.ayc)}${row("🟥", "Kırmızı kart", x.hrc, x.arc)}</div>`;
+  }
   function akisView(m) {
     if (ESPNID[m.kod] === undefined || (ESPNID[m.kod] && !ESPNEV[m.kod])) return `<div class="lodds-note">Maç akışı yükleniyor…</div>`;
-    if (!ESPNID[m.kod]) return `<div class="mkt"><div class="lodds-note">Bu maç için ücretsiz kaynakta (ESPN) maç akışı bulunamadı. ESPN büyük ligleri ve Avrupa kupalarını kapsıyor; küçük liglerde gol/kart dakikaları gösterilemiyor.</div></div>`;
+    if (!ESPNID[m.kod]) return iddaaSummary(m);
     const P = espnParts(m.kod); if (!P) return "";
     const st = (P.ev.status && P.ev.status.type) || {};
     if (!P.dets.length) return `<div class="mkt"><div class="mkt-h">Maç akışı <span class="mkt-s">${esc(stTr(st.description))} · kaynak ESPN</span></div>
@@ -582,6 +595,7 @@ function liveDetail(kod) {
     document.querySelectorAll("[data-ps]").forEach((el) => { const [k, p] = el.dataset.ps.split("|"); el.innerHTML = pickState(k, p); });
     document.querySelectorAll("[data-livebox]").forEach((el) => (el.innerHTML = liveBox(el.dataset.livebox)));
     document.querySelectorAll("[data-lodds]").forEach((el) => (el.innerHTML = liveOddsGrid(el.dataset.lodds)));
+    if (typeof paintAkis === "function") paintAkis();
     document.querySelectorAll("[data-crow]").forEach((el) => { const m = byKod(el.dataset.crow); if (m) { el.innerHTML = compactInner(m); el.classList.toggle("is-live", LIVE[m.kod]?.phase === 1); } });
     document.querySelectorAll("[data-lms]").forEach((el) => { const m = byKod(el.dataset.lms); if (m) el.innerHTML = msGrid(m, LIVE[m.kod]?.phase === 1); });
     document.querySelectorAll("[data-ldet]").forEach((el) => (el.innerHTML = liveDetail(el.dataset.ldet)));
