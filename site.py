@@ -165,7 +165,7 @@ def main():
     (out / "rapor.html").write_text(page("iddaa Günlük Analiz", nav + idx), encoding="utf-8")
     # Ana adres uygulamaya yönlenir; düz metin rapor rapor.html'de
     (out / "index.html").write_text("<!doctype html><meta charset='utf-8'><meta http-equiv='refresh' content='0;url=app/'>"
-                                    "<a href='app/'>Maç Analiz</a> · <a href='rapor.html'>Metin rapor</a>", encoding="utf-8")
+                                    "<a href='app/'>Skor Radar</a> · <a href='rapor.html'>Metin rapor</a>", encoding="utf-8")
     items = "".join(f"<a href='r/{m['ad']}.html'>{m['tarih']} · {m['saat']}</a>" for m in manifest)
     (out / "arsiv.html").write_text(page("Geçmiş raporlar",
                                          "<nav><a href='rapor.html'>Son rapor</a><a href='app/'>Uygulama</a></nav><h1>Geçmiş raporlar</h1>"

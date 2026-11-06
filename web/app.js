@@ -1,4 +1,4 @@
-/* Maç Analiz — telefon arayüzü. Veri: ../data.json (GitHub Actions her gün üretir). */
+/* Skor Radar — telefon arayüzü. Veri: ../data.json (GitHub Actions her gün üretir). */
 (() => {
   "use strict";
   const $ = (s, el = document) => el.querySelector(s);
@@ -480,7 +480,7 @@
     });
     const to = ks.reduce((a, [k, s]) => { const c = currentOdd(k, s); return a * (c && c.o ? c.o : s.o); }, 1);
     const maxMbs = Math.max(...ks.map(([, s]) => Number(s.mbs) || 1));
-    return `Maç Analiz kuponu (${DATA.tarih})\n${lines.join("\n")}\nToplam oran: ${odd(to)} · ${ks.length} maç · en yüksek MBS ${maxMbs}`;
+    return `Skor Radar kuponu (${DATA.tarih})\n${lines.join("\n")}\nToplam oran: ${odd(to)} · ${ks.length} maç · en yüksek MBS ${maxMbs}`;
   }
   async function copyText(t) {
     try { await navigator.clipboard.writeText(t); return true; } catch (e) {}
