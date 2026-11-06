@@ -79,6 +79,7 @@
       }
       const finBefore = new Set(DATA.maclar.filter((m) => LIVE[m.kod]?.phase === 2).map((m) => m.kod));
       LIVE = out; liveAt = Date.now();
+      trackGoals();
       const hm2 = /^#mac=(\d+)$/.exec(location.hash || "");   // paylaşılan bağlantı canlı veriyle bulunabiliyorsa aç
       if (hm2 && !curKod && !window.__hashOpened && byKod(hm2[1])) { window.__hashOpened = true; setTimeout(() => openDetail(hm2[1]), 0); }
       const finNow = DATA.maclar.filter((m) => LIVE[m.kod]?.phase === 2).map((m) => m.kod);
@@ -359,9 +360,57 @@
     const dets = [...(c.details || [])].sort((a, b) => ((a.clock && a.clock.value) || 0) - ((b.clock && b.clock.value) || 0));
     return { ev, c, homeId: H && H.team ? H.team.id : null, dets };
   }
+  // ---------- gol günlüğü (ESPN'in kapsamadığı maçlar) ----------
+  // Canlı skor her saniye geldiği için skor değiştiği an dakika ve takım kaydedilir (cihazda saklanır).
+  // Takip başlamadan önceki goller için yalnızca yarı bilgisi (iddaa İY skoru) bilinir.
+  let GLOG = LS.get("glog", {});
+  (function () { const lim = Date.now() - 2 * 864e5; for (const k of Object.keys(GLOG)) if ((GLOG[k].at || 0) < lim) delete GLOG[k]; })();
+  function trackGoals() {
+    let ch = false;
+    for (const [k, x] of Object.entries(LIVE)) {
+      if (!x || !x.phase) continue;
+      let g = GLOG[k];
+      if (!g) {   // ilk görüş: mevcut goller "takip öncesi"
+        if (x.h || x.a) { GLOG[k] = { h: x.h, a: x.a, bh: x.h, ba: x.a, bhh: x.hh, bha: x.ha, g: [], at: Date.now() }; ch = true; }
+        else if (x.phase === 1) { GLOG[k] = { h: 0, a: 0, bh: 0, ba: 0, g: [], at: Date.now() }; ch = true; }
+        continue;
+      }
+      for (const [side, cur] of [["h", x.h], ["a", x.a]]) {
+        while (cur > g[side]) { g[side]++; g.g.push({ t: side, m: x.s === 4 ? "İY" : minLabel(x), sc: `${g.h}-${g.a}`, at: Date.now() }); ch = true; }
+        if (cur < g[side]) {   // VAR ile iptal: o takımın son golünü işaretle
+          const last = [...g.g].reverse().find((q) => q.t === side && !q.var);
+          if (last) last.var = true; else g["b" + side] = Math.max(0, g["b" + side] - 1);
+          g[side] = cur; ch = true;
+        }
+      }
+      if (x.hh != null && g.bhh == null && x.s !== 2) { g.bhh = x.hh; g.bha = x.ha; }
+      g.at = Date.now();
+    }
+    if (ch) { LS.set("glog", GLOG); if (curKod && !ESPNID[curKod]) paintAkis(); }
+  }
+  // Takip öncesi gollerin yarı dağılımı (iddaa İY skoruna göre)
+  function preGoals(kod, side) {
+    const g = GLOG[kod], x = LIVE[kod]; if (!g) return [];
+    const n = g["b" + side]; if (!n) return [];
+    const ht = x && (side === "h" ? x.hh : x.ha);
+    const first = ht == null ? null : Math.min(n, ht);
+    if (first == null) return Array(n).fill("?");
+    return [...Array(first).fill("1. yarı"), ...Array(n - first).fill("2. yarı")];
+  }
+  function glogLines(kod, side) {
+    const g = GLOG[kod]; if (!g) return [];
+    return [...preGoals(kod, side).map((m) => ({ m, pre: true })), ...g.g.filter((q) => q.t === side)];
+  }
+
   // Skor tablosunun altında golcüler ve kırmızı kartlar
   function scorersUnder(kod) {
-    const P = espnParts(kod); if (!P) return "";
+    const P = espnParts(kod);
+    if (!P) {   // ESPN yoksa: gol günlüğü (dakika + takım)
+      if (ESPNID[kod] === undefined) return "";
+      const L = (side) => glogLines(kod, side).map((q) => `<div class="${q.var ? "var" : ""}">⚽ ${esc(q.m === "?" ? "" : q.m)}${q.var ? " (iptal)" : ""}</div>`).join("");
+      const hh = L("h"), aa = L("a");
+      return hh || aa ? `<div class="sb-goals"><div>${hh}</div><div>${aa}</div></div>` : "";
+    }
     const line = (d) => { const i = evInfo(d); if (!i.goal && !i.red) return "";
       const who = (d.athletesInvolved || [])[0]; const nm = who ? (who.shortName || who.displayName) : "";
       return `<div>${i.goal ? "⚽" : "🟥"} ${esc((d.clock && d.clock.displayValue) || "")} ${esc(nm)}${i.tag ? ` (${i.tag})` : ""}</div>`; };
@@ -382,7 +431,23 @@
     const row = (ic, l, a, b) => `<div class="sm-r"><b>${a ?? "–"}</b><span>${ic} ${l}</span><b>${b ?? "–"}</b></div>`;
     return `<div class="mkt"><div class="mkt-h">Maç akışı <span class="mkt-s">${esc(st)} · iddaa</span></div>
       <div class="tl-teams"><b>${esc(m.ev)}</b><b>${esc(m.dep)}</b></div>
+      ${glogTimeline(m)}
       ${row("⚽", "Gol", x.h, x.a)}${row("⏱", "İlk yarı", x.hh, x.ha)}${row("⚑", "Korner", x.hco, x.aco)}${row("🟨", "Sarı kart", x.hyc, x.ayc)}${row("🟥", "Kırmızı kart", x.hrc, x.arc)}</div>`;
+  }
+  function glogTimeline(m) {
+    const g = GLOG[m.kod]; if (!g) return "";
+    const rows = [];
+    for (const side of ["h", "a"]) for (const m2 of preGoals(m.kod, side)) rows.push({ t: side, m: m2 === "?" ? "–" : m2, pre: true, o: m2 === "1. yarı" ? 0 : 1 });
+    rows.sort((a, b) => a.o - b.o);
+    const all = [...rows, ...g.g.map((q) => ({ ...q, o: 2 }))].sort((a, b) => a.o - b.o || (a.o === 2 ? a.at - b.at : 0));
+    if (!all.length) return `<div class="lodds-note">Henüz gol yok.</div>`;
+    let h = "";
+    for (const q of all) {
+      const home = q.t === "h";
+      const body = `<div class="tl-b ${home ? "l" : "r"}"><div class="tl-n">⚽ Gol${q.var ? " <s>iptal (VAR)</s>" : ""}${q.sc && !q.var ? ` <span class="tl-sc">${esc(q.sc)}</span>` : ""}</div><div class="tl-s">${esc(home ? m.ev : m.dep)}${q.pre ? " · dakika bilinmiyor" : ""}</div></div>`;
+      h += `<div class="tl-row">${home ? body : "<div></div>"}<div class="tl-m">${esc(q.pre ? (q.m === "1. yarı" ? "1Y" : q.m === "2. yarı" ? "2Y" : "–") : q.m)}</div>${home ? "<div></div>" : body}</div>`;
+    }
+    return h + `<div class="lodds-note">Gol dakikası uygulama açıkken canlı skordan yakalanır. Bu lig için golcü adı ücretsiz kaynaklarda yok.</div>`;
   }
   function akisView(m) {
     if (ESPNID[m.kod] === undefined || (ESPNID[m.kod] && !ESPNEV[m.kod])) return `<div class="lodds-note">Maç akışı yükleniyor…</div>`;
@@ -709,6 +774,8 @@ function liveDetail(kod) {
   const teams = (m) => `<div class="teams"><span>${esc(m.ev)}<span class="vs">–</span>${esc(m.dep)}</span>${favBtn(m)}</div>`;
   const meta = (m) => `<div class="meta"><span class="lig">${esc(m.lig)}</span><span class="mlive" data-live="${esc(m.kod)}">${liveTag(m.kod)}</span><span class="mtime">${esc(m.saat)} · MBS ${esc(m.mbs)}</span></div>`;
 
+  const metaD = (m) => `<div class="meta"><span class="lig">${esc(m.lig)}</span><span class="mtime">${esc(m.saat)} · MBS ${esc(m.mbs)}</span></div>`;
+
   // ---------- sekmeler ----------
   function vSecim() {
     const picks = DATA.ozet.map((p) => ({ m: byKod(p.kod), o: null, p })).filter((x) => x.m && !isFinished(x.m));
@@ -969,7 +1036,7 @@ function liveDetail(kod) {
 
   function drawDetail(m) {
     const tabs = [["oran", "Oranlar"], ["bilgi", "Bilgiler"], ["ist", "İstatistik"], ["analiz", "Analiz"]];
-    $("#sheetBody").innerHTML = `<div class="sh-top"><div class="grab"></div><div class="sh-head"><div>${meta(m)}<h3>${esc(m.ev)} – ${esc(m.dep)}</h3></div>
+    $("#sheetBody").innerHTML = `<div class="sh-top"><div class="grab"></div><div class="sh-head"><div>${metaD(m)}<h3>${esc(m.ev)} – ${esc(m.dep)}</h3></div>
       <div class="shbtns"><span data-favd="${esc(m.kod)}">${favBtn(m)}</span><button class="close" data-close="1" aria-label="Kapat">✕</button></div></div>
       <div data-livebox="${esc(m.kod)}">${liveBox(m.kod)}</div>
       <div data-goals="${esc(m.kod)}">${scorersUnder(m.kod)}</div>
