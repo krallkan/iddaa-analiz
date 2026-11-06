@@ -356,3 +356,14 @@ body{background:var(--bg)}
 
 .sm-r{display:grid;grid-template-columns:44px 1fr 44px;align-items:center;padding:9px 4px;border-bottom:1px solid var(--line);font-size:.88rem}
 .sm-r:last-child{border-bottom:0}.sm-r span{text-align:center;color:#c9ccd3}.sm-r b{font-size:1.05rem}.sm-r b:last-child{text-align:right}
+
+/* keskin piyasa (gerçek değer) */
+.kes-info{background:var(--card,#141416);border:1px solid var(--line,#26262b);border-radius:12px;padding:10px 12px;margin:0 0 10px;font-size:.84rem;line-height:1.45}
+.kes-info small{opacity:.65}.kes-info.dim{opacity:.75}
+.card.kes{border-color:#2dd4bf55;box-shadow:inset 3px 0 0 #2dd4bf}
+.kes-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:6px;font-size:.9rem}
+.kes-sub{font-size:.76rem;opacity:.65;margin-top:4px}
+.kes-tr{display:grid;grid-template-columns:1.3fr .8fr .8fr .9fr .9fr;gap:6px;padding:7px 2px;border-bottom:1px solid var(--line,#26262b);font-size:.84rem;font-variant-numeric:tabular-nums}
+.kes-tr.hd{font-size:.72rem;opacity:.6;text-transform:uppercase}
+.kes-tr.on{background:#2dd4bf14;border-radius:6px}
+.kes-tr .pos{color:#4ade80;font-weight:700}.kes-tr .neg{color:#f87171}

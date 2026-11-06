@@ -20,6 +20,12 @@
   const nice = (s) => NAME[s] || s.replace(/\b0\b/g, "X");
 
   let DATA = null, live = true, tab = "secim", lig = "Tümü", q = "", lastLoad = 0;
+  let KESKIN = null;   // keskin piyasa (Pinnacle vb.) karşılaştırması: ../keskin.json
+  async function loadKeskin() {
+    try { const r = await fetch("../keskin.json?t=" + Date.now(), { cache: "no-store" });
+      KESKIN = r.ok ? await r.json() : null; } catch (e) { KESKIN = null; }
+  }
+  const kFlag = (kod) => !!(KESKIN && (KESKIN.isaretler || []).some((x) => x.kod === kod));
   let kupon = LS.get("kupon", {}); // {kod: {p,s,o,m,pk,mbs,mac,pa,tarih}}
   // Favoriler: {kod: {ev, dep, lig, saat, baslama, tarih}} — cihazda saklanır, 2 gün sonra silinir
   let FAV = LS.get("favs", {});
@@ -639,6 +645,7 @@ function liveDetail(kod) {
       const r = await fetch(url + (url.includes("?") ? "&" : "?") + "t=" + Date.now(), { cache: "no-store" });
       if (!r.ok) throw new Error(r.status);
       DATA = await r.json(); live = isLive; lastLoad = Date.now();
+      if (isLive) await loadKeskin();
       if (isLive) LS.set("son_veri", DATA);
       cleanKupon();
       render();
@@ -707,6 +714,7 @@ function liveDetail(kod) {
     const picks = DATA.ozet.map((p) => ({ m: byKod(p.kod), o: null, p })).filter((x) => x.m && !isFinished(x.m));
     picks.forEach((x) => (x.o = opt(x.m, x.p.p, x.p.s)));
     let h = `<div class="hero"><div class="big">${picks.length}</div><p><b>Günün seçimleri</b><br>Yalnızca Üst tahminleri (İY 1.5, 2.5, 3.5, 4.5). Güven ≥55, maç başına 1 seçim. Başlamış maçlar canlı skoruyla listede kalır. Oranlar ${esc((DATA.oran_zamani || "").slice(11, 16))} itibarıyla.</p></div>`;
+    h += keskinSection();
     for (const { m, o } of picks) {
       if (!o) continue;
       h += `<div class="card tap" data-open="${esc(m.kod)}">${meta(m)}${teams(m)}
@@ -726,6 +734,38 @@ function liveDetail(kod) {
     }
     h += `<button class="btn" data-tab="gecmis">🕘 Geçmiş raporlar</button><div class="note">${esc(DATA.not)}</div><div class="disc">${esc(DATA.uyari)}</div>`;
     return h;
+  }
+
+  function keskinSection() {
+    if (!KESKIN) return "";
+    const now = Date.now();
+    const xs = (KESKIN.isaretler || []).filter((x) => new Date(x.baslama).getTime() > now);
+    const g = KESKIN.gecmis_ozet || {};
+    const hist = g.adet ? `Geçmiş: ${g.adet} seçim · ${g.tuttu} tuttu (%${Math.round(100 * g.tuttu / g.adet)}, beklenen %${Math.round(100 * g.beklenen_tutma)}) · kâr ${g.kar_birim > 0 ? "+" : ""}${g.kar_birim} birim (ROI ${g.roi > 0 ? "+" : ""}${(100 * g.roi).toFixed(1)}%)`
+      : "Geçmiş: henüz sonuçlanan seçim yok.";
+    let h = `<div class="h"><h2>💎 Gerçek değer</h2><span>keskin piyasaya göre</span></div>
+      <div class="kes-info">iddaa Üst oranı, dünyanın en keskin piyasasının (Pinnacle vb.) marjsız fiyatından yüksekse burada çıkar. ${esc(hist)}<br><small>Keskin oran: ${esc((KESKIN.kaynak_zamani || "").slice(11, 16) || "–")} · ${esc(KESKIN.durum || "")} · ${KESKIN.karsilastirilan || 0} maç karşılaştırıldı</small></div>`;
+    if (!xs.length) return h + `<div class="kes-info dim">Şu an iddaa'da keskin fiyatın üzerinde Üst oranı yok. (iddaa marjı ~%15 olduğundan bu sık olmaz — normaldir.)</div>`;
+    for (const x of xs) {
+      const m = byKod(x.kod);
+      h += `<div class="card tap kes" data-open="${esc(x.kod)}"><div class="meta"><span class="lig">${esc(x.lig || "")}</span><span class="mtime">${esc((x.baslama || "").slice(11, 16))}</span></div>
+        <div class="teams"><span>${esc(x.mac)}</span></div>
+        <div class="kes-row"><b>${esc(x.secenek)}</b><span>iddaa <b>${odd(x.iddaa_oran)}</b></span><span>adil ${odd(x.adil_oran)}</span><span class="chip pos">değer +${(100 * x.deger).toFixed(1)}%</span></div>
+        <div class="kes-sub">doğru olasılık ${pct(x.dogru_olasilik)} · kaynak ${esc(x.kaynak)}${m ? "" : " · maç bültende"}</div></div>`;
+    }
+    return h;
+  }
+  function keskinBlock(kod) {
+    const k = KESKIN && KESKIN.maclar && KESKIN.maclar[kod];
+    if (!KESKIN) return "";
+    if (!k) return `<div class="mkt"><div class="mkt-h">💎 Keskin piyasa karşılaştırması</div>${nodata("Bu maç için keskin piyasa fiyatı yok (The Odds API bu ligi kapsamıyor ya da bugünkü çekimde eşleşmedi).")}</div>`;
+    const rows = k.satirlar.map((r) => `<div class="kes-tr ${r.gercek_deger ? "on" : ""}"><span>${esc(r.secenek)}${r.gercek_deger ? " 💎" : ""}</span>
+      <span>${r.iddaa_oran ? odd(r.iddaa_oran) : "–"}</span><span>${r.adil_oran ? odd(r.adil_oran) : "–"}</span><span>${pct(r.dogru_olasilik)}</span>
+      <span class="${r.deger > 0 ? "pos" : "neg"}">${r.deger == null ? "–" : (r.deger > 0 ? "+" : "") + (100 * r.deger).toFixed(1) + "%"}</span></div>`).join("");
+    const src = (k.kaynak_cizgiler || []).map((c) => `${String(c.cizgi).replace(".", ",")} Üst ${odd(c.ust)} / Alt ${odd(c.alt)}`).join(" · ");
+    return `<div class="mkt"><div class="mkt-h">💎 Keskin piyasa karşılaştırması <span class="mkt-s">${esc(k.kaynak)}</span></div>
+      <div class="kes-tr hd"><span>Seçenek</span><span>iddaa</span><span>adil</span><span>olasılık</span><span>değer</span></div>${rows}
+      <div class="lodds-note">Keskin piyasa toplam gol beklentisi <b>${k.mu.toFixed(2)}</b>${src ? ` (${esc(src)})` : ""}. Değer = olasılık × iddaa oranı − 1; 💎 = iddaa keskin fiyatın üzerinde. Keskin oran ${esc((KESKIN.kaynak_zamani || "").slice(11, 16))} itibarıyla; arada değişmiş olabilir.</div></div>`;
   }
 
   function matchRow(m) {
@@ -777,7 +817,7 @@ function liveDetail(kod) {
       return `<button class="cms-o ${on ? "on" : ""}" data-mk="${esc(m.kod)}|${mk.t}|${mk.st}|${esc(mk.sov ?? "")}|${n}"><small>${niceOut(n)}</small>${odd(o.odd)}</button>`; };
     const an = DATA.maclar.some((q) => q.kod === m.kod);
     return `${left}<div class="ct"><div class="ctn">${sc(x?.h)}<span>${esc(m.ev)}</span></div><div class="ctn">${sc(x?.a)}<span>${esc(m.dep)}</span></div>
-      ${an || isFav(m.kod) ? `<div class="ctag">${an ? "📊" : ""}${isFav(m.kod) ? "★" : ""}</div>` : ""}</div>
+      ${an || isFav(m.kod) || kFlag(m.kod) ? `<div class="ctag">${kFlag(m.kod) ? "💎" : ""}${an ? "📊" : ""}${isFav(m.kod) ? "★" : ""}</div>` : ""}</div>
       <div class="cms">${["1", "0", "2"].map(btn).join("")}</div>`;
   }
   const compactRow = (m) => `<div class="crow ${LIVE[m.kod]?.phase === 1 ? "is-live" : ""}" data-open="${esc(m.kod)}" data-crow="${esc(m.kod)}">${compactInner(m)}</div>`;
@@ -1067,7 +1107,7 @@ function liveDetail(kod) {
   // --- Analiz ---
   function tabAnaliz(m) {
     const ins = need(m.kod, "ins", `bet-insights/${m.kod}`);
-    if (!m.secenekler.length) return `<div class="mkt ai"><div class="mkt-h">🤖 Model yorumu</div><p>Bu maç günlük analiz listesinde değil (filtre: öncelikli ligler, yeterli veri). Model tahmini yok; iddaa'nın analiz notları aşağıda.</p></div>
+    if (!m.secenekler.length) return keskinBlock(m.kod) + `<div class="mkt ai"><div class="mkt-h">🤖 Model yorumu</div><p>Bu maç günlük analiz listesinde değil (filtre: öncelikli ligler, yeterli veri). Model tahmini yok; iddaa'nın analiz notları aşağıda.</p></div>
       <div class="mkt"><div class="mkt-h">Akıllı analiz notları <span class="mkt-s">iddaa istatistik</span></div>${ins === null || ins === undefined ? loading
         : !ins || !(ins.bi || []).length ? nodata("Bu maç için analiz notu yok.") : ins.bi.map((x) => `<div class="insight">💡 ${esc(x.f)}</div>`).join("")}</div>`;
     const best = m.secim ? m.secenekler.find((o) => o.p === m.secim.p && o.s === m.secim.s) : null;
@@ -1083,6 +1123,7 @@ function liveDetail(kod) {
     if (m.risk?.length) lines.push(`Dikkat: ${m.risk.map(esc).join(" · ")}.`);
     let h = `<div class="mkt ai"><div class="mkt-h">🤖 Model yorumu</div>${lines.map((l) => `<p>${l}</p>`).join("")}
       ${best || top ? `<div class="pickbox"><span>Öne çıkan Üst tahmini</span><b>${esc((best || top).etiket || "")}</b><em>${odd((best || top).o)} · %${Math.round(100 * (best || top).m)} · güven ${Math.round((best || top).g)}</em></div>` : ""}</div>`;
+    h += keskinBlock(m.kod);
     h += `<div class="mkt"><div class="mkt-h">Akıllı analiz notları <span class="mkt-s">iddaa istatistik</span></div>${ins === null || ins === undefined ? loading
       : !ins || !(ins.bi || []).length ? nodata("Bu maç için analiz notu yok.") : ins.bi.map((x) => `<div class="insight">💡 ${esc(x.f)}</div>`).join("")}</div>`;
     h += `<div class="mkt"><div class="mkt-h">Üst tahminleri</div>${[...m.secenekler].map((o) => oddRow(esc((o.etiket || o.s).replace(/(\d)\.5/, "$1,5")),

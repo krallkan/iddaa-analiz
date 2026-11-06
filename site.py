@@ -137,6 +137,9 @@ def main():
         if a.onceki:
             cur = carry_over(cur, a.onceki, manifest)
         (out / "data.json").write_text(json.dumps(cur, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    for nm in ("keskin.json", "keskin_gecmis.json"):   # keskin piyasa karşılaştırması (keskin.py)
+        if (ROOT / "reports" / nm).exists():
+            shutil.copy(ROOT / "reports" / nm, out / nm)
     for p in (ROOT / "reports").glob("app_????-??-??_????.json"):
         shutil.copy(p, out / "d" / f"{p.stem[4:]}.json")
     for p in reps:

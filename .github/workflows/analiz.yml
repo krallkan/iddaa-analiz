@@ -6,6 +6,11 @@ on:
     # 09:07, 12:07, 15:07, 18:07, 20:07 (Türkiye saati, UTC+3)
     - cron: "7 6,9,12,15,17 * * *"
   workflow_dispatch:            # Actions sekmesinden elle çalıştırma
+    inputs:
+      keskin_zorla:
+        description: "Keskin oranları saat eşiğini beklemeden çek (günde 1 kez)"
+        type: boolean
+        default: false
 
 permissions:
   contents: write               # gh-pages dalına yayın + haftalık geri test sonucunu commit
@@ -55,6 +60,13 @@ jobs:
         env:
           COLUMNS: "160"
         run: python main.py
+
+      # Keskin piyasa (Pinnacle vb.) ile karşılaştırma; günde bir kez API'den çeker, hata analizi durdurmaz
+      - name: Keskin piyasa karşılaştırması
+        continue-on-error: true
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python keskin.py --onceki "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/keskin_gecmis.json" ${{ inputs.keskin_zorla && '--zorla' || '' }}
 
       - name: Rapor sayfası
         run: python site.py --onceki "https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/manifest.json"
