@@ -82,3 +82,15 @@ Sofascore / FBref / Mackolik bot korumasıyla erişimi engelliyor; ClubElo bağl
 - iddaa kadro servisi resmi 11 değildir.
 
 **Bu analiz istatistiksel bir tahmindir, sonuç garantisi vermez. Kaybetmeyi göze alabileceğin miktarla oyna.**
+
+## Gerçek değer (keskin piyasa karşılaştırması)
+
+`keskin.py`, iddaa'nın Üst oranlarını dünyanın en keskin piyasasının (Pinnacle > Betfair Borsa > Matchbook;
+yoksa en az 4 şirketin medyanı) marjsız Alt/Üst fiyatıyla karşılaştırır. Kaynak: The Odds API (ücretsiz plan).
+
+- Anahtar: GitHub depo secret'ı `ODDS_API_KEY` (koda/rapora yazılmaz).
+- Keskin oranlar günde bir kez (TR 11:00 sonrası ilk çalıştırma) çekilir; kredi tavanı = kalan kredi ÷ ayın kalan günü.
+  Elle çalıştırmada `keskin_zorla` seçeneği saat eşiğini atlar.
+- Keskin ana çizgi (ör. 2.75) → toplam gol beklentisi μ (Poisson, Asya çizgisinde iade dahil) → iddaa 2,5/3,5/4,5 Üst olasılığı.
+- Değer = olasılık × iddaa oranı − 1. %2 ve üzeri (ortalama kaynakta %5) ve oran 1.25–6.00 ise 💎 işaretlenir.
+- İşaretlenen seçimler `keskin_gecmis.json`'da tutulur, maç bitince iddaa canlı sonuçlarından tuttu/yattı ve kâr işlenir.
