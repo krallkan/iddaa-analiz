@@ -24,6 +24,9 @@
 - **Bülten ve Canlı:** iddaa'daki bütün maçlar (telefon bülteni doğrudan iddaa'dan çeker, ~1 MB ilk açılışta, sonra
   yalnızca değişenler) ve o an oynanan bütün maçlar. Listede her maç tek satır: saat/canlı dakika, takımlar, MS 1-X-2.
   Satıra dokununca maçın bütün bahisleri (kategorili), canlı oranlar, kadro, istatistik ve analiz açılır.
+  **Maç akışı:** gol (golcü, asist, penaltı, kendi kalesine), sarı/kırmızı kart, kaçan/kurtarılan penaltı dakikalarıyla;
+  kaynak ESPN herkese açık skor servisi (büyük ligler ve Avrupa kupaları; küçük liglerde yok). Canlı maç detayı açıkken
+  her saniye yenilenir. iddaa ↔ ESPN maç eşleştirmesi başlama saati + takım adı benzerliği + canlı skorla yapılır.
   Uygulama kapalıyken bildirim gönderilmez.
 - **Tarayıcıdan:** https://krallkan.github.io/iddaa-analiz/ (aynı arayüz) · metin rapor: `rapor.html`
 - **Otomatik çalışma:** `.github/workflows/analiz.yml` her gün 09:07, 12:07, 15:07, 18:07 ve 20:07'de (TSİ) analizi

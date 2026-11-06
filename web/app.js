@@ -256,6 +256,145 @@
     return `<div class="mgrid c3">${["1", "0", "2"].map((n) => { const o = mk.o.find((x) => x.n === n); return o ? mOddBtn(m, mk, o, (live ? "CANLI " : "MS ") + niceOut(n)) : ""; }).join("")}</div>`;
   }
 
+  // ---- iddaa ↔ ESPN maç eşleştirme (app.js'e eklenecek blok) ----
+  const EXO = { kopenhag: "kobenhavn", marsilya: "marseille", lizbon: "lisboa", prag: "praha", sofya: "sofia", munih: "munchen",
+    belgrad: "beograd", atina: "athens", zurih: "zurich", viyana: "wien", bruksel: "bruxelles", varsova: "warszawa",
+    kiev: "kyiv", moskova: "moskva", roma: "roma", milano: "milan", napoli: "napoli", torino: "torino", lyon: "lyon",
+    "kizil yildiz": "red star", "kizilyildiz": "red star", "b leverkusen": "leverkusen", "bayer leverkusen": "leverkusen",
+    "un craiova": "universitatea craiova", "k almaty": "kairat", "ofi crete": "ofi", "kuopion": "kups", "inter club de escaldes": "inter escaldes" };
+  const STOP = new Set(["fc", "cf", "sc", "ac", "afc", "fk", "sk", "cd", "club", "de", "the", "sv", "if", "bk", "ss", "us", "as", "nk", "kf", "ca", "cs", "ud", "rc", "sd", "real", "1907", "1999", "1903", "1899"]);
+  function normTeam(s) {
+    let t = String(s || "").toLocaleLowerCase("tr").replace(/ı/g, "i").normalize("NFKD").replace(/[̀-ͯ]/g, "")
+      .replace(/ø/g, "o").replace(/æ/g, "ae").replace(/ß/g, "ss").replace(/[^a-z0-9 ]+/g, " ").replace(/\s+/g, " ").trim();
+    for (const [k, v] of Object.entries(EXO)) if (t === k || t.startsWith(k + " ") || t.endsWith(" " + k) || t.includes(" " + k + " ")) t = t.replace(k, v);
+    return t.split(" ").filter((w) => w && !STOP.has(w));
+  }
+  function teamSim(a, b) {
+    const A = normTeam(a), B = normTeam(b);
+    if (!A.length || !B.length) return 0;
+    let hit = 0;
+    for (const x of A) if (B.some((y) => x === y || (x.length >= 4 && y.length >= 4 && (x.startsWith(y.slice(0, 4)) && y.startsWith(x.slice(0, 4)))))) hit++;
+    const tok = hit / Math.min(A.length, B.length);
+    const bg = (s) => { const r = []; for (let i = 0; i < s.length - 1; i++) r.push(s.slice(i, i + 2)); return r; };
+    const a2 = bg(A.join("")), b2 = bg(B.join("")); let inter = 0; const pool = [...b2];
+    for (const g of a2) { const i = pool.indexOf(g); if (i >= 0) { inter++; pool.splice(i, 1); } }
+    const dice = (2 * inter) / ((a2.length + b2.length) || 1);
+    return Math.max(tok, dice);
+  }
+  // m: {ev, dep, baslama(ISO TR)}, x: canlı skor (opsiyonel), evs: ESPN olayları
+  function espnMatch(m, evs, x) {
+    const t0 = Date.parse(m.baslama);
+    let best = null;
+    for (const e of evs) {
+      if (Math.abs(Date.parse(e.date) - t0) > 30 * 60e3) continue;
+      const c = e.competitions && e.competitions[0]; if (!c) continue;
+      const H = c.competitors.find((q) => q.homeAway === "home"), A = c.competitors.find((q) => q.homeAway === "away");
+      const nm = (q) => [q.team.displayName, q.team.shortDisplayName, q.team.name, q.team.location].filter(Boolean);
+      const sh = Math.max(...nm(H).map((n) => teamSim(m.ev, n))), sa = Math.max(...nm(A).map((n) => teamSim(m.dep, n)));
+      let sc = sh + sa;
+      if (x && x.phase && +H.score === x.h && +A.score === x.a) sc += 0.3;
+      const ok = (sh >= 0.5 && sa >= 0.3) || (sa >= 0.5 && sh >= 0.3) || sh >= 0.85 || sa >= 0.85;
+      if (ok && (!best || sc > best.sc)) best = { e, sc, sh, sa };
+    }
+    return best;
+  }
+  // ---------- maç akışı (ESPN herkese açık skor servisi) ----------
+  const ESPN = "https://site.api.espn.com/apis/site/v2/sports/soccer/all/scoreboard";
+  const ESPNDAY = {}, ESPNEV = {}; let ESPNID = LS.get("espnid", {}), espnTimer = null, espnBusy = false;
+  const ymd = (iso) => iso.slice(0, 10).replace(/-/g, "");
+  async function espnDay(d) {
+    const c = ESPNDAY[d]; if (c && Date.now() - c.at < 120e3) return c.evs;
+    try { const j = await (await fetch(`${ESPN}?dates=${d}&limit=1000`, { cache: "no-store" })).json();
+      ESPNDAY[d] = { at: Date.now(), evs: j.events || [] }; return ESPNDAY[d].evs; } catch (e) { return c ? c.evs : []; }
+  }
+  async function findEspn(m) {
+    if (ESPNID[m.kod] !== undefined) return ESPNID[m.kod];
+    const d0 = m.baslama.slice(0, 10), prev = new Date(Date.parse(d0 + "T12:00:00Z") - 864e5).toISOString().slice(0, 10);
+    let best = null;
+    for (const d of [ymd(d0), ymd(prev)]) { const b = espnMatch(m, await espnDay(d), LIVE[m.kod]); if (b && (!best || b.sc > best.sc)) best = b; }
+    ESPNID[m.kod] = best ? best.e.id : null;
+    if (best) { LS.set("espnid", ESPNID); ESPNEV[m.kod] = { e: best.e, at: Date.now() }; }
+    else setTimeout(() => { if (ESPNID[m.kod] === null) delete ESPNID[m.kod]; }, 600e3);   // 10 dk sonra yeniden dene
+    return ESPNID[m.kod];
+  }
+  async function fetchEspn(kod) {
+    clearTimeout(espnTimer); espnTimer = null;
+    if (curKod !== kod || espnBusy) return;
+    const m = byKod(kod); if (!m) return;
+    espnBusy = true;
+    try {
+      const id = await findEspn(m);
+      if (id) { const r = await fetch(`${ESPN}/${id}`, { cache: "no-store" }); if (r.ok) ESPNEV[kod] = { e: await r.json(), at: Date.now() }; }
+    } catch (e) {}
+    espnBusy = false;
+    paintAkis();
+    if (curKod !== kod) return;
+    const st = ESPNEV[kod] && ESPNEV[kod].e && ESPNEV[kod].e.status ? ESPNEV[kod].e.status.type.state : null;   // pre | in | post
+    const wait = st === "in" || LIVE[kod]?.phase === 1 ? 1000 : st === "post" ? 0 : 30000;
+    if (wait) espnTimer = setTimeout(() => { if (document.visibilityState === "visible") fetchEspn(kod); else espnTimer = setTimeout(() => fetchEspn(kod), 2000); }, wait);
+  }
+  function evInfo(d) {
+    const t = (d.type && d.type.text) || "";
+    if (d.shootout) return { ic: "🎯", tx: d.scoringPlay ? "Seri penaltı golü" : "Seri penaltı kaçtı" };
+    if (d.ownGoal) return { ic: "⚽", tx: "Kendi kalesine gol", goal: true, og: true, tag: "KK" };
+    if (d.penaltyKick && d.scoringPlay) return { ic: "⚽", tx: "Penaltı golü", goal: true, tag: "P" };
+    if (/Penalty - (Missed|Saved)/i.test(t)) return { ic: "❌", tx: /Saved/i.test(t) ? "Penaltı kurtarıldı" : "Penaltı kaçtı" };
+    if (d.scoringPlay) return { ic: "⚽", tx: /Header/i.test(t) ? "Gol (kafa)" : /Free-kick/i.test(t) ? "Gol (serbest vuruş)" : "Gol", goal: true };
+    if (d.redCard) return { ic: "🟥", tx: /Yellow/i.test(t) ? "İkinci sarıdan kırmızı" : "Kırmızı kart", red: true };
+    if (d.yellowCard) return { ic: "🟨", tx: "Sarı kart" };
+    if (/Substitution/i.test(t)) return { ic: "🔁", tx: "Oyuncu değişikliği" };
+    return { ic: "•", tx: t };
+  }
+  function espnParts(kod) {
+    const ev = ESPNEV[kod] && ESPNEV[kod].e; if (!ev || !ev.competitions) return null;
+    const c = ev.competitions[0], H = c.competitors.find((q) => q.homeAway === "home");
+    const dets = [...(c.details || [])].sort((a, b) => ((a.clock && a.clock.value) || 0) - ((b.clock && b.clock.value) || 0));
+    return { ev, c, homeId: H && H.team ? H.team.id : null, dets };
+  }
+  // Skor tablosunun altında golcüler ve kırmızı kartlar
+  function scorersUnder(kod) {
+    const P = espnParts(kod); if (!P) return "";
+    const line = (d) => { const i = evInfo(d); if (!i.goal && !i.red) return "";
+      const who = (d.athletesInvolved || [])[0]; const nm = who ? (who.shortName || who.displayName) : "";
+      return `<div>${i.goal ? "⚽" : "🟥"} ${esc((d.clock && d.clock.displayValue) || "")} ${esc(nm)}${i.tag ? ` (${i.tag})` : ""}</div>`; };
+    const tid = (d) => d.team && d.team.id;
+    const home = P.dets.filter((d) => tid(d) === P.homeId).map(line).join(""), away = P.dets.filter((d) => tid(d) !== P.homeId).map(line).join("");
+    if (!home && !away) return "";
+    return `<div class="sb-goals"><div>${home}</div><div>${away}</div></div>`;
+  }
+  const ST_TR = { "Full Time": "Maç sonu", "Halftime": "Devre arası", "Scheduled": "Başlamadı", "First Half": "1. yarı", "Second Half": "2. yarı",
+    "Final": "Maç sonu", "Postponed": "Ertelendi", "Canceled": "İptal", "Abandoned": "Yarıda kaldı", "Extra Time": "Uzatma", "Penalties": "Penaltılar" };
+  const stTr = (t) => ST_TR[t] || t || "";
+  function akisView(m) {
+    if (ESPNID[m.kod] === undefined || (ESPNID[m.kod] && !ESPNEV[m.kod])) return `<div class="lodds-note">Maç akışı yükleniyor…</div>`;
+    if (!ESPNID[m.kod]) return `<div class="mkt"><div class="lodds-note">Bu maç için ücretsiz kaynakta (ESPN) maç akışı bulunamadı. ESPN büyük ligleri ve Avrupa kupalarını kapsıyor; küçük liglerde gol/kart dakikaları gösterilemiyor.</div></div>`;
+    const P = espnParts(m.kod); if (!P) return "";
+    const st = (P.ev.status && P.ev.status.type) || {};
+    if (!P.dets.length) return `<div class="mkt"><div class="mkt-h">Maç akışı <span class="mkt-s">${esc(stTr(st.description))} · kaynak ESPN</span></div>
+      <div class="lodds-note">${st.state === "pre" ? "Maç başlayınca gol, kart ve penaltı olayları burada saniyesinde görünür." : "Henüz gol/kart olayı yok."}</div></div>`;
+    let hs = 0, as = 0, h = "", htDone = false;
+    const dv = (d) => (d.clock && d.clock.displayValue) || "";
+    const isFirst = (d) => ((d.clock && d.clock.value) || 0) <= 2700 || /^45'\+/.test(dv(d));
+    for (const d of P.dets) {
+      if (!htDone && !isFirst(d)) { htDone = true; h += `<div class="tl-div">İlk yarı sonucu ${hs} - ${as}</div>`; }
+      const i = evInfo(d), home = d.team && d.team.id === P.homeId;
+      if (i.goal) { if (home) hs++; else as++; }   // ESPN kendi kalesine golü yararlanan takıma yazar
+      const ath = d.athletesInvolved || [];
+      const who = ath[0] ? ath[0].displayName : "";
+      const sub = i.goal && ath[1] ? `${i.tx} · asist: ${ath[1].displayName}` : i.tx;
+      const body = `<div class="tl-b ${home ? "l" : "r"}"><div class="tl-n">${i.ic} ${esc(who || i.tx)}${i.goal ? ` <span class="tl-sc">${hs}-${as}</span>` : ""}</div><div class="tl-s">${who ? esc(sub) : ""}</div></div>`;
+      h += `<div class="tl-row">${home ? body : "<div></div>"}<div class="tl-m">${esc(dv(d))}</div>${home ? "<div></div>" : body}</div>`;
+    }
+    const sc = (ha) => (P.c.competitors.find((q) => q.homeAway === ha) || {}).score;
+    if (st.state === "post") h += `<div class="tl-div">Maç sonucu ${sc("home")} - ${sc("away")}</div>`;
+    return `<div class="mkt"><div class="mkt-h">Maç akışı <span class="mkt-s">${esc(st.state === "in" ? (P.ev.status.displayClock || "canlı") : stTr(st.description))} · kaynak ESPN</span></div>
+      <div class="tl-teams"><b>${esc(m.ev)}</b><b>${esc(m.dep)}</b></div>${h}</div>`;
+  }
+  function paintAkis() {
+    document.querySelectorAll("[data-akis]").forEach((el) => { const m = byKod(el.dataset.akis); if (m) el.innerHTML = akisView(m); });
+    document.querySelectorAll("[data-goals]").forEach((el) => (el.innerHTML = scorersUnder(el.dataset.goals)));
+  }
+
   // ---------- kupon oran kontrolü ----------
   let KODDS = {}, kTimer = null, kBusy = false;      // {kod: {m, at}}
   async function fetchKuponOdds() {
@@ -490,6 +629,8 @@ function liveDetail(kod) {
       cleanKupon();
       render();
       fetchLive();
+      const hm = /^#mac=(\d+)$/.exec(location.hash || "");   // paylaşılabilir bağlantı: .../app/#mac=<kod>
+      if (hm && !curKod && byKod(hm[1])) openDetail(hm[1]);
       if (isLive) toast("Güncel rapor yüklendi");
     } catch (e) {
       const cached = LS.get("son_veri", null);
@@ -747,12 +888,12 @@ function liveDetail(kod) {
     $("#sheet").classList.remove("hidden"); document.body.style.overflow = "hidden";
     $("#sheetBody").scrollTop = 0;
     history.pushState({ detay: kod }, "");   // Android geri tuşu paneli kapatsın
-    fetchEvent(kod);
+    fetchEvent(kod); fetchEspn(kod);
   }
   // ---------- maç detayı: sekmeler ----------
   const ST = "https://statisticsv2.iddaa.com/statistics/soccer";
   const DET = {};   // {kod: {lineup, standings, rh, ra, h2h, ins, cc}}  (oturum içi önbellek)
-  let dTab = "oran", dSub = { bilgi: "ozet", ist: "canli" };
+  let dTab = "oran", dSub = { bilgi: "akis", ist: "canli" };
   async function detFetch(kod, key, path) {
     DET[kod] = DET[kod] || {};
     if (DET[kod][key] !== undefined) return DET[kod][key];
@@ -777,6 +918,7 @@ function liveDetail(kod) {
     $("#sheetBody").innerHTML = `<div class="sh-top"><div class="grab"></div><div class="sh-head"><div>${meta(m)}<h3>${esc(m.ev)} – ${esc(m.dep)}</h3></div>
       <div class="shbtns"><span data-favd="${esc(m.kod)}">${favBtn(m)}</span><button class="close" data-close="1" aria-label="Kapat">✕</button></div></div>
       <div data-livebox="${esc(m.kod)}">${liveBox(m.kod)}</div>
+      <div data-goals="${esc(m.kod)}">${scorersUnder(m.kod)}</div>
       <div class="dtabs">${tabs.map(([id, ad]) => `<button class="dtab ${id === dTab ? "on" : ""}" data-dtab="${id}">${ad}${id === "ist" && LIVE[m.kod]?.phase === 1 ? ' <i class="dot"></i>' : ""}</button>`).join("")}</div></div>
       <div id="dtab"></div>`;
     drawTab(m);
@@ -811,8 +953,10 @@ function liveDetail(kod) {
 
   // --- Bilgiler ---
   function tabBilgi(m) {
-    let h = subtabs("bilgi", [["ozet", "Özet"], ["kadro", "Kadro"], ["sakat", "Sakat/Ceza"]]);
-    if (dSub.bilgi === "ozet") {
+    let h = subtabs("bilgi", [["akis", "Maç Akışı"], ["ozet", "Özet"], ["kadro", "Kadro"], ["sakat", "Sakat/Ceza"]]);
+    if (dSub.bilgi === "akis") {
+      h += `<div data-akis="${esc(m.kod)}">${akisView(m)}</div>`;
+    } else if (dSub.bilgi === "ozet") {
       const x = LIVE[m.kod];
       h += `<div class="mkt"><div class="mkt-h">Maç bilgisi</div>
         <div class="kv2"><span>Turnuva</span><b>${esc(m.lig)}</b><span>Başlama</span><b>${esc(m.baslama.slice(0, 10).split("-").reverse().join("."))} ${esc(m.saat)}</b>
@@ -822,7 +966,7 @@ function liveDetail(kod) {
         <div class="score"><b>${o2(m.lambda?.ev)} : ${o2(m.lambda?.dep)}</b><small>beklenen gol</small></div></div></div>
         <div class="mkt"><div class="mkt-h">Sonraki maçlar</div><div class="kv2"><span>${esc(m.ev)}</span><b>${esc((m.sonraki?.ev_sonraki || [])[0] || "bültende yok")}</b>
         <span>${esc(m.dep)}</span><b>${esc((m.sonraki?.dep_sonraki || [])[0] || "bültende yok")}</b></div></div>
-        <div class="lodds-note">Gol ve kart dakikaları (maç akışı) iddaa'nın açık servislerinde bulunmuyor; anlık skor, korner ve kartlar İstatistik › Canlı sekmesinde.</div>`;
+        <div class="lodds-note">Gol, kart ve penaltı dakikaları "Maç Akışı" sekmesinde (kaynak ESPN); anlık skor, korner ve kartlar İstatistik › Canlı sekmesinde.</div>`;
     } else if (dSub.bilgi === "kadro") {
       const L = need(m.kod, "lineup", `lineup/${m.kod}`);
       h += L === null || L === undefined ? loading : !L ? nodata("Kadro bilgisi yok.") : lineupView(L);
@@ -933,7 +1077,7 @@ function liveDetail(kod) {
       <div class="lodds-note">Bu yorumlar istatistiksel tahmindir, sonuç garantisi vermez.</div>`;
     return h;
   }
-  function hideDetail() { $("#sheet").classList.add("hidden"); document.body.style.overflow = ""; curKod = null; clearTimeout(evTimer); evTimer = null; }
+  function hideDetail() { $("#sheet").classList.add("hidden"); document.body.style.overflow = ""; curKod = null; clearTimeout(evTimer); evTimer = null; clearTimeout(espnTimer); espnTimer = null; }
   function closeDetail() { if (history.state && history.state.detay) history.back(); else hideDetail(); }
 
   // ---------- çizim ----------
@@ -1011,7 +1155,7 @@ function liveDetail(kod) {
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState !== "visible") return;
     if (live && Date.now() - lastLoad > 10 * 60 * 1000) load("../data.json", true);
-    else { fetchLive(); fetchOdds(); if (curKod) fetchEvent(curKod); if (tab === "kupon") fetchKuponOdds(); }   // ekrana dönünce hemen güncelle
+    else { fetchLive(); fetchOdds(); if (curKod) { fetchEvent(curKod); fetchEspn(curKod); } if (tab === "kupon") fetchKuponOdds(); }   // ekrana dönünce hemen güncelle
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeDetail(); });
   // Android geri tuşu: önce detay panelini kapat
