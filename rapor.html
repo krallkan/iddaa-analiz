@@ -14,10 +14,10 @@ th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}th{pos
 code{font-size:.8rem;white-space:normal}
 nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;color:var(--muted)}
 .arsiv a{display:block;padding:10px 12px;margin:6px 0;background:var(--card);border:1px solid var(--line);border-radius:8px;text-decoration:none}
-</style></head><body><main><nav><a href='arsiv.html'>Geçmiş raporlar</a></nav><h1>iddaa Günlük Maç Analizi — 2026-11-21</h1>
-<p>Rapor zamanı: 2026-11-21T23:52:40+03:00 · Oranların çekildiği an: <strong>2026-11-21T23:52:40+03:00</strong> (oranlar değişir; oynamadan önce kontrol edin)</p>
+</style></head><body><main><nav><a href='arsiv.html'>Geçmiş raporlar</a></nav><h1>iddaa Günlük Maç Analizi — 2026-11-23</h1>
+<p>Rapor zamanı: 2026-11-23T00:16:17+03:00 · Oranların çekildiği an: <strong>2026-11-23T00:16:14+03:00</strong> (oranlar değişir; oynamadan önce kontrol edin)</p>
 <blockquote>
-<p><strong>Model hakkında dürüst not.</strong> Tahminler piyasaya dayalıdır: iddaa'nın MS, Alt/Üst, KG, Çifte Şans ve handikap oranlarından marj temizlenip tüm pazarlara uyan tek bir gol beklentisi (λ) çifti çıkarılır; İY, İY/MS, toplam gol gibi diğer pazarlar bu λ'dan tutarlı biçimde türetilir. Geri testte (2026-11-05, 1411 maç) bağımsız istatistik modelinin en iyi ağırlığı w=0.0 çıktı (test log-loss: saf piyasa 1.631, saf istatistik 1.670); istatistik modeli bu yüzden ikinci görüş olarak güven skorunda kullanılır. 'Değer', iddaa'nın bir pazarını kendi diğer pazarlarıyla tutarsız fiyatlamasından doğar; ~%15 marj nedeniyle çoğu seçimin beklenen değeri negatiftir.</p>
+<p><strong>Model hakkında dürüst not.</strong> Tahminler piyasaya dayalıdır: iddaa'nın MS, Alt/Üst, KG, Çifte Şans ve handikap oranlarından marj temizlenip tüm pazarlara uyan tek bir gol beklentisi (λ) çifti çıkarılır; İY, İY/MS, toplam gol gibi diğer pazarlar bu λ'dan tutarlı biçimde türetilir. Geri testte (2026-11-22, 1107 maç) bağımsız istatistik modelinin en iyi ağırlığı w=0.0 çıktı (test log-loss: saf piyasa 1.628, saf istatistik 1.666); istatistik modeli bu yüzden ikinci görüş olarak güven skorunda kullanılır. 'Değer', iddaa'nın bir pazarını kendi diğer pazarlarıyla tutarsız fiyatlamasından doğar; ~%15 marj nedeniyle çoğu seçimin beklenen değeri negatiftir.</p>
 <p>Güven skoru formülü: <code>GÜVEN = 30·O + 30·U + 20·V + 20·İ − H | p=piyasaya dayalı olasılık | O=(p−0.40)/0.45 | U=1−|p_istatistik−p|/0.15 (şüpheli→0) | V=veri kalitesi | İ=1−(puan_sd−0.9)/0.6 | H=haber/rotasyon riski (≤15) | Özet şartı: yalnızca config/pazarlar.json'daki seçenekler (İY 1.5 Üst, 2.5/3.5/4.5 Üst), oran 1.25-5.00, model ≥%55</code></p>
 </blockquote>
 <h2>A) Günün özeti</h2>
@@ -41,24 +41,938 @@ nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;col
 </thead>
 <tbody>
 <tr>
-<td>–</td>
-<td>–</td>
-<td>Bugün güven eşiğini geçen seçim yok</td>
-<td>–</td>
-<td>–</td>
-<td>–</td>
-<td>–</td>
-<td>–</td>
-<td>–</td>
-<td>–</td>
-<td>–</td>
+<td>23:00</td>
+<td>İspanya La Liga</td>
+<td>Levante – Elche</td>
+<td>1</td>
+<td>Alt/Üst 2.5: Üst</td>
+<td>1.52</td>
+<td>56.9</td>
+<td>56.7</td>
+<td>56.3</td>
+<td>-0.13</td>
+<td>71</td>
+</tr>
+<tr>
+<td>21:00</td>
+<td>Polonya Ekstraklasa</td>
+<td>Wieczysta Krakow – Motor Lublin</td>
+<td>2</td>
+<td>Alt/Üst 2.5: Üst</td>
+<td>1.30</td>
+<td>64.7</td>
+<td>64.0</td>
+<td>68.0</td>
+<td>-0.16</td>
+<td>71</td>
+</tr>
+<tr>
+<td>22:45</td>
+<td>İtalya Serie A</td>
+<td>AC Monza – Fiorentina</td>
+<td>1</td>
+<td>Alt/Üst 2.5: Üst</td>
+<td>1.42</td>
+<td>61.2</td>
+<td>61.0</td>
+<td>64.1</td>
+<td>-0.13</td>
+<td>65</td>
+</tr>
+<tr>
+<td>22:30</td>
+<td>İspanya La Liga 2</td>
+<td>AD Ceuta – Almeria</td>
+<td>1</td>
+<td>Alt/Üst 2.5: Üst</td>
+<td>1.52</td>
+<td>56.8</td>
+<td>56.7</td>
+<td>57.8</td>
+<td>-0.14</td>
+<td>64</td>
+</tr>
+<tr>
+<td>02:30</td>
+<td>ABD Major Lig</td>
+<td>Chicago Fire – Charlotte FC</td>
+<td>1</td>
+<td>Alt/Üst 2.5: Üst</td>
+<td>1.28</td>
+<td>67.6</td>
+<td>67.3</td>
+<td>71.5</td>
+<td>-0.13</td>
+<td>63</td>
+</tr>
+<tr>
+<td>21:00</td>
+<td>İsveç Allsvenskan</td>
+<td>Hammarby – IFK Göteborg</td>
+<td>1</td>
+<td>Alt/Üst 2.5: Üst</td>
+<td>1.32</td>
+<td>66.0</td>
+<td>65.7</td>
+<td>56.5</td>
+<td>-0.13</td>
+<td>58</td>
+</tr>
+<tr>
+<td>20:00</td>
+<td>Türkiye Süper Lig</td>
+<td>Başakşehir – Çorum FK</td>
+<td>1</td>
+<td>Alt/Üst 2.5: Üst</td>
+<td>1.43</td>
+<td>60.4</td>
+<td>60.3</td>
+<td>64.3</td>
+<td>-0.14</td>
+<td>58</td>
+</tr>
+<tr>
+<td>04:30</td>
+<td>ABD Major Lig</td>
+<td>Vancouver Whitecaps – Real Salt Lake</td>
+<td>1</td>
+<td>Alt/Üst 2.5: Üst</td>
+<td>1.25</td>
+<td>69.1</td>
+<td>69.0</td>
+<td>60.4</td>
+<td>-0.14</td>
+<td>56</td>
 </tr>
 </tbody>
 </table></div>
 <h2>B) Maç maç detaylı analiz</h2>
+<h3>23:00 · İspanya La Liga · Levante – Elche (kod 3318962, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Levante</td>
+<td>GBMMGBBMMB</td>
+<td>atılan 1.30 / yenilen 1.70</td>
+<td>2.5Ü %60.0</td>
+<td>KG %70.0</td>
+<td>gol yemeden %20.0</td>
+</tr>
+<tr>
+<td>Elche</td>
+<td>MMGGBBGMBM</td>
+<td>atılan 1.40 / yenilen 1.20</td>
+<td>2.5Ü %50.0</td>
+<td>KG %50.0</td>
+<td>gol yemeden %30.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Levante — İspanya La Liga sezon verisi: iç saha 2.60/2.40 (5 maç), dış saha 0.43/1.29 (7 maç), xG 1.26 / xGA 2.02 (eşleşme Levante, 9 maç tarih+skor ile doğrulandı)</li>
+<li>Elche — İspanya La Liga sezon verisi: iç saha 0.67/2.33 (6 maç), dış saha 1.67/1.00 (6 maç), xG 1.20 / xGA 1.76 (eşleşme Elche, 9 maç tarih+skor ile doğrulandı)</li>
+<li>Puan durumu (LaLiga 26/27): Levante 18. sıra, 11 puan (12 maç, 16-21); Elche 19. sıra, 10 puan (12 maç, 14-20); puan farkı 1</li>
+<li>Sonraki maç (5 gün): Levante: bültende yok | Elche: bültende yok</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: 2026-01-23 LaLiga: Levante 3-2 Elche (İY 0-1); 2025-08-29 LaLiga: Elche 2-0 Levante (İY 0-0); 2025-05-10 LaLiga 2: Elche 1-3 Levante (İY 0-2); 2024-11-16 LaLiga 2: Levante 1-1 Elche (İY 0-1)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Levante: maç başı kart 3.00, maç başı korner 8.00 | Elche: maç başı kart 4.17, maç başı korner 10.60. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): Levante (None, 4-2-3-1): M. Ryan, Manu Sánchez, I. Ndukwe, A. Mandi, J. Toljan, Dani Requena, Jon Ander Olasagasti, T. Fernández, Iván Romero, Roger Brugué, K. Etta Eyong
+- Elche (None, 4-3-3): M. Dituro, R. Revivo, Víctor Chust, F. Redondo, Rubén Sánchez, Martim Neto, Javi Morcillo, F. Buonanotte, Germán Valera, Fer Niño, L. Cepeda
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 1.63, λ dep 1.33 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-22 (1107 maç, eğitim/test yarıları))
+- Piyasa λ: 1.63 / 1.33, uyduruldu: AU_1.5, AU_2.5, AU_3.5, CS, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0089)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 1.66, λ dep 1.28 (μ 0.122, ev avantajı 0.289, ligler arası +0.000, ρ -0.0454); veri kalitesi 1.0
+- Güç kaynağı: Levante: football-data SP1 (zaman ağırlıklı, 21.6 ağırlıklı maç) | Elche: football-data SP1 (zaman ağırlıklı, 21.4 ağırlıklı maç)
+- En olası 3 skor: 1-1 (%11.7), 2-1 (%9.2), 1-0 (%7.9)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (00:16)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IY_AU_1.5 Üst</td>
+<td>%36.4</td>
+<td>%38.7</td>
+<td>%35.9</td>
+<td>2.23</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%56.9</td>
+<td>%56.7</td>
+<td>%56.3</td>
+<td>1.52</td>
+</tr>
+<tr>
+<td>AU_3.5 Üst</td>
+<td>%34.5</td>
+<td>%35.7</td>
+<td>%33.9</td>
+<td>2.41</td>
+</tr>
+<tr>
+<td>AU_4.5 Üst</td>
+<td>%17.9</td>
+<td>veri yok</td>
+<td>%17.4</td>
+<td>kapalı/yok</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.52 — tahmin %56.9, pazar fiyatı %56.7, istatistik %56.3, değer -0.13, güven <strong>71</strong> (O 0.376, U 0.955, V 1.0, İ 0.542, H −0.0)
+<strong>En büyük risk</strong>: kadro resmi değil (resmi 11 maçtan ~1 saat önce açıklanır)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3318962/tum-oranlar (2026-11-23T00:16:14+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3318962
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/SP1.csv
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/SP1.csv
+- Haber araması: https://news.google.com/rss/search?q=%22Levante%22%20%22Elche%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:13:07+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Levante%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:13:09+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Elche%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:13:11+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Levante%20Elche%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-23T00:13:14+03:00)</p>
+<h3>21:00 · Polonya Ekstraklasa · Wieczysta Krakow – Motor Lublin (kod 3313168, MBS 2)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Wieczysta Krakow</td>
+<td>MMMMMGBMBM</td>
+<td>atılan 1.10 / yenilen 1.90</td>
+<td>2.5Ü %70.0</td>
+<td>KG %70.0</td>
+<td>gol yemeden %10.0</td>
+</tr>
+<tr>
+<td>Motor Lublin</td>
+<td>GGBBGGBMMG</td>
+<td>atılan 2.00 / yenilen 1.50</td>
+<td>2.5Ü %80.0</td>
+<td>KG %80.0</td>
+<td>gol yemeden %20.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Wieczysta Krakow — Polonya Ekstraklasa sezon verisi: iç saha 1.40/1.60 (5 maç), dış saha 1.22/2.22 (9 maç), xG veri yok / xGA veri yok (eşleşme Wieczysta Krakow, 9 maç tarih+skor ile doğrulandı)</li>
+<li>Motor Lublin — Polonya Ekstraklasa sezon verisi: iç saha 1.50/1.62 (8 maç), dış saha 1.67/1.83 (6 maç), xG veri yok / xGA veri yok (eşleşme Motor Lublin, 8 maç tarih+skor ile doğrulandı)</li>
+<li>Puan durumu (Ekstraklasa 26/27): Wieczysta Krakow veri yok; Motor Lublin 10. sıra, 19 puan (14 maç, 22-24); puan farkı veri yok</li>
+<li>Sonraki maç (5 gün): Wieczysta Krakow: bültende yok | Motor Lublin: bültende yok</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: veri yok (kaynakta geçmiş karşılaşma yok)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Wieczysta Krakow: maç başı kart 3.33, maç başı korner 10.83 | Motor Lublin: maç başı kart 5.17, maç başı korner 11.80. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): Wieczysta Krakow (None, 3-4-3): M.Kochalski, A.Djermanovic, K.Fila, D.Dujmovic, K.Pestka, T.Christensen, M.Maigaard, M.Villar, L.Semedo, E.Koulouris, L.Piazon
+- Motor Lublin (M.Misiura, 4-3-3): G.Tratnik, B.Bereszynski, T.Plavotic, F.Luberecki, T.Santos, C.Simon, Y.Bourhane, R.Lopes, M.Ndiaye, K.Czubak, F.Ronaldo
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 1.74, λ dep 1.60 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-22 (1107 maç, eğitim/test yarıları))
+- Piyasa λ: 1.74 / 1.60, uyduruldu: AU_2.5, AU_3.5, CS, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0111)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 1.80, λ dep 1.71 (μ 0.213, ev avantajı 0.256, ligler arası +0.000, ρ -0.0454); veri kalitesi 0.85
+- Güç kaynağı: Wieczysta Krakow: football-data POL (zaman ağırlıklı, 10.9 ağırlıklı maç) | Motor Lublin: football-data POL (zaman ağırlıklı, 20.9 ağırlıklı maç)
+- En olası 3 skor: 1-1 (%10.3), 2-1 (%8.6), 1-2 (%7.9)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (00:16)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IY_AU_1.5 Üst</td>
+<td>%43.2</td>
+<td>%44.5</td>
+<td>%45.8</td>
+<td>1.87</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%64.7</td>
+<td>%64.0</td>
+<td>%68.0</td>
+<td>1.30</td>
+</tr>
+<tr>
+<td>AU_3.5 Üst</td>
+<td>%42.7</td>
+<td>%44.4</td>
+<td>%46.4</td>
+<td>1.88</td>
+</tr>
+<tr>
+<td>AU_4.5 Üst</td>
+<td>%24.3</td>
+<td>veri yok</td>
+<td>%27.5</td>
+<td>kapalı/yok</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.30 — tahmin %64.7, pazar fiyatı %64.0, istatistik %68.0, değer -0.16, güven <strong>71</strong> (O 0.549, U 0.781, V 0.85, İ 0.692, H −0.0)
+<strong>En büyük risk</strong>: kadro resmi değil (resmi 11 maçtan ~1 saat önce açıklanır)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3313168/tum-oranlar (2026-11-23T00:16:14+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3313168
+- Sezon verisi: https://www.football-data.co.uk/new/POL.csv
+- Sezon verisi: https://www.football-data.co.uk/new/POL.csv
+- Haber araması: https://news.google.com/rss/search?q=%22Wieczysta%20Krakow%22%20%22Motor%20Lublin%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:14:33+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Wieczysta%20Krakow%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:14:35+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Motor%20Lublin%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:14:37+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Wieczysta%20Krakow%20Motor%20Lublin%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-23T00:14:39+03:00)</p>
+<h3>22:45 · İtalya Serie A · AC Monza – Fiorentina (kod 3318557, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AC Monza</td>
+<td>MMMMGMBGMB</td>
+<td>atılan 1.60 / yenilen 2.00</td>
+<td>2.5Ü %80.0</td>
+<td>KG %80.0</td>
+<td>gol yemeden %10.0</td>
+</tr>
+<tr>
+<td>Fiorentina</td>
+<td>BGBMMMBGGM</td>
+<td>atılan 2.00 / yenilen 1.80</td>
+<td>2.5Ü %90.0</td>
+<td>KG %90.0</td>
+<td>gol yemeden %10.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>AC Monza — İtalya Serie A sezon verisi: iç saha 1.80/1.80 (5 maç), dış saha 1.33/2.67 (6 maç), xG 1.56 / xGA 1.45 (eşleşme Monza, 9 maç tarih+skor ile doğrulandı)</li>
+<li>Fiorentina — İtalya Serie A sezon verisi: iç saha 1.17/2.17 (6 maç), dış saha 2.00/2.40 (5 maç), xG 1.61 / xGA 1.55 (eşleşme Fiorentina, 9 maç tarih+skor ile doğrulandı)</li>
+<li>Puan durumu (Serie A 26/27): AC Monza 18. sıra, 7 puan (11 maç, 17-25); Fiorentina 15. sıra, 9 puan (11 maç, 17-25); puan farkı -2</li>
+<li>Sonraki maç (5 gün): AC Monza: bültende yok | Fiorentina: bültende yok</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: 2025-01-13 Serie A: AC Monza 2-1 Fiorentina (İY 1-0); 2024-09-01 Serie A: Fiorentina 2-2 AC Monza (İY 1-2)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: AC Monza: maç başı kart 4.17, maç başı korner 8.17 | Fiorentina: maç başı kart 5.00, maç başı korner 10.83. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): AC Monza (I.Juric, 3-4-3): N. Törnqvist, L. Lucchesi, S. Goglichidze, E. Kouadio, Ricardo Mangas, M. Foe Ondoa, E. Akinsanmiro, I. Touré, E. Zeballos, Gustavo Varela, Dany Mota
+- Fiorentina (P.Vanoli, 4-2-3-1): David de Gea, João Mário, Viery, R. Drăgușin, Álex Jiménez, N. Fagioli, M. Brescianini, W. Gnonto, Pote, F. Mastantuono, M. Pellegrino
+- [sakatlik] Fiorentina breathe easy: Njie avoids a serious thigh injury - Tu Futbolero — Tu Futbolero, 2026-11-20T13:59 (<a href="https://news.google.com/rss/articles/CBMiowFBVV95cUxNUURqb0I1bkYyZmxwb1diOXZHdTdTWE5RZTlNSk9LQ3dwSkR1Z3RFY1g1ZG4xbl84MjE4dnVEeW01R3VaTXhPcVp4VmJLaXZwX3Z1ZW5HeVhmMjdhc3N0dk5qUWEyX01uTENNOEdIdlpjQlQwMUFtQ1pHX2l5TnN2SW93U2pUY0FDNC0wN1dNMWlDWndReDdtWnRiX05qVmozZC1n?oc=5">bağlantı</a>)
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 1.32, λ dep 1.84 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-22 (1107 maç, eğitim/test yarıları))
+- Piyasa λ: 1.32 / 1.84, uyduruldu: AU_1.5, AU_2.5, AU_3.5, CS, HMS_1:0, KG, MS (pazarlar arası RMSE 0.0085)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 1.64, λ dep 1.66 (μ 0.228, ev avantajı 0.085, ligler arası +0.000, ρ -0.0454); veri kalitesi 1.0
+- Güç kaynağı: AC Monza: football-data I1 (zaman ağırlıklı, 9.1 ağırlıklı maç) | Fiorentina: football-data I1 (zaman ağırlıklı, 20.8 ağırlıklı maç)
+- En olası 3 skor: 1-1 (%10.8), 1-2 (%9.5), 0-1 (%7.3)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (00:16)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IY_AU_1.5 Üst</td>
+<td>%39.8</td>
+<td>%41.9</td>
+<td>%42.0</td>
+<td>2.07</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%61.2</td>
+<td>%61.0</td>
+<td>%64.1</td>
+<td>1.42</td>
+</tr>
+<tr>
+<td>AU_3.5 Üst</td>
+<td>%38.8</td>
+<td>%40.1</td>
+<td>%42.0</td>
+<td>2.15</td>
+</tr>
+<tr>
+<td>AU_4.5 Üst</td>
+<td>%21.2</td>
+<td>veri yok</td>
+<td>%23.7</td>
+<td>kapalı/yok</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.42 — tahmin %61.2, pazar fiyatı %61.0, istatistik %64.1, değer -0.13, güven <strong>65</strong> (O 0.47, U 0.807, V 1.0, İ 0.483, H −3.0)
+<strong>En büyük risk</strong>: 1 sakatlık/ceza haberi</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3318557/tum-oranlar (2026-11-23T00:16:14+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3318557
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/I1.csv
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/I1.csv
+- Haber araması: https://news.google.com/rss/search?q=%22AC%20Monza%22%20%22Fiorentina%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:12:51+03:00)
+- Haber araması: https://news.google.com/rss/search?q=AC%20Monza%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:12:52+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Fiorentina%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:12:54+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Monza%20Fiorentina%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-23T00:12:56+03:00)</p>
+<h3>22:30 · İspanya La Liga 2 · AD Ceuta – Almeria (kod 3318724, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AD Ceuta</td>
+<td></td>
+<td>atılan veri yok / yenilen veri yok</td>
+<td>2.5Ü veri yok</td>
+<td>KG veri yok</td>
+<td>gol yemeden veri yok</td>
+</tr>
+<tr>
+<td>Almeria</td>
+<td>GGBGBGGGGG</td>
+<td>atılan 2.00 / yenilen 0.80</td>
+<td>2.5Ü %60.0</td>
+<td>KG %60.0</td>
+<td>gol yemeden %40.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>AD Ceuta — sezon verisi/xG: veri yok (football-data'da tarih/skor ile doğrulanan takım yok (lig kapsam dışı olabilir))</li>
+<li>Almeria — İspanya La Liga 2 sezon verisi: iç saha 2.43/0.86 (7 maç), dış saha 1.29/0.71 (7 maç), xG 1.42 / xGA 1.12 (eşleşme Almeria, 9 maç tarih+skor ile doğrulandı)</li>
+<li>Puan durumu (LaLiga 2 26/27): AD Ceuta 22. sıra, 5 puan (14 maç, 10-32); Almeria 2. sıra, 32 puan (14 maç, 26-11); puan farkı -27</li>
+<li>Sonraki maç (5 gün): AD Ceuta: bültende yok | Almeria: bültende yok</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: 2026-02-01 LaLiga 2: Almeria 4-2 AD Ceuta (İY 3-1); 2025-11-09 LaLiga 2: AD Ceuta 3-2 Almeria (İY 1-1)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: AD Ceuta: maç başı kart 5.33, maç başı korner 13.20 | Almeria: maç başı kart 4.67, maç başı korner 9.00. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): AD Ceuta (S.Lobera Rodriguez, 4-3-3): Guille Vallejo, Redru, Y. Bodiger, Carlos Hernández, Álex Petxarroman, Marino Illescas, Ale Meléndez, G. Okoro, Cedric Teguia, Jordi Escobar, Kuki Zalazar
+- Almeria (G.Pimienta, 4-3-3): Andrés Fernández, Leonardo Lelo, F. Bonini, Chumi, Marcos Luna, Javi Muñoz, S. Džodić, Quim Junyent, B. Cipenga, Miguel de la Fuente, Sergio Arribas
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 1.24, λ dep 1.72 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-22 (1107 maç, eğitim/test yarıları))
+- Piyasa λ: 1.24 / 1.72, uyduruldu: AU_1.5, AU_2.5, AU_3.5, CS, HMS_1:0, KG, MS (pazarlar arası RMSE 0.0059)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 1.43, λ dep 1.57 (μ 0.171, ev avantajı 0.22, ligler arası +0.000, ρ -0.0454); veri kalitesi 0.5
+- Güç kaynağı: AD Ceuta: veri yok | Almeria: football-data SP2 (zaman ağırlıklı, 24.5 ağırlıklı maç)
+- En olası 3 skor: 1-1 (%11.6), 1-2 (%9.5), 0-1 (%8.4)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (00:16)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IY_AU_1.5 Üst</td>
+<td>%38.0</td>
+<td>%38.5</td>
+<td>%38.7</td>
+<td>2.25</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%56.8</td>
+<td>%56.7</td>
+<td>%57.8</td>
+<td>1.52</td>
+</tr>
+<tr>
+<td>AU_3.5 Üst</td>
+<td>%34.4</td>
+<td>%35.4</td>
+<td>%35.4</td>
+<td>2.44</td>
+</tr>
+<tr>
+<td>AU_4.5 Üst</td>
+<td>%17.8</td>
+<td>veri yok</td>
+<td>%18.5</td>
+<td>kapalı/yok</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.52 — tahmin %56.8, pazar fiyatı %56.7, istatistik %57.8, değer -0.14, güven <strong>64</strong> (O 0.373, U 0.933, V 0.25, İ 1.0, H −0.0)
+<strong>En büyük risk</strong>: takımlardan biri için sezon verisi yok (yalnızca son 10 maç, rakip gücü düzeltilmemiş)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3318724/tum-oranlar (2026-11-23T00:16:14+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3318724
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/SP2.csv
+- Haber araması: https://news.google.com/rss/search?q=%22AD%20Ceuta%22%20%22Almeria%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:15:27+03:00)
+- Haber araması: https://news.google.com/rss/search?q=AD%20Ceuta%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:15:30+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Almeria%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:15:33+03:00)
+- Haber araması: https://news.google.com/rss/search?q=AD%20Ceuta%20Almeria%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-23T00:15:34+03:00)</p>
+<h3>02:30 · ABD Major Lig · Chicago Fire – Charlotte FC (kod 3389684, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chicago Fire</td>
+<td>MGBGMMGGGM</td>
+<td>atılan 1.90 / yenilen 1.90</td>
+<td>2.5Ü %80.0</td>
+<td>KG %70.0</td>
+<td>gol yemeden %10.0</td>
+</tr>
+<tr>
+<td>Charlotte FC</td>
+<td>BGGMBMGMGB</td>
+<td>atılan 2.40 / yenilen 1.80</td>
+<td>2.5Ü %90.0</td>
+<td>KG %70.0</td>
+<td>gol yemeden %20.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Chicago Fire — ABD Major Lig sezon verisi: iç saha 1.94/1.47 (17 maç), dış saha 1.82/1.71 (17 maç), xG veri yok / xGA veri yok (eşleşme Chicago Fire, 10 maç tarih+skor ile doğrulandı)</li>
+<li>Charlotte FC — ABD Major Lig sezon verisi: iç saha 2.18/0.94 (17 maç), dış saha 1.71/2.06 (17 maç), xG veri yok / xGA veri yok (eşleşme Charlotte, 10 maç tarih+skor ile doğrulandı)</li>
+<li>Puan durumu (ABD MLS 2026): Chicago Fire 6. sıra, 55 puan (34 maç, 64-54); Charlotte FC 7. sıra, 54 puan (34 maç, 66-51); puan farkı 1</li>
+<li>Sonraki maç (5 gün): Chicago Fire: bültende yok | Charlotte FC: bültende yok</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: 2026-09-27 ABD MLS: Charlotte FC 0-1 Chicago Fire (İY 0-0); 2026-08-02 ABD MLS: Chicago Fire 2-1 Charlotte FC (İY 1-1); 2025-06-29 ABD MLS: Chicago Fire 3-2 Charlotte FC (İY 3-0); 2025-05-18 ABD MLS: Charlotte FC 1-4 Chicago Fire (İY 0-1)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Chicago Fire: maç başı kart 5.00, maç başı korner 10.00 | Charlotte FC: maç başı kart 2.83, maç başı korner 10.67. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): Chicago Fire (G.Berhalter, 4-3-3): C.Brady, A.Hanche-Olsen, Mbokazi, N.Allen, D.D'avilla, R.J.Dean Jr, A.J.Saletros, M.Haile-Selassie, P.Zinckernagel, R.Lewandowski, J.Bamba
+- Charlotte FC (D.Smith, 4-3-3): K.Kahlina, N.Byrne, M.Agyemang, H.Kessler, H.Toffolo, D.Diani, A.Westwood, P.Biel, L.de la Torre, Aron John, I.Gorno
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 2.24, λ dep 1.25 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-22 (1107 maç, eğitim/test yarıları))
+- Piyasa λ: 2.24 / 1.25, uyduruldu: AU_2.5, AU_3.5, CS, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0047)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 1.98, λ dep 1.72 (μ 0.317, ev avantajı 0.242, ligler arası +0.000, ρ -0.0454); veri kalitesi 0.85
+- Güç kaynağı: Chicago Fire: football-data USA (zaman ağırlıklı, 26.9 ağırlıklı maç) | Charlotte FC: football-data USA (zaman ağırlıklı, 26.4 ağırlıklı maç)
+- En olası 3 skor: 2-1 (%9.6), 1-1 (%8.9), 2-0 (%7.7)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (00:16)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IY_AU_1.5 Üst</td>
+<td>%45.5</td>
+<td>%46.7</td>
+<td>%48.6</td>
+<td>1.85</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%67.6</td>
+<td>%67.3</td>
+<td>%71.5</td>
+<td>1.28</td>
+</tr>
+<tr>
+<td>AU_3.5 Üst</td>
+<td>%46.0</td>
+<td>%46.7</td>
+<td>%50.6</td>
+<td>1.85</td>
+</tr>
+<tr>
+<td>AU_4.5 Üst</td>
+<td>%27.1</td>
+<td>veri yok</td>
+<td>%31.2</td>
+<td>kapalı/yok</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.28 — tahmin %67.6, pazar fiyatı %67.3, istatistik %71.5, değer -0.13, güven <strong>63</strong> (O 0.614, U 0.745, V 0.85, İ 0.242, H −0.0)
+<strong>En büyük risk</strong>: sonuçları dalgalı takım(lar)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3389684/tum-oranlar (2026-11-23T00:16:14+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3389684
+- Sezon verisi: https://www.football-data.co.uk/new/USA.csv
+- Sezon verisi: https://www.football-data.co.uk/new/USA.csv
+- Haber araması: https://news.google.com/rss/search?q=%22Chicago%20Fire%22%20%22Charlotte%20FC%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:13:32+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Chicago%20Fire%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:13:35+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Charlotte%20FC%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:13:37+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Chicago%20Fire%20Charlotte%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-23T00:13:40+03:00)</p>
+<h3>21:00 · İsveç Allsvenskan · Hammarby – IFK Göteborg (kod 3320012, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Hammarby</td>
+<td>GGGGGMGGGB</td>
+<td>atılan 1.70 / yenilen 0.50</td>
+<td>2.5Ü %30.0</td>
+<td>KG %40.0</td>
+<td>gol yemeden %50.0</td>
+</tr>
+<tr>
+<td>IFK Göteborg</td>
+<td>BMBBBGMGGG</td>
+<td>atılan 1.40 / yenilen 1.00</td>
+<td>2.5Ü %40.0</td>
+<td>KG %60.0</td>
+<td>gol yemeden %30.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Hammarby — İsveç Allsvenskan sezon verisi: iç saha 2.86/0.57 (14 maç), dış saha 1.43/1.07 (14 maç), xG veri yok / xGA veri yok (eşleşme Hammarby, 9 maç tarih+skor ile doğrulandı)</li>
+<li>IFK Göteborg — İsveç Allsvenskan sezon verisi: iç saha 1.21/1.00 (14 maç), dış saha 1.36/2.29 (14 maç), xG veri yok / xGA veri yok (eşleşme Goteborg, 9 maç tarih+skor ile doğrulandı)</li>
+<li>Puan durumu (Allsvenskan 2026): Hammarby 2. sıra, 58 puan (28 maç, 60-23); IFK Göteborg 10. sıra, 39 puan (28 maç, 36-46); puan farkı 19</li>
+<li>Sonraki maç (5 gün): Hammarby: bültende yok | IFK Göteborg: bültende yok</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: 2026-05-09 Allsvenskan: IFK Göteborg 0-1 Hammarby (İY 0-0); 2025-10-05 Allsvenskan: IFK Göteborg 1-2 Hammarby (İY 0-1); 2025-03-30 Allsvenskan: Hammarby 4-0 IFK Göteborg (İY 2-0); 2025-03-09 İsveç Kupası: IFK Göteborg 4-0 Hammarby (İY 2-0); 2024-09-01 Allsvenskan: IFK Göteborg 0-1 Hammarby (İY 0-0); 2024-07-15 Allsvenskan: Hammarby 0-1 IFK Göteborg (İY 0-1)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Hammarby: maç başı kart 4.17, maç başı korner 10.67 | IFK Göteborg: maç başı kart 3.83, maç başı korner 9.83. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): Hammarby (H.Rydström, 4-3-3): W.Hahn, H.Hampus, F.Winther, M.Karlsson, I.B.Fofana, F.Adjei Junior, T.Tekie, P.Abraham, N.Persson, M.Madjed, V.Lind
+- IFK Göteborg (J.Bjorklund, 4-3-3): V.Andersson, F.Eriksson, J.Bager, H.Hermannsson, N.Tolf, O.Mansson, D.Kruse, K.Ackermann, T.Heintz, N.Zugelj, A.Simmelhack
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 2.70, λ dep 0.71 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-22 (1107 maç, eğitim/test yarıları))
+- Piyasa λ: 2.70 / 0.71, uyduruldu: AU_2.5, AU_3.5, HMS_0:2, KG, MS (pazarlar arası RMSE 0.0056)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 2.16, λ dep 0.79 (μ 0.221, ev avantajı 0.152, ligler arası +0.000, ρ -0.0454); veri kalitesi 0.85
+- Güç kaynağı: Hammarby: football-data SWE (zaman ağırlıklı, 22.4 ağırlıklı maç) | IFK Göteborg: football-data SWE (zaman ağırlıklı, 22.6 ağırlıklı maç)
+- En olası 3 skor: 2-0 (%12.1), 3-0 (%10.9), 1-0 (%8.7)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (00:16)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IY_AU_1.5 Üst</td>
+<td>%44.3</td>
+<td>%45.7</td>
+<td>%37.4</td>
+<td>1.89</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%66.0</td>
+<td>%65.7</td>
+<td>%56.5</td>
+<td>1.32</td>
+</tr>
+<tr>
+<td>AU_3.5 Üst</td>
+<td>%44.0</td>
+<td>%44.4</td>
+<td>%34.0</td>
+<td>1.95</td>
+</tr>
+<tr>
+<td>AU_4.5 Üst</td>
+<td>%25.3</td>
+<td>veri yok</td>
+<td>%17.5</td>
+<td>kapalı/yok</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.32 — tahmin %66.0, pazar fiyatı %65.7, istatistik %56.5, değer -0.13, güven <strong>58</strong> (O 0.578, U 0.364, V 0.85, İ 0.65, H −0.0)
+<strong>En büyük risk</strong>: istatistik modeli piyasadan ayrılıyor (-10 puan)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3320012/tum-oranlar (2026-11-23T00:16:14+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3320012
+- Sezon verisi: https://www.football-data.co.uk/new/SWE.csv
+- Sezon verisi: https://www.football-data.co.uk/new/SWE.csv
+- Haber araması: https://news.google.com/rss/search?q=%22Hammarby%22%20%22IFK%20G%C3%B6teborg%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:14:49+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Hammarby%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:14:51+03:00)
+- Haber araması: https://news.google.com/rss/search?q=IFK%20G%C3%B6teborg%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:14:54+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Hammarby%20Goteborg%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-23T00:14:56+03:00)</p>
+<h3>20:00 · Türkiye Süper Lig · Başakşehir – Çorum FK (kod 3319387, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Başakşehir</td>
+<td>GGMGBGMMBM</td>
+<td>atılan 1.70 / yenilen 1.70</td>
+<td>2.5Ü %70.0</td>
+<td>KG %60.0</td>
+<td>gol yemeden %20.0</td>
+</tr>
+<tr>
+<td>Çorum FK</td>
+<td>MGMGGMGGMM</td>
+<td>atılan 1.90 / yenilen 1.90</td>
+<td>2.5Ü %80.0</td>
+<td>KG %50.0</td>
+<td>gol yemeden %20.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Başakşehir — Türkiye Süper Lig sezon verisi: iç saha 2.67/1.17 (6 maç), dış saha 0.60/2.00 (5 maç), xG 1.68 / xGA 1.58 (eşleşme Buyuksehyr, 10 maç tarih+skor ile doğrulandı)</li>
+<li>Çorum FK — Türkiye Süper Lig sezon verisi: iç saha 1.20/1.80 (5 maç), dış saha 2.50/2.00 (6 maç), xG 1.38 / xGA 1.34 (eşleşme Corum, 10 maç tarih+skor ile doğrulandı)</li>
+<li>Puan durumu (Süper Lig 26/27): Başakşehir 9. sıra, 17 puan (11 maç, 19-17); Çorum FK 11. sıra, 16 puan (11 maç, 21-21); puan farkı 1</li>
+<li>Sonraki maç (5 gün): Başakşehir: bültende yok | Çorum FK: bültende yok</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: 2025-02-04 Türkiye Kupası: Başakşehir 4-1 Çorum FK (İY 2-1)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Başakşehir: maç başı kart 3.33, maç başı korner 9.67 | Çorum FK: maç başı kart 3.33, maç başı korner 8.50. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): Başakşehir (N.Şahin, 4-2-3-1): D. Dilmen, M. Karbownik, O. Ba, E. Bayram, Ö. Şahiner, U. Güneş, O. Kemen, I. Brnić, E. Shomurodov, A. Skov Olsen, D. Selke
+- Çorum FK (B.Yılmaz, 4-2-3-1): Marcos Felipe, A. Borza, H. Smolčić, Alexandre Penetra, G. Sazdağı, E. Mahmić, Y. Ramadani, A. Kyziridis, M. Diomandé, C. Ünder, J. Ramírez
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 1.85, λ dep 1.27 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-22 (1107 maç, eğitim/test yarıları))
+- Piyasa λ: 1.85 / 1.27, uyduruldu: AU_1.5, AU_2.5, AU_3.5, CS, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0079)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 2.11, λ dep 1.21 (μ 0.149, ev avantajı 0.267, ligler arası +0.000, ρ -0.0454); veri kalitesi 1.0
+- Güç kaynağı: Başakşehir: football-data T1 (zaman ağırlıklı, 19.1 ağırlıklı maç) | Çorum FK: football-data T1 (zaman ağırlıklı, 8.8 ağırlıklı maç)
+- En olası 3 skor: 1-1 (%10.8), 2-1 (%9.6), 1-0 (%7.7)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (00:16)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IY_AU_1.5 Üst</td>
+<td>%40.0</td>
+<td>%41.3</td>
+<td>%42.8</td>
+<td>2.09</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%60.4</td>
+<td>%60.3</td>
+<td>%64.3</td>
+<td>1.43</td>
+</tr>
+<tr>
+<td>AU_3.5 Üst</td>
+<td>%38.0</td>
+<td>%39.2</td>
+<td>%42.3</td>
+<td>2.20</td>
+</tr>
+<tr>
+<td>AU_4.5 Üst</td>
+<td>%20.6</td>
+<td>veri yok</td>
+<td>%23.9</td>
+<td>kapalı/yok</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.43 — tahmin %60.4, pazar fiyatı %60.3, istatistik %64.3, değer -0.14, güven <strong>58</strong> (O 0.454, U 0.737, V 1.0, İ 0.117, H −0.0)
+<strong>En büyük risk</strong>: sonuçları dalgalı takım(lar)</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3319387/tum-oranlar (2026-11-23T00:16:14+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3319387
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/T1.csv
+- Sezon verisi: https://www.football-data.co.uk/mmz4281/2627/T1.csv
+- Haber araması: https://news.google.com/rss/search?q=%22Ba%C5%9Fak%C5%9Fehir%22%20%22%C3%87orum%20FK%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:12:42+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Ba%C5%9Fak%C5%9Fehir%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:12:44+03:00)
+- Haber araması: https://news.google.com/rss/search?q=%C3%87orum%20FK%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:12:46+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Buyuksehyr%20Corum%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-23T00:12:48+03:00)</p>
+<h3>04:30 · ABD Major Lig · Vancouver Whitecaps – Real Salt Lake (kod 3409574, MBS 1)</h3>
+<p><strong>Form (son 10 maç, tüm turnuvalar — kaynak: iddaa istatistik)</strong></p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th></th>
+<th>Son 10</th>
+<th>İç saha son 5</th>
+<th>Dış saha son 5</th>
+<th>Son 7 gün maç</th>
+<th>Puan sapması</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vancouver Whitecaps</td>
+<td>GGGMGBBMBG</td>
+<td>atılan 2.10 / yenilen 1.10</td>
+<td>2.5Ü %60.0</td>
+<td>KG %60.0</td>
+<td>gol yemeden %30.0</td>
+</tr>
+<tr>
+<td>Real Salt Lake</td>
+<td>BGMGGGBMGM</td>
+<td>atılan 1.70 / yenilen 1.10</td>
+<td>2.5Ü %70.0</td>
+<td>KG %70.0</td>
+<td>gol yemeden %20.0</td>
+</tr>
+</tbody>
+</table></div>
+<ul>
+<li>Vancouver Whitecaps — ABD Major Lig sezon verisi: iç saha 2.59/0.94 (17 maç), dış saha 1.76/1.06 (17 maç), xG veri yok / xGA veri yok (eşleşme Vancouver Whitecaps, 10 maç tarih+skor ile doğrulandı)</li>
+<li>Real Salt Lake — ABD Major Lig sezon verisi: iç saha 1.94/1.29 (17 maç), dış saha 1.18/1.76 (17 maç), xG veri yok / xGA veri yok (eşleşme Real Salt Lake, 9 maç tarih+skor ile doğrulandı)</li>
+<li>Puan durumu (ABD MLS 2026): Vancouver Whitecaps 2. sıra, 64 puan (34 maç, 74-34); Real Salt Lake 18. sıra, 45 puan (34 maç, 53-52); puan farkı 19</li>
+<li>Sonraki maç (5 gün): Vancouver Whitecaps: bültende yok | Real Salt Lake: bültende yok</li>
+</ul>
+<p><strong>Kafa kafaya</strong>: 2026-09-20 ABD MLS: Real Salt Lake 0-3 Vancouver Whitecaps (İY 0-2); 2026-02-22 ABD MLS: Vancouver Whitecaps 1-0 Real Salt Lake (İY 0-0); 2025-05-25 ABD MLS: Real Salt Lake 2-3 Vancouver Whitecaps (İY 2-2); 2025-05-04 ABD MLS: Vancouver Whitecaps 2-1 Real Salt Lake (İY 1-0)</p>
+<p><strong>Kart/korner (son 6 maç)</strong>: Vancouver Whitecaps: maç başı kart 3.33, maç başı korner 10.17 | Real Salt Lake: maç başı kart 4.50, maç başı korner 11.17. Kart pazarı bültende yok.</p>
+<p><strong>Kadro ve haberler</strong>
+- Tahmini 11 (iddaa kadro servisi, resmi değil): Vancouver Whitecaps (J.Sorensen, 4-2-3-1): Y.Takaoka, E.Ocampo Vidal, R.Veselinovic, M.Gherasimencov, B.Halbouni, R.Priso, A.Cvetkovic, O.Larraz, R.Gauld, C.Sabaly, Y.Diaby
+- Real Salt Lake (P.Mastroeni, 5-4-1): Rafael, L.De Fougerolles, P.Quinton, K.J.Henry, J.Arias, D.Marczuk, J.Sanabria, S.Lobzhanidze, S.Spierings, N.Caliskan, D.Luna
+- Son 72 saatte risk taşıyan haber başlığı bulunamadı.
+- Manuel λ düzeltmesi: yok (doğrulanmış, kilit oyuncu eksikliği bulunamadı).</p>
+<p><strong>Tahmin (piyasaya dayalı)</strong>: λ ev 2.45, λ dep 1.12 — λ = piyasa^1.00 · istatistik^0.00 (w kaynağı: backtest.py 2026-11-22 (1107 maç, eğitim/test yarıları))
+- Piyasa λ: 2.45 / 1.12, uyduruldu: AU_2.5, AU_3.5, HMS_0:1, KG, MS (pazarlar arası RMSE 0.0044)
+<strong>İstatistik modeli (ikinci görüş)</strong>: λ ev 2.19, λ dep 0.94 (μ 0.317, ev avantajı 0.242, ligler arası +0.000, ρ -0.0454); veri kalitesi 0.85
+- Güç kaynağı: Vancouver Whitecaps: football-data USA (zaman ağırlıklı, 27.5 ağırlıklı maç) | Real Salt Lake: football-data USA (zaman ağırlıklı, 26.4 ağırlıklı maç)
+- En olası 3 skor: 2-1 (%9.5), 2-0 (%8.4), 1-1 (%8.1)</p>
+<div class='tw'><table>
+<thead>
+<tr>
+<th>Pazar</th>
+<th>Tahmin</th>
+<th>Pazar fiyatı (marjsız)</th>
+<th>İstatistik</th>
+<th>Oran (00:16)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>IY_AU_1.5 Üst</td>
+<td>%46.7</td>
+<td>%48.0</td>
+<td>%40.1</td>
+<td>1.80</td>
+</tr>
+<tr>
+<td>AU_2.5 Üst</td>
+<td>%69.1</td>
+<td>%69.0</td>
+<td>%60.3</td>
+<td>1.25</td>
+</tr>
+<tr>
+<td>AU_3.5 Üst</td>
+<td>%47.7</td>
+<td>%48.3</td>
+<td>%38.0</td>
+<td>1.79</td>
+</tr>
+<tr>
+<td>AU_4.5 Üst</td>
+<td>%28.5</td>
+<td>veri yok</td>
+<td>%20.5</td>
+<td>kapalı/yok</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Önerilen seçenek</strong>: Alt/Üst 2.5: <strong>Üst</strong> @1.25 — tahmin %69.1, pazar fiyatı %69.0, istatistik %60.4, değer -0.14, güven <strong>56</strong> (O 0.647, U 0.417, V 0.85, İ 0.333, H −0.0)
+<strong>En büyük risk</strong>: istatistik modeli piyasadan ayrılıyor (-9 puan) (diğer: sonuçları dalgalı takım(lar))</p>
+<p><strong>Kaynaklar</strong>
+- Oranlar: https://www.iddaa.com/program/futbol/mac-detay/1/3409574/tum-oranlar (2026-11-23T00:16:14+03:00)
+- İstatistik: https://statisticsv2.iddaa.com/statistics/soccer/*/3409574
+- Sezon verisi: https://www.football-data.co.uk/new/USA.csv
+- Sezon verisi: https://www.football-data.co.uk/new/USA.csv
+- Haber araması: https://news.google.com/rss/search?q=%22Vancouver%20Whitecaps%22%20%22Real%20Salt%20Lake%22%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:13:52+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Vancouver%20Whitecaps%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:13:55+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Real%20Salt%20Lake%20%28sakat%20OR%20cezal%C4%B1%20OR%20kadro%20OR%20%22muhtemel%2011%22%29%20when%3A3d&amp;hl=tr&amp;gl=TR&amp;ceid=TR:tr (2026-11-23T00:13:58+03:00)
+- Haber araması: https://news.google.com/rss/search?q=Vancouver%20Whitecaps%20Real%20Salt%20Lake%20%28injury%20OR%20%22team%20news%22%20OR%20lineup%20OR%20suspended%29%20when%3A3d&amp;hl=en-GB&amp;gl=GB&amp;ceid=GB:en (2026-11-23T00:14:00+03:00)</p>
 <h2>C) Kupon önerileri</h2>
 <p>Kombine olasılık, maçların birbirinden bağımsız olduğu varsayımıyla çarpılarak hesaplanır.</p>
-<p>Bugün kupon önerisi yok (yeterli güvenli seçim yok).</p>
+<p><strong>Düşük risk — tekli</strong> — toplam oran 1.52, kombine model olasılığı: %57 ≈ %57 (piyasa: %57), beklenen değer -0.14 (birim başına), en yüksek MBS 1
+- Levante - Elche: Alt/Üst 2.5: Üst @1.52 (model %57, MBS 1)</p>
+<p><strong>Düşük risk — ikili</strong> — toplam oran 1.98, kombine model olasılığı: %57 × %65 ≈ %37 (piyasa: %36), beklenen değer -0.27 (birim başına), en yüksek MBS 2
+- Levante - Elche: Alt/Üst 2.5: Üst @1.52 (model %57, MBS 1)
+- Wieczysta Krakow - Motor Lublin: Alt/Üst 2.5: Üst @1.30 (model %65, MBS 2)</p>
+<p><strong>Dengeli — 3'lü</strong> — toplam oran 2.81, kombine model olasılığı: %57 × %65 × %61 ≈ %23 (piyasa: %22), beklenen değer -0.37 (birim başına), en yüksek MBS 2
+- Levante - Elche: Alt/Üst 2.5: Üst @1.52 (model %57, MBS 1)
+- Wieczysta Krakow - Motor Lublin: Alt/Üst 2.5: Üst @1.30 (model %65, MBS 2)
+- AC Monza - Fiorentina: Alt/Üst 2.5: Üst @1.42 (model %61, MBS 1)</p>
 <p>Not: iddaa marjı (~%15) nedeniyle bu seçimlerin beklenen değeri negatiftir; kupon büyüdükçe kayıp beklentisi artar.</p>
 <h2>D) Elenen maçlar</h2>
 <div class='tw'><table>
@@ -72,10 +986,550 @@ nav{display:flex;gap:12px;flex-wrap:wrap;font-size:.9rem;margin:.4rem 0 1rem;col
 </thead>
 <tbody>
 <tr>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
+<td>00:15</td>
+<td>Strongest - Blooming</td>
+<td>Bolivya Profesyonel Ligi</td>
+<td>başlamasına 11 dk var; analiz yetişmez (min 30)</td>
+</tr>
+<tr>
+<td>00:30</td>
+<td>Goianiense - Vila Nova</td>
+<td>Brezilya Brasileiro Serie B, Yükselme</td>
+<td>başlamasına 26 dk var; analiz yetişmez (min 30)</td>
+</tr>
+<tr>
+<td>00:30</td>
+<td>Fluminense - Mirassol FC SP</td>
+<td>Brezilya Serie A</td>
+<td>başlamasına 26 dk var; analiz yetişmez (min 30)</td>
+</tr>
+<tr>
+<td>00:30</td>
+<td>LDU Quito - SD Aucas</td>
+<td>Ekvador Serie A</td>
+<td>başlamasına 26 dk var; analiz yetişmez (min 30)</td>
+</tr>
+<tr>
+<td>00:30</td>
+<td>Metropolitan - Dep. La Gua.</td>
+<td>Venezuela Primera Lig Kapanış Ana Tur A</td>
+<td>başlamasına 26 dk var; analiz yetişmez (min 30)</td>
+</tr>
+<tr>
+<td>01:00</td>
+<td>Inter San Carlos - Sporting San Jose</td>
+<td>Kosta Rika Primera Lig, Açılış</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>02:00</td>
+<td>CD Walter Ferretti - Sebaco FC</td>
+<td>Nikaragua Primera Ligi Açılış</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>02:05</td>
+<td>Municipal - Antigua GFC</td>
+<td>Guatemala Ulusal Lig, Açılış</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>02:07</td>
+<td>Guadalajara Chivas - Cruz Azul</td>
+<td>Meksika Primera Ligi, Açılış</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>02:15</td>
+<td>CD Motagua - CD Olimpia</td>
+<td>Honduras Ulusal Lig, Açılış</td>
+<td>sınırlı pazar (5 &lt; 10)</td>
+</tr>
+<tr>
+<td>02:30</td>
+<td>San Antonio Bulo Bulo - Always Ready</td>
+<td>Bolivya Profesyonel Ligi</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>02:30</td>
+<td>Deportes Limache - Deportes La Serena</td>
+<td>Şili Premier Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>03:00</td>
+<td>Gimnasia Y Tiro de Salta - T. Suarez</td>
+<td>Arjantin Primera Nacional, Yüks.Playoff</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>04:00</td>
+<td>Diriangen FC - Managua FC</td>
+<td>Nikaragua Primera Ligi Açılış</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>04:10</td>
+<td>CD Marquense - Aurora FC</td>
+<td>Guatemala Ulusal Lig, Açılış</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>04:10</td>
+<td>Queretaro - Necaxa</td>
+<td>Meksika Primera Ligi, Açılış</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>04:30</td>
+<td>Juticalpa FC - Olancho FC</td>
+<td>Honduras Ulusal Lig, Açılış</td>
+<td>sınırlı pazar (5 &lt; 10)</td>
+</tr>
+<tr>
+<td>07:00</td>
+<td>Kanagawa Sagamihara (K) - Omiya Ardija Ventus (K)</td>
+<td>Japonya WE-League</td>
+<td>kadın/genç/B takımı</td>
+</tr>
+<tr>
+<td>07:00</td>
+<td>Albirex Niigata (K) - Sanfrecce Hiroshima (K)</td>
+<td>Japonya WE-League</td>
+<td>kadın/genç/B takımı</td>
+</tr>
+<tr>
+<td>08:00</td>
+<td>Nagano Parceiro (K) - Urawa Red Diamonds (K)</td>
+<td>Japonya WE-League</td>
+<td>kadın/genç/B takımı</td>
+</tr>
+<tr>
+<td>09:00</td>
+<td>Tokyo Verdy Beleza (K) - INAC Kobe Leonessa (K)</td>
+<td>Japonya WE-League</td>
+<td>kadın/genç/B takımı</td>
+</tr>
+<tr>
+<td>14:00</td>
+<td>FC Chernomorets Odessa - Epicentr Dunaivtsi</td>
+<td>Ukrayna Premier Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>14:00</td>
+<td>LNZ Cherkasy - Polissya Zhytomyr</td>
+<td>Ukrayna Premier Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>15:00</td>
+<td>FK Shkendija - FK Sileks Kratovo</td>
+<td>North Macedonia Kuzey Makedonya 1. MFL</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>15:30</td>
+<td>CSKA Sofia II - Stara Zagora</td>
+<td>Bulgaristan 2. Lig</td>
+<td>kadın/genç/B takımı</td>
+</tr>
+<tr>
+<td>15:40</td>
+<td>Saham - Oman FC</td>
+<td>Umman Ligi</td>
+<td>sınırlı pazar (8 &lt; 10)</td>
+</tr>
+<tr>
+<td>16:00</td>
+<td>CA River Plate (K) - CA Talleres de Cordoba(K)</td>
+<td>Arjantin Primera Division A, Women, Cla</td>
+<td>lig türü dışarıda (kadin)</td>
+</tr>
+<tr>
+<td>16:00</td>
+<td>NK Bistrica - Krka</td>
+<td>Slovenya 2.Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>16:00</td>
+<td>EM Mahdia - CS Chebba</td>
+<td>Tunus 2. Lig Grup A</td>
+<td>sınırlı pazar (1 &lt; 10)</td>
+</tr>
+<tr>
+<td>16:00</td>
+<td>Oceano Club De Kerkennah - AS Gabes</td>
+<td>Tunus 2. Lig Grup A</td>
+<td>sınırlı pazar (1 &lt; 10)</td>
+</tr>
+<tr>
+<td>16:00</td>
+<td>Sporting Ben Arous - ES Beni Khalled</td>
+<td>Tunus 2. Lig Grup A</td>
+<td>sınırlı pazar (1 &lt; 10)</td>
+</tr>
+<tr>
+<td>16:00</td>
+<td>US Tataouine - AS Megrine</td>
+<td>Tunus 2. Lig Grup A</td>
+<td>sınırlı pazar (1 &lt; 10)</td>
+</tr>
+<tr>
+<td>16:00</td>
+<td>Stade Soussienf - AS Soliman</td>
+<td>Tunus 2. Lig Grup A</td>
+<td>sınırlı pazar (1 &lt; 10)</td>
+</tr>
+<tr>
+<td>16:00</td>
+<td>BS Bouhajla - Croissant Sportif De Msaken</td>
+<td>Tunus 2. Lig Grup A</td>
+<td>sınırlı pazar (1 &lt; 10)</td>
+</tr>
+<tr>
+<td>16:00</td>
+<td>ES Bouchamma - Olympique Du Kef</td>
+<td>Tunus 2. Lig Grup B</td>
+<td>sınırlı pazar (1 &lt; 10)</td>
+</tr>
+<tr>
+<td>16:00</td>
+<td>Barnsley FC U21 - Bolton Wanderers U21</td>
+<td>İngiltere Amatör Profesyonel Gelişim Ligi</td>
+<td>lig türü dışarıda (genc_takim)</td>
+</tr>
+<tr>
+<td>16:45</td>
+<td>FK Neftchi Fargona - Al Hilal</td>
+<td>AFC Asya Şampiyonlar Ligi Batı</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>16:45</td>
+<td>Shenavar Sazi Qeshm - Naft Gachsaran</td>
+<td>İran Azadegan Ligi</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>17:00</td>
+<td>Chelyabinsk - Leningradets</td>
+<td>Rusya Futbol Ulusal Ligi</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>17:00</td>
+<td>Albinoleffe U20 - Genoa U20</td>
+<td>İtalya Bahar Şampiyonası</td>
+<td>kadın/genç/B takımı</td>
+</tr>
+<tr>
+<td>17:30</td>
+<td>AL Jeel - AL Saqer FC</td>
+<td>Suudi Arabistan 1. Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>18:00</td>
+<td>Wadi Degla - AL Ittihad</td>
+<td>Mısır Premier Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>18:00</td>
+<td>El Gouna Fc - Zamalek</td>
+<td>Mısır Premier Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>18:00</td>
+<td>Braga U23 - Leixoes U23</td>
+<td>Portekiz U23 Liga Next Gen</td>
+<td>lig türü dışarıda (genc_takim)</td>
+</tr>
+<tr>
+<td>18:00</td>
+<td>CSA Steaua Bucuresti - Chindia</td>
+<td>Romanya 2.Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>18:00</td>
+<td>Bahla Club - Samail SC</td>
+<td>Umman Ligi</td>
+<td>sınırlı pazar (8 &lt; 10)</td>
+</tr>
+<tr>
+<td>18:15</td>
+<td>Jeddah Club - Damac FC</td>
+<td>Suudi Arabistan 1. Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>19:00</td>
+<td>Al-Shamal - Ahli Saudi</td>
+<td>AFC Asya Şampiyonlar Ligi Batı</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>19:00</td>
+<td>AL Ain FC - Esteghlal FC</td>
+<td>AFC Asya Şampiyonlar Ligi Batı</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>19:00</td>
+<td>TS Tabriz - Al-Wasl FC</td>
+<td>AFC Asya Şampiyonlar Ligi Batı</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>19:00</td>
+<td>Ludogorets - Dunav 2010</td>
+<td>Bulgaristan Parva Ligi</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>19:00</td>
+<td>Torino U20 - Bologna U20</td>
+<td>İtalya Bahar Şampiyonası</td>
+<td>kadın/genç/B takımı</td>
+</tr>
+<tr>
+<td>19:30</td>
+<td>FC Koper - NK Aluminij Kidricevo</td>
+<td>Slovenya 1. SNL</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>19:45</td>
+<td>Ben Aknoun - USM Alger</td>
+<td>Cezayir 1. Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>20:00</td>
+<td>Bayern Münih (K) - TSG Hoffenheim (K)</td>
+<td>Almanya Amatör Bundesliga, Women</td>
+<td>lig türü dışarıda (kadin)</td>
+</tr>
+<tr>
+<td>20:00</td>
+<td>P. Bielsko - Nieciecza</td>
+<td>Polonya 1. Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>21:00</td>
+<td>JS Kabylie - MC Alger</td>
+<td>Cezayir 1. Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>21:00</td>
+<td>El Ahly (MISIR) - Pyramids FC</td>
+<td>Mısır Premier Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>21:00</td>
+<td>Sepsi Os Sf - Rapid 1923</td>
+<td>Romanya 1. Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>21:15</td>
+<td>AL Quwa AL Jawiya - Al Gharafa</td>
+<td>AFC Asya Şampiyonlar Ligi Batı</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>21:15</td>
+<td>AL Ittihad - FC Pakhtakor Tashkent</td>
+<td>AFC Asya Şampiyonlar Ligi Batı</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>21:30</td>
+<td>Diosgyör - Karcag SE</td>
+<td>Macaristan NB II</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Cdt Real Oruro - Guabira Montero</td>
+<td>Bolivya Profesyonel Ligi</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Brighton U21 - West Ham United U21</td>
+<td>İngiltere Amatör U21 Premier League Cup, Group</td>
+<td>lig türü dışarıda (genc_takim)</td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Reading FC U21 - Exeter City U21</td>
+<td>İngiltere Amatör U21 Premier League Cup, Group</td>
+<td>lig türü dışarıda (genc_takim)</td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Bournemouth U21 - Leicester City U21</td>
+<td>İngiltere Amatör U21 Premier League Cup, Group</td>
+<td>lig türü dışarıda (genc_takim)</td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Wolverhampton U21 - Preston U21</td>
+<td>İngiltere Amatör U21 Premier League Cup, Group</td>
+<td>lig türü dışarıda (genc_takim)</td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Newcastle United U21 - Nottingham Forest U21</td>
+<td>İngiltere Amatör U21 Premier League Cup, Group</td>
+<td>lig türü dışarıda (genc_takim)</td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Birmingham City U21 - Gillingham FC Reserve</td>
+<td>İngiltere Amatör U21 Premier League Cup, Group</td>
+<td>lig türü dışarıda (genc_takim)</td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>RCD Espanyol (K) - Valencia (K)</td>
+<td>İspanya Primera Division Femenina</td>
+<td>kadın/genç/B takımı</td>
+</tr>
+<tr>
+<td>22:30</td>
+<td>CA Juventud De Las Piedras - Defensor Sporting</td>
+<td>Uruguay Primera Ligi, Kapanış</td>
+<td>sınırlı pazar (5 &lt; 10)</td>
+</tr>
+<tr>
+<td>22:30</td>
+<td>US Grosseto - Monterosi Tuscia</td>
+<td>İtalya Serie C</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>22:45</td>
+<td>Orleans - Thionville Lusitanos</td>
+<td>Fransa Ulusal Lig</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>22:45</td>
+<td>Chelmsford C - Maidst. Utd</td>
+<td>İngiltere Amatör Konferans Ligi Güney</td>
+<td>lig türü dışarıda (genc_takim)</td>
+</tr>
+<tr>
+<td>22:45</td>
+<td>Calcio Lecco 1912 - AC Lumezzane</td>
+<td>İtalya Serie C</td>
+<td>öncelik listesi dışındaki lig</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>CA Banfield (K) - CA Huracan (K)</td>
+<td>Arjantin Primera Division A, Women, Cla</td>
+<td>lig türü dışarıda (kadin)</td>
+</tr>
+<tr>
+<td>20:00</td>
+<td>Bodrum FK – Vanspor FK</td>
+<td>Türkiye 1. Lig</td>
+<td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Brentford – Everton</td>
+<td>İngiltere Premier Lig</td>
+<td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
+</tr>
+<tr>
+<td>01:00</td>
+<td>River Plate – Ath Lanus</td>
+<td>Arjantin Primera LPF, Clausura Playoffs</td>
+<td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
+</tr>
+<tr>
+<td>01:30</td>
+<td>Bragantino SP – Vasco Da Gama</td>
+<td>Brezilya Serie A</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 55 &lt; 55 (Alt/Üst 2.5: Üst @1.51)</td>
+</tr>
+<tr>
+<td>04:00</td>
+<td>Instituto AC Cordoba – CA Huracan</td>
+<td>Arjantin Primera LPF, Clausura Playoffs</td>
+<td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
+</tr>
+<tr>
+<td>18:00</td>
+<td>Asteras Tripolis – Aris</td>
+<td>Yunanistan Süper Lig</td>
+<td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
+</tr>
+<tr>
+<td>20:00</td>
+<td>NK Slaven – Osijek</td>
+<td>Hırvatistan 1. HNL</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 45 &lt; 55 (Alt/Üst 2.5: Üst @1.40)</td>
+</tr>
+<tr>
+<td>21:00</td>
+<td>Brondby – Midtjylland</td>
+<td>Danimarka Süper Lig</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 26 &lt; 55 (Alt/Üst 2.5: Üst @1.42)</td>
+</tr>
+<tr>
+<td>21:00</td>
+<td>Orgryte – Kalmar FF</td>
+<td>İsveç Allsvenskan</td>
+<td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Vitesse – Graafschap</td>
+<td>Hollanda 1. Lig</td>
+<td>analiz edildi, seçilmedi: en iyi uygun seçenek güveni 31 &lt; 55 (Alt/Üst 2.5: Üst @1.30)</td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Jong Ajax – Jong AZ Alkmaar</td>
+<td>Hollanda 1. Lig</td>
+<td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
+</tr>
+<tr>
+<td>22:00</td>
+<td>Jong PSV – Jong Utrecht</td>
+<td>Hollanda 1. Lig</td>
+<td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
+</tr>
+<tr>
+<td>22:45</td>
+<td>Sochaux – Dunkerque</td>
+<td>Fransa Ligue 2</td>
+<td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
+</tr>
+<tr>
+<td>22:45</td>
+<td>Nantes – Grenoble</td>
+<td>Fransa Ligue 2</td>
+<td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
+</tr>
+<tr>
+<td>23:00</td>
+<td>Gimnasia – New Old Boys</td>
+<td>Arjantin Primera LPF, Clausura Playoffs</td>
+<td>analiz edildi, seçilmedi: özet kurallarına uyan seçenek yok (olasılık &lt;%55 veya oran aralık dışı)</td>
 </tr>
 </tbody>
 </table></div>
